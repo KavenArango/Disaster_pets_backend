@@ -1,0 +1,17 @@
+FROM debian:10.6
+
+WORKDIR /app
+
+RUN apt-get update || : && apt-get install python -y
+
+COPY requirements.txt ./
+
+RUN python install requirements.txt
+
+COPY . .
+
+ENV PORT=8080
+
+EXPOSE 8080
+
+CMD [ "python -m flask run", "start" ]
