@@ -1,6 +1,6 @@
 version: "3"
 services:
-  web:
+  db:
     build: .
     ports:
       - "5000:5000"
@@ -10,3 +10,5 @@ services:
     command: flask run
     volumes:
       - .:/code
+  web:
+    image: sap19/disaster-pets-front-end
