@@ -11,7 +11,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key =True, autoincrement=True)
     fname = db.Column(db.String(50), nullable=False)
     lname = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(80), unique=True, nullable=False) 
+    email = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.VARCHAR(255), nullable=False)
     phone = db.Column(db.String(20), nullable=True)
     phone2 = db.Column(db.String(20), nullable = True)
@@ -31,14 +31,15 @@ class User(db.Model):
         self.date_created = datetime.now()
         self.last_logged = datetime.now()
         self.role_id = role_id
-        
 
-    def encode_auth_token(self, user_id):
+
+    def encode_auth_token(self, user_id, user_role_id):
         try:
             payload = {
                 'exp': datetime.utcnow() + timedelta(days=0, seconds=5),
                 'iat': datetime.utcnow(),
-                'sub': user_id
+                'sub': user_id,
+                'role': user_role_id
             }
             return jwt.encode(
                 payload,
@@ -47,7 +48,7 @@ class User(db.Model):
             )
         except Exception as e:
             return e
-    
+
     @staticmethod
     def decode_auth_token(auth_token):
         try:
@@ -67,4 +68,3 @@ class Role(db.Model):
 
     def __init__(self, role_name):
         self.role_name = role_name
-    
