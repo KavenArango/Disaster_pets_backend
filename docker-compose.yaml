@@ -1,6 +1,6 @@
 version: "3"
 services:
-  db:
+  flask-app:
     build: .
     ports:
       - "5000:5000"
@@ -10,5 +10,7 @@ services:
     command: flask run
     volumes:
       - .:/code
-  web:
+  react-ui:
     image: sap19/disaster-pets-front-end
+    ports:
+      - "3000:3000"
