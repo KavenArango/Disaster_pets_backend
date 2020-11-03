@@ -51,34 +51,40 @@ class RegisterAPI(Resource):
 
 
 class LoginAPI(Resource):
-    def post(self):
-        current_user = request.get_json()
-        user = User.query.filter_by(email = current_user.get('email')).first()
-        if user and bcrypt.check_password_hash(user.password, current_user.get("password")):
+	def post(self):
+		current_user = request.get_json()
+		user = User.query.filter_by(email = current_user.get('email')).first()
+		if user:
+			if bcrypt.check_password_hash(user.password, current_user.get("password")):
+				access_token = create_access_token(identity = user.id)
+				refresh_token = create_refresh_token(identity = user.id)
 
-            access_token = create_access_token(identity = user.id)
-            refresh_token = create_refresh_token(identity = user.id)
-
-            if access_token:
-                responseObject = {
-                    'status' : 'success',
-                    'message': 'successfully logged in!',
-                    'access_token': access_token,
-                    'refresh_token': refresh_token
-                }
-                return make_response(jsonify(responseObject)), 200
-            else:
-                responseObject = {
-                    'status' : 'fail',
-                    'message': 'user does not exist'
-                }
-                return make_response(jsonify(responseObject)), 404
-        else:
-            responseObject = {
-                        'status' : 'failed',
-                        'message': 'something went wrong try again'
-            }
-            return make_response(jsonify(responseObject)), 500
+				if access_token:
+					responseObject = {
+						'status' : 'success',
+						'message': 'successfully logged in!',
+						'access_token': access_token,
+						'refresh_token': refresh_token
+					}
+					return make_response(jsonify(responseObject)), 200
+				else:
+					responseObject = {
+						'status' : 'failed',
+						'message': 'something went wrong',
+					}
+					return make_response(jsonify(responseObject)), 200
+			else:
+				responseObject = {
+							'status' : 'failed',
+							'message': 'Email or Password Inncorect'
+				}
+				return make_response(jsonify(responseObject)), 500
+		else:
+			responseObject = {
+				'status' : 'fail',
+				'message': 'user does not exist'
+			}
+			return make_response(jsonify(responseObject)), 404
 
 # class LogoutAPI(Resource):
 #    @jwt_required
