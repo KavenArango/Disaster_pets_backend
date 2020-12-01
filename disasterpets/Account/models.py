@@ -39,30 +39,6 @@ class User(db.Model):
         self.social = social
         
 
-    # def encode_auth_token(self, user_id):
-    #     try:
-    #         payload = {
-    #             'exp': datetime.utcnow() + timedelta(days=0, seconds=5),
-    #             'iat': datetime.utcnow(),
-    #             'sub': user_id
-    #         }
-    #         return jwt.encode(
-    #             payload,
-    #             current_app.secret_key,
-    #             algorithm='HS256'
-    #         )
-    #     except Exception as e:
-    #         return e
-    
-    # @staticmethod
-    # def decode_auth_token(auth_token):
-    #     try:
-    #         payload = jwt.decode(auth_token, current_app.secret_key)
-    #         return payload['sub']
-    #     except jwt.ExpiredSignatureError:
-    #         return 'Signature expired. Please log in again.'
-    #     except jwt.InvalidTokenError:
-    #         return 'Invalid token. Please log in again.'
 
 
 class Role(db.Model):

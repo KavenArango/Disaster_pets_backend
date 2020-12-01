@@ -46,5 +46,9 @@ class RejectMatchJoin(db.Model):
         self.petid = petid
         self.rejectid = rejectid
 
+class PetStatus(db.Model):
+    __tablename__ = 'petstatus' 
+
+    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     
        

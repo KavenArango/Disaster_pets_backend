@@ -19,3 +19,14 @@ class Location(db.Model):
         self.state = state
         self.zipcode = zipcode
     
+
+class LocationJoin(db.Model):
+    __tablename__ = 'locationjoin'
+
+    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    petid = db.Column(db.Integer, db.ForeignKey('pets.id'))
+    locationid = db.Column(db.Integer, db.ForeignKey('location.id'))
+
+    def __init__(self, petid, locationid):
+        self.petid = petid
+        self.locationid = locationid
