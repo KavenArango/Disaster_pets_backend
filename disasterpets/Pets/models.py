@@ -25,9 +25,6 @@ class Pets(db.Model):
         self.altered_status = altered_status
         self.date_created = datetime.now()
         
-
-
-
 class Breeds(db.Model):
     __tablename__ = 'breeds'
 
@@ -66,3 +63,4 @@ class PetsJoin(db.Model):
     def __init__(self, user_id, pet_id):
         self.user_id = user_id
         self.pet_id = pet_id
+

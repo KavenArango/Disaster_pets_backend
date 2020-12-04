@@ -17,8 +17,12 @@ class User(db.Model):
     date_created = db.Column(db.Date,nullable = False )
     last_logged = db.Column(db.Date, nullable = True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    reporter = db.Column(db.Boolean)
+    owner = db.Column(db.Boolean)
+    social = db.Column(db.Integer, db.ForeignKey('socialmedia.id'))
 
-    def __init__(self, fname, lname, email, password, phone, phone2, role_id):
+
+    def __init__(self, fname, lname, email, password, phone, phone2, role_id, reporter, owner, social):
         self.fname = fname
         self.lname = lname
         self.email = email
@@ -30,32 +34,11 @@ class User(db.Model):
         self.date_created = datetime.now()
         self.last_logged = datetime.now()
         self.role_id = role_id
+        self.reporter = reporter
+        self.owner = owner
+        self.social = social
         
 
-    # def encode_auth_token(self, user_id):
-    #     try:
-    #         payload = {
-    #             'exp': datetime.utcnow() + timedelta(days=0, seconds=5),
-    #             'iat': datetime.utcnow(),
-    #             'sub': user_id
-    #         }
-    #         return jwt.encode(
-    #             payload,
-    #             current_app.secret_key,
-    #             algorithm='HS256'
-    #         )
-    #     except Exception as e:
-    #         return e
-    
-    # @staticmethod
-    # def decode_auth_token(auth_token):
-    #     try:
-    #         payload = jwt.decode(auth_token, current_app.secret_key)
-    #         return payload['sub']
-    #     except jwt.ExpiredSignatureError:
-    #         return 'Signature expired. Please log in again.'
-    #     except jwt.InvalidTokenError:
-    #         return 'Invalid token. Please log in again.'
 
 
 class Role(db.Model):
@@ -66,4 +49,18 @@ class Role(db.Model):
 
     def __init__(self, role_name):
         self.role_name = role_name
+
+class SocialMedia(db.Model):
+    __tablename__ = 'socialmedia'
+
+    id = db.Column(db.Integer, primary_key = True, autoincrement=True)
+    fb = db.Column(db.String(150), nullable = True)
+    twitter = db.Column(db.String(150), nullable = True)
+    insta = db.Column(db.String(150), nullable = True)
+
+    def __init__(self, fb, twitter, insta):
+        self.fb = fb
+        self.twitter = twitter
+        self.insta = insta
+
     
