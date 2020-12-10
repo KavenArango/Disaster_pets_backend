@@ -64,3 +64,26 @@ class PetsJoin(db.Model):
         self.user_id = user_id
         self.pet_id = pet_id
 
+class UniqueFeature(db.Model):
+    __tablename__ ='uniquefeature'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    breed = db.Column(db.Integer, db.ForeignKey('breeds.id'))
+    animal = db.Column(db.Integer, db.ForeignKey('animals.id'))
+    feature = db.Column(db.String(50))
+
+    def __init__(self, breed, animal, feature):
+        self.breed = breed
+        self.animal = animal
+        self.feature = feature
+
+class UniqueFeaturesJoin(db.Model):
+    __tablename__ = 'uniquefeaturesjoin'
+
+    id = db.Column(db.Integer, primary_key = True, autoincrement=True)
+    petid = db.Column(db.Integer, db.ForeignKey('pets.id'))
+    featureid = db.Column(db.Integer, db.ForeignKey('uniquefeature.id'))
+
+    def __init__(self, petid, featureid):
+        self.petid = petid
+        self.featureid = featureid

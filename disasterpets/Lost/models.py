@@ -14,3 +14,4 @@ class LostTable(db.Model):
     def __init__(self, petid, admincheck):
         self.petid = petid
         self.admincheck = admincheck
+

@@ -41,8 +41,12 @@ def register_extensions(app):
 def register_blueprints(app):
     from disasterpets.Account.routes import account
     from disasterpets.Pets.routes import petbp
+    from disasterpets.Matching.routes import matchingbp
+    from disasterpets.Pictures.routes import petgallerybp
     app.register_blueprint(account)
     app.register_blueprint(petbp)
+    app.register_blueprint(matchingbp)
+    app.register_blueprint(petgallerybp)
     return None
 
 # @jwtmanager.token_in_blacklist_loader
