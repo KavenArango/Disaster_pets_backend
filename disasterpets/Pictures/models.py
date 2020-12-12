@@ -9,7 +9,7 @@ class PetImage(db.Model):
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     image_url =db.Column(db.String(200), nullable = False)
 
-    def __init__ (self, image_url)
+    def __init__ (self, image_url):
         self.image_url = image_url
 
 class PetImageJoin(db.Model):

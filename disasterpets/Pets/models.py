@@ -87,3 +87,12 @@ class UniqueFeaturesJoin(db.Model):
     def __init__(self, petid, featureid):
         self.petid = petid
         self.featureid = featureid
+
+class PetStatus(db.Model):
+    __tablename__ = 'petstatus' 
+
+    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    status = db.Column(db.String(20))
+
+    def __init__(self, status):
+        self.status = status
