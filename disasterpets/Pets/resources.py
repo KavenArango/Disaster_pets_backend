@@ -28,6 +28,7 @@ class AddPetAPI(Resource):
             )
             db.session.add(pet)
             db.session.commit()
+
             location = Location(
                 street_name=new_pet.get('street_name'),
                 house_number = new_pet.get('house_number'),
@@ -36,6 +37,12 @@ class AddPetAPI(Resource):
                 zipcode = new_pet.get('zipcode')
             )
             db.session.add(location)
+            db.session.commit()
+
+            petimage = PetImage(
+               image_url = new_pet.get('image_url')
+            )
+            db.session.add(petimage)
             db.session.commit()
 
             # db.session.refresh(pet)
