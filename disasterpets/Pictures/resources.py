@@ -46,12 +46,7 @@ class PetGalleryAPI(Resource):
                 }
                 return make_response(jsonify(responseObject)), 201
                 
-            responseObject = {
-                    'status' : 'failure',
-                    'message': 'No query done',
-                    
-                }
-            return make_response(jsonify(responseObject)), 201
+           
         except Exception as e:
             print(e)
             responseObject = {

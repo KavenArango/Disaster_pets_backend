@@ -8,6 +8,9 @@ from flask_restful import Resource
 from werkzeug.utils import secure_filename
 import os
 from disasterpets.Location.models import Location, LocationJoin
+from disasterpets.Pictures.models import PetImage
+from disasterpets.Pets.schema import PetsSchema, BreedSchema, GenderSchema, PetStatusSchema, AnimalSchema, AlteredSchema
+from disasterpets.Pets.models import Pets, PetsJoin, Breeds, Gender, AlteredStatus, PetStatus, Animals
 
 class AddPetAPI(Resource):
     @jwt_required
@@ -74,6 +77,45 @@ class AddPetAPI(Resource):
                 'message': 'something went wrong try again'
             }
             return make_response(jsonify(responseObject)), 404
+
+    @jwt_required
+    def get(self):
+        breeds_schema = BreedSchema(many=True)
+        genders_schema = GenderSchema(many = True)
+        petstat_schema = PetStatusSchema(many =True)
+        animals_schena = AnimalSchema(many=True)
+        altered_schema = AlteredSchema(many=True)
+        try:
+            allbreeds = Breeds.query.all()
+            breedresult = breeds_schema.dump(allbreeds)
+            allgenders = Gender.query.all()
+            genderesults = genders_schema.dump(allgenders)
+            allpetstat = PetStatus.query.all()
+            statusresults = petstat_schema.dump(allpetstat)
+            allanimals = Animals.query.all()
+            animalresults = animals_schena.dump(allanimals)
+            altered = AlteredStatus.query.all()
+            alteredresults = altered_schema.dump(altered)
+            responseObject = {
+                'status' : 'success',
+                'message': 'successfully Pulled!',
+                'breeds': breedresult,
+                'genders': genderesults,
+                'animal': animalresults,
+                'status': statusresults,
+                'altered': alteredresults
+            }
+            return make_response(jsonify(responseObject)), 201
+                    
+    
+        except Exception as e:
+                print(e)
+                responseObject = {
+                    'status' : 'failed',
+                    'message': 'something went wrong try again'
+                }
+                return make_response(jsonify(responseObject)), 404
+
 
 class UploadImageAPI(Resource):
     @jwt_required

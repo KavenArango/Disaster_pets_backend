@@ -9,7 +9,7 @@ upload_image = UploadImageAPI.as_view('uploadimage_api')
 petbp.add_url_rule(
     '/addpet',
     view_func= addpet_view,
-    methods=['POST']
+    methods=['POST', 'GET']
 )
 petbp.add_url_rule(
     '/uploadimage',

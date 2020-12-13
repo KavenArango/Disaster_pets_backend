@@ -4,11 +4,6 @@ from disasterpets.Pets.models import Breeds, Gender, AlteredStatus, Animals, Pet
 
 
 
-def must_not_be_blank(data):
-    if not data:
-        raise ValidationError("Data not provided.")
-
-
 class BreedSchema(ma.Schema):
     class Meta:
         model = Breeds
