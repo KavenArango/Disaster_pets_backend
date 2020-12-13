@@ -4,7 +4,7 @@ from flask import Flask, jsonify, request, make_response, current_app
 import json 
 from disasterpets import bcrypt, db, jwt
 from flask_restful import Resource
-from disasterpets.Pets.schema import PetsSchema
+from disasterpets.Pets.schema import PetsSchema, BreedSchema
 from disasterpets.Pets.models import Pets, PetsJoin, Breeds, Gender, AlteredStatus, PetStatus, Animals
 
 
@@ -12,6 +12,7 @@ class PetGalleryAPI(Resource):
     def get(self):
         searchingfor = request.get_json()
         pets_schema = PetsSchema(many=True)
+        breed_schema = BreedSchema()
         try:
             if searchingfor == None:
                 searchingfor = Pets.query.all()
