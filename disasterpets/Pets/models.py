@@ -14,6 +14,7 @@ class Pets(db.Model):
     secondary_breed = db.Column(db.Integer, db.ForeignKey('breeds.id'), nullable = True)
     gender = db.Column(db.String(20), nullable = True)
     altered_status = db.Column(db.Integer, db.ForeignKey('alteredstatus.id'), nullable = True)
+    pet_status = db.Column(db.Integer, db.ForeignKey('petstatus.id'), nullable = True)
     trapper_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable = True)
     date_created = db.Column(db.Date,nullable = False )
 
@@ -26,7 +27,6 @@ class Pets(db.Model):
         self.altered_status = altered_status
         self.date_created = datetime.now()
     
-
 
 class Breeds(db.Model):
     __tablename__ = 'breeds'
@@ -99,3 +99,12 @@ class PetStatus(db.Model):
 
     def __init__(self, status):
         self.status = status
+
+class Gender(db.Model):
+    __tablename__ = 'gender'
+
+    id = db.Column(db.Integer, primary_key = True, autoincrement=True)
+    gender = db.Column(db.String(10))
+
+    def __init__(self, gender):
+        self.gender = gender

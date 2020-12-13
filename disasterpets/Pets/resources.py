@@ -21,7 +21,8 @@ class AddPetAPI(Resource):
                 secondary_breed=new_pet.get('secondary_breed'),
                 gender=new_pet.get('gender'),
                 altered_status=new_pet.get('altered_status'),
-                trapper_id =new_pet.get('trapper_id ')
+                trapper_id =new_pet.get('trapper_id '),
+                pet_status = new_pet.get('pet_status')
             )
             db.session.add(pet)
             db.session.commit()
@@ -47,6 +48,7 @@ class AddPetAPI(Resource):
                 'message': 'something went wrong try again'
             }
             return make_response(jsonify(responseObject)), 404
+
 class UploadImageAPI(Resource):
     @jwt_required
     def post(self):
