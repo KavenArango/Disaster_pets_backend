@@ -6,12 +6,14 @@ from disasterpets import bcrypt, db, jwt
 from flask_restful import Resource
 from disasterpets.Pets.schema import PetsSchema, BreedSchema, GenderSchema, PetStatusSchema, AnimalSchema, AlteredSchema
 from disasterpets.Pets.models import Pets, PetsJoin, Breeds, Gender, AlteredStatus, PetStatus, Animals
-
+from disasterpets.Pictures.models import PetImageJoin
+from disasterpets.Pictures.schema import PetsImageJoinSchema
 
 class PetGalleryAPI(Resource):
     def get(self):
         searchingfor = request.get_json()
         pets_schema = PetsSchema(many=True)
+        #imagejoin_schema = PetsImageJoinSchema(many = True)
         breeds_schema = BreedSchema(many=True)
         genders_schema = GenderSchema(many = True)
         petstat_schema = PetStatusSchema(many =True)
@@ -21,7 +23,9 @@ class PetGalleryAPI(Resource):
         try:
             if searchingfor == None:
                 searchingfor = Pets.query.all()
+                #searchingfor = PetImageJoin.query.all()
                 jresults = pets_schema.dump(searchingfor)
+                #jresults = imagejoin_schema.dump(searchingfor)
                 allbreeds = Breeds.query.all()
                 breedresult = breeds_schema.dump(allbreeds)
                 allgenders = Gender.query.all()

@@ -8,7 +8,7 @@ from flask_restful import Resource
 from werkzeug.utils import secure_filename
 import os
 from disasterpets.Location.models import Location, LocationJoin
-from disasterpets.Pictures.models import PetImage
+from disasterpets.Pictures.models import PetImage, PetImageJoin
 from disasterpets.Pets.schema import PetsSchema, BreedSchema, GenderSchema, PetStatusSchema, AnimalSchema, AlteredSchema
 from disasterpets.Pets.models import Pets, PetsJoin, Breeds, Gender, AlteredStatus, PetStatus, Animals
 
@@ -48,22 +48,31 @@ class AddPetAPI(Resource):
             db.session.add(petimage)
             db.session.commit()
 
-            # db.session.refresh(pet)
-            # petjoin = PetsJoin(
-            #     user_id = current_user,
-            #     pet_id = pet.id
-            # )
-            # db.session.add(petjoin)
-            # db.session.commit()
+            db.session.refresh(pet)
+            petjoin = PetsJoin(
+                user_id = current_user,
+                pet_id = pet.id
+            )
+            db.session.add(petjoin)
+            db.session.commit()
 
-            # db.session.refresh(pet)
-            # db.session.refresh(location)
-            # locationjoin = LocationJoin(
-            #     petid = pet.id,
-            #     locationid=location.id
-            # )
-            # db.session.add(locationjoin)
-            # db.session.commit()
+            db.session.refresh(pet)
+            db.session.refresh(location)
+            locationjoin = LocationJoin(
+                petid = pet.id,
+                locationid=location.id
+            )
+            db.session.add(locationjoin)
+            db.session.commit()
+
+            db.session.refresh(pet)
+            db.session.refresh(petimage)
+            petimagejoin = PetImageJoin(
+                pet_id = pet.id,
+                petimage_id = petimage.id
+            )
+            db.session.add(petimagejoin)
+            db.session.commit()
 
             responseObject = {
                 'status': 'success',
