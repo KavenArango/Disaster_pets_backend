@@ -19,7 +19,7 @@ class PetsImageJoinSchema(ma.Schema):
     gender = ma.Function(lambda obj: obj.pet.sex.gender)
     altered_status = ma.Function(lambda obj: obj.pet.alteredstat.status)
     animal_type = ma.Function(lambda obj: obj.pet.animal.animal)
-    pet_status = ma.Function(lambda obj: obj.pet.pet_status)
+    pet_status = ma.Function(lambda obj: obj.pet.petstatus.status)
     date_created = ma.Function(lambda obj: obj.pet.date_created)
     trapper_id = ma.Function(lambda obj: obj.pet.trapper_id)
     pet_image = ma.Function(lambda obj: obj.petimage.image_url)
