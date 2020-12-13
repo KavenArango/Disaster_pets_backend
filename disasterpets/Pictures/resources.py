@@ -5,7 +5,7 @@ import json
 from disasterpets import bcrypt, db, jwt
 from flask_restful import Resource
 from disasterpets.Pets.schema import PetsSchema
-from disasterpets.Pets.models import Pets, PetsJoin
+from disasterpets.Pets.models import Pets, PetsJoin, Breeds, Gender, AlteredStatus, PetStatus, Animals
 
 
 class PetGalleryAPI(Resource):
