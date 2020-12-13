@@ -3,6 +3,7 @@ import jwt
 from disasterpets import db
 from datetime import datetime
 
+
 class Pets(db.Model):
     __tablename__ = 'pets'
 
@@ -24,7 +25,9 @@ class Pets(db.Model):
         self.secondary_breed = secondary_breed
         self.altered_status = altered_status
         self.date_created = datetime.now()
-        
+    
+
+
 class Breeds(db.Model):
     __tablename__ = 'breeds'
 
