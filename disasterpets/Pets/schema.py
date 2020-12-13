@@ -36,12 +36,11 @@ class PetsSchema(ma.Schema):
         include_fk = True
     pet_name = ma.Function(lambda obj: obj.pet_name)
     primary_breed= ma.Function(lambda obj: obj.pbreed.breed)
-    primary_bid = ma.Function(lambda obj: obj.primary_breed)
     secondary_breed = ma.Function(lambda obj: obj.sbreed.breed)
     gender = ma.Function(lambda obj: obj.sex.gender)
-    altered_status = ma.Function(lambda obj: obj.altered.status)
+    altered_status = ma.Function(lambda obj: obj.alteredstat.status)
     animal_type = ma.Function(lambda obj: obj.animal.animal)
-    pet_status = ma.Function(lambda obj: obj.petstatus.status)
+    pet_status = ma.Function(lambda obj: obj.pet.pet_status)
     date_created = ma.Function(lambda obj: obj.date_created)
     trapper_id = ma.Function(lambda obj: obj.trapper_id)
     fields = ('id', 'pet_name', 'primary_breed', 'primary_bid', 'secondary_breed',

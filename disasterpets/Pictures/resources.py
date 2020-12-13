@@ -12,20 +12,20 @@ from disasterpets.Pictures.schema import PetsImageJoinSchema
 class PetGalleryAPI(Resource):
     def get(self):
         searchingfor = request.get_json()
-        pets_schema = PetsSchema(many=True)
-        #imagejoin_schema = PetsImageJoinSchema(many = True)
+        #pets_schema = PetsSchema(many=True)
+        imagejoin_schema = PetsImageJoinSchema(many = True)
         breeds_schema = BreedSchema(many=True)
         genders_schema = GenderSchema(many = True)
         petstat_schema = PetStatusSchema(many =True)
-        animals_schena = AnimalSchema(many=True)
+        animals_schema = AnimalSchema(many=True)
         altered_schema = AlteredSchema(many=True)
 
         try:
             if searchingfor == None:
-                searchingfor = Pets.query.all()
-                #searchingfor = PetImageJoin.query.all()
-                jresults = pets_schema.dump(searchingfor)
-                #jresults = imagejoin_schema.dump(searchingfor)
+                #searchingfor = Pets.query.all()
+                searchingfor = PetImageJoin.query.all()
+                #jresults = pets_schema.dump(searchingfor)
+                jresults = imagejoin_schema.dump(searchingfor)
                 allbreeds = Breeds.query.all()
                 breedresult = breeds_schema.dump(allbreeds)
                 allgenders = Gender.query.all()
@@ -33,7 +33,7 @@ class PetGalleryAPI(Resource):
                 allpetstat = PetStatus.query.all()
                 statusresults = petstat_schema.dump(allpetstat)
                 allanimals = Animals.query.all()
-                animalresults = animals_schena.dump(allanimals)
+                animalresults = animals_schema.dump(allanimals)
                 altered = AlteredStatus.query.all()
                 alteredresults = altered_schema.dump(altered)
 

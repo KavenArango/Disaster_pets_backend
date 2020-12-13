@@ -105,7 +105,7 @@ class Pets(db.Model):
     gender = db.Column(db.Integer(), db.ForeignKey("gender.id"), nullable = False)
     sex = db.relationship("Gender", uselist=False, lazy='select')
     altered_status = db.Column(db.Integer, db.ForeignKey('alteredstatus.id'), nullable = True)
-    altered = db.relationship("AlteredStatus", uselist=False, lazy='select')
+    alteredstat = db.relationship("AlteredStatus", uselist=False, lazy='select')
     pet_status = db.Column(db.Integer, db.ForeignKey('petstatus.id'), nullable = True)
     petstatus = db.relationship("PetStatus", uselist=False, lazy='select')
     trapper_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable = True)
