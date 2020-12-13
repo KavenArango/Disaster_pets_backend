@@ -10,6 +10,7 @@ class Breeds(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     breed = db.Column(db.String(50), nullable = False)
+    
 
     def __init__(self, breed):
         self.breed = breed
@@ -29,6 +30,7 @@ class Animals(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     animal = db.Column(db.String(50), unique = True, nullable = False)
+    pet = db.relationship('Pets')
 
     def __init__(self, breed):
         self.animal = animal
@@ -93,17 +95,17 @@ class Pets(db.Model):
     id = db.Column(db.Integer, primary_key =True, autoincrement=True)
     pet_name = db.Column(db.String(50), nullable=True)
     animal_type = db.Column(db.Integer, db.ForeignKey('animals.id'), nullable = True)
-    animal = db.relationship("Animals", backref=db.backref("pets", lazy="dynamic"))
+    animal = db.relationship("Animals", uselist=False, lazy='select')
     primary_breed = db.Column(db.Integer, db.ForeignKey('breeds.id'), nullable = True)
     secondary_breed = db.Column(db.Integer, db.ForeignKey('breeds.id'), nullable = True)
-    breed = db.relationship("Breeds", foreign_keys=[primary_breed])
-    breedtwo = db.relationship("Breeds", foreign_keys=[secondary_breed])
+    pbreed = db.relationship("Breeds", uselist=False, lazy='select', foreign_keys=[primary_breed])
+    sbreed = db.relationship("Breeds", uselist=False, lazy='select', foreign_keys=[secondary_breed])
     gender = db.Column(db.Integer(), db.ForeignKey("gender.id"), nullable = False)
-    sex = db.relationship("Gender", backref=db.backref("pets", lazy="dynamic"))
+    sex = db.relationship("Gender", uselist=False, lazy='select')
     altered_status = db.Column(db.Integer, db.ForeignKey('alteredstatus.id'), nullable = True)
-    altered = db.relationship("AlteredStatus", backref=db.backref("pets", lazy="dynamic"))
+    altered = db.relationship("AlteredStatus", uselist=False, lazy='select')
     pet_status = db.Column(db.Integer, db.ForeignKey('petstatus.id'), nullable = True)
-    petstatus = db.relationship("PetStatus", backref=db.backref("pets", lazy="dynamic"))
+    petstatus = db.relationship("PetStatus", uselist=False, lazy='select')
     trapper_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable = True)
     date_created = db.Column(db.Date,nullable = False )
 

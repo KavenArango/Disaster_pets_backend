@@ -4,7 +4,7 @@ from flask import Flask, jsonify, request, make_response, current_app
 import json 
 from disasterpets import bcrypt, db, jwt
 from flask_restful import Resource
-from disasterpets.Pets.schema import PetsSchema, BreedSchema
+from disasterpets.Pets.schema import PetsSchema, BreedSchema, GenderSchema
 from disasterpets.Pets.models import Pets, PetsJoin, Breeds, Gender, AlteredStatus, PetStatus, Animals
 
 
@@ -12,16 +12,25 @@ class PetGalleryAPI(Resource):
     def get(self):
         searchingfor = request.get_json()
         pets_schema = PetsSchema(many=True)
-        breed_schema = BreedSchema()
+        breeds_schema = BreedSchema(many=True)
+        genders_schema = GenderSchema(many = True)
+
         try:
             if searchingfor == None:
                 searchingfor = Pets.query.all()
                 jresults = pets_schema.dump(searchingfor)
+                allbreeds = Breeds.query.all()
+                breedresult = breeds_schema.dump(allbreeds)
+                allgenders = Gender.query.all()
+                genderesults = genders_schema.dump(allgenders)
+
             
                 responseObject = {
                     'status' : 'success',
                     'message': 'successfully Pulled!',
-                    'pets': jresults
+                    'pets': jresults,
+                    'breeds': breedresult,
+                    'genders': genderesults
                 }
                 return make_response(jsonify(responseObject)), 201
                 

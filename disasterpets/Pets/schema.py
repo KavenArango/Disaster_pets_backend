@@ -39,21 +39,22 @@ class PetsSchema(ma.Schema):
     class Meta:
         model = Pets
         include_fk = True
-        primary_breed= ma.Function(lambda obj: obj.breed.breed)
-        secondary_breed = ma.Function(lambda obj: obj.breed.breed)
-        gender = ma.Function(lambda obj: obj.GenderSchema.gender)
-        altered_status = ma.Function(lambda obj: obj.altered_status.altered_status)
-        animal_type = ma.Function(lambda obj: obj.animals.animal)
-        pet_status = ma.Function(lambda obj: obj.petstatus.status)
-        fields = ('id', 'pet_name', 'primary_breed', 'secondary_breed',
-         'gender', 'animal_type', 'pet_status', 'altered_status', 'trapper_id', 'date_created')  
+    pet_name = ma.Function(lambda obj: obj.pet_name)
+    primary_breed= ma.Function(lambda obj: obj.pbreed.breed)
+    #secondary_breed = ma.Function(lambda obj: obj.sbreed.breed)
+    gender = ma.Function(lambda obj: obj.sex.gender)
+    altered_status = ma.Function(lambda obj: obj.altered.status)
+    animal_type = ma.Function(lambda obj: obj.animal.animal)
+    pet_status = ma.Function(lambda obj: obj.petstatus.status)
+    date_created = ma.Function(lambda obj: obj.date_created)
+    trapper_id = ma.Function(lambda obj: obj.trapper_id)
+    fields = ('id', 'pet_name', 'primary_breed', 'secondary_breed',
+        'gender', 'animal_type', 'pet_status', 'altered_status', 'trapper_id', 'date_created')  
         
     
    
 
-    
 
-   
 
 
 # class BreedSchema(Schema):
