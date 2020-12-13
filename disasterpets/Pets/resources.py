@@ -1,11 +1,12 @@
 
 from flask_jwt_extended import (create_access_token, create_refresh_token, 
 jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
-from flask import Flask, Blueprint, jsonify, request, make_response, current_app
+from flask import Flask, Blueprint, jsonify, request, make_response, current_app, session, url_for, app
 from disasterpets.Pets.models import Pets, PetsJoin
 from disasterpets import bcrypt, db, jwt
 from flask_restful import Resource
-
+from werkzeug.utils import secure_filename
+import os
 
 class AddPetAPI(Resource):
     @jwt_required
@@ -46,3 +47,24 @@ class AddPetAPI(Resource):
                 'message': 'something went wrong try again'
             }
             return make_response(jsonify(responseObject)), 404
+class UploadImageAPI(Resource):
+    @jwt_required
+    def post(self):
+        target=os.path.join('static/images')
+        if not os.path.isdir(target):
+            responseObject = {
+                'status': 'error',
+                'message': 'something went wrong'
+            }
+            return make_response(jsonify(responseObject)), 500
+        print(request)
+        fileObj = request.files
+        for f in fileObj:
+            file = request.files.get(f)
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(target, filename))
+        responseObject = {
+                'status': 'success',
+                'message': 'successfully added photo'
+        }
+        return make_response(jsonify(responseObject)), 200

@@ -1,4 +1,4 @@
 {
     "python.formatting.provider": "black",
-    "python.pythonPath": "/home/puffy/Desktop/Code/Disaster_pets_backend/venv/bin/python3.7"
+    "python.pythonPath": "venv/bin/python"
 }
