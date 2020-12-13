@@ -41,7 +41,7 @@ class PetsSchema(ma.Schema):
         include_fk = True
     pet_name = ma.Function(lambda obj: obj.pet_name)
     primary_breed= ma.Function(lambda obj: obj.pbreed.breed)
-    #secondary_breed = ma.Function(lambda obj: obj.sbreed.breed)
+    secondary_breed = ma.Function(lambda obj: obj.sbreed.breed)
     gender = ma.Function(lambda obj: obj.sex.gender)
     altered_status = ma.Function(lambda obj: obj.altered.status)
     animal_type = ma.Function(lambda obj: obj.animal.animal)

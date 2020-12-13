@@ -4,7 +4,7 @@ from flask import Flask, jsonify, request, make_response, current_app
 import json 
 from disasterpets import bcrypt, db, jwt
 from flask_restful import Resource
-from disasterpets.Pets.schema import PetsSchema, BreedSchema, GenderSchema
+from disasterpets.Pets.schema import PetsSchema, BreedSchema, GenderSchema, PetStatusSchema, AnimalSchema, AlteredSchema
 from disasterpets.Pets.models import Pets, PetsJoin, Breeds, Gender, AlteredStatus, PetStatus, Animals
 
 
@@ -14,6 +14,9 @@ class PetGalleryAPI(Resource):
         pets_schema = PetsSchema(many=True)
         breeds_schema = BreedSchema(many=True)
         genders_schema = GenderSchema(many = True)
+        petstat_schema = PetStatusSchema(many =True)
+        animals_schena = AnimalSchema(many=True)
+        altered_schema = AlteredSchema(many=True)
 
         try:
             if searchingfor == None:
@@ -23,6 +26,12 @@ class PetGalleryAPI(Resource):
                 breedresult = breeds_schema.dump(allbreeds)
                 allgenders = Gender.query.all()
                 genderesults = genders_schema.dump(allgenders)
+                allpetstat = PetStatus.query.all()
+                statusresults = petstat_schema.dump(allpetstat)
+                allanimals = Animals.query.all()
+                animalresults = animals_schena.dump(allanimals)
+                altered = AlteredStatus.query.all()
+                alteredresults = altered_schema.dump(altered)
 
             
                 responseObject = {
@@ -30,7 +39,10 @@ class PetGalleryAPI(Resource):
                     'message': 'successfully Pulled!',
                     'pets': jresults,
                     'breeds': breedresult,
-                    'genders': genderesults
+                    'genders': genderesults,
+                    'animal': animalresults,
+                    'status': statusresults,
+                    'altered': alteredresults
                 }
                 return make_response(jsonify(responseObject)), 201
                 

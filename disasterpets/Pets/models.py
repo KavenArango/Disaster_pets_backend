@@ -2,6 +2,8 @@ from flask import Flask, current_app
 import jwt
 from disasterpets import db
 from datetime import datetime
+from disasterpets.Lost.models import LostTable
+from disasterpets.Found.models import FoundTable
 
     
 
@@ -108,6 +110,8 @@ class Pets(db.Model):
     petstatus = db.relationship("PetStatus", uselist=False, lazy='select')
     trapper_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable = True)
     date_created = db.Column(db.Date,nullable = False )
+    lost = db.Column(db.Integer, db.ForeignKey('losttable.id'))
+    found = db.Column(db.Integer, db.ForeignKey('foundtable.id'))
 
     def __init__(self, pet_name, animal_type, gender, primary_breed, secondary_breed, altered_status, trapper_id, pet_status):
         self.pet_name = pet_name
