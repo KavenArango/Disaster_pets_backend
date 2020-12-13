@@ -7,6 +7,7 @@ from disasterpets import bcrypt, db, jwt
 from flask_restful import Resource
 from werkzeug.utils import secure_filename
 import os
+from disasterpets.Location.models import Location, LocationJoin
 
 class AddPetAPI(Resource):
     @jwt_required
@@ -23,19 +24,37 @@ class AddPetAPI(Resource):
                 altered_status=new_pet.get('altered_status'),
                 trapper_id =new_pet.get('trapper_id '),
                 pet_status = new_pet.get('pet_status')
+
             )
             db.session.add(pet)
             db.session.commit()
-
-
-            db.session.refresh(pet)
-            petjoin = PetsJoin(
-                user_id = current_user,
-                pet_id = pet.id
+            location = Location(
+                street_name=new_pet.get('street_name'),
+                house_number = new_pet.get('house_number'),
+                city = new_pet.get('city'),
+                state = new_pet.get('state'),
+                zipcode = new_pet.get('zipcode')
             )
-            db.session.add(petjoin)
+            db.session.add(location)
             db.session.commit()
-            
+
+            # db.session.refresh(pet)
+            # petjoin = PetsJoin(
+            #     user_id = current_user,
+            #     pet_id = pet.id
+            # )
+            # db.session.add(petjoin)
+            # db.session.commit()
+
+            # db.session.refresh(pet)
+            # db.session.refresh(location)
+            # locationjoin = LocationJoin(
+            #     petid = pet.id,
+            #     locationid=location.id
+            # )
+            # db.session.add(locationjoin)
+            # db.session.commit()
+
             responseObject = {
                 'status': 'success',
                 'message': 'successfully added pet'
