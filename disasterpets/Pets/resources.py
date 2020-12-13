@@ -144,6 +144,7 @@ class UploadImageAPI(Resource):
             file.save(os.path.join(target, filename))
         responseObject = {
                 'status': 'success',
-                'message': 'successfully added photo'
+                'message': 'successfully added photo',
+                'url': "http://localhost:5000/" + filename
         }
         return make_response(jsonify(responseObject)), 200
