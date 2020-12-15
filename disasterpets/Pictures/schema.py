@@ -13,6 +13,7 @@ class PetsImageJoinSchema(ma.Schema):
     class Meta:
         model = PetImageJoin
         include_fk = True
+    pet_id = ma.Function(lambda obj: obj.pet.id)
     pet_name = ma.Function(lambda obj: obj.pet.pet_name)
     primary_breed= ma.Function(lambda obj: obj.pet.pbreed.breed)
     secondary_breed = ma.Function(lambda obj: obj.pet.sbreed.breed)

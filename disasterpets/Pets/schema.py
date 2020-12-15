@@ -34,6 +34,7 @@ class PetsSchema(ma.Schema):
     class Meta:
         model = Pets
         include_fk = True
+    id = ma.Function(lambda obj: obj.id)
     pet_name = ma.Function(lambda obj: obj.pet_name)
     primary_breed= ma.Function(lambda obj: obj.pbreed.breed)
     secondary_breed = ma.Function(lambda obj: obj.sbreed.breed)

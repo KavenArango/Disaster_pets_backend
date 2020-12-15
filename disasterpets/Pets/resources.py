@@ -125,6 +125,33 @@ class AddPetAPI(Resource):
                 }
                 return make_response(jsonify(responseObject)), 404
 
+class PetDetailAPI(Resource):
+    @jwt_required
+    def get(self):
+        this_pet = request.get_json()
+        try:
+            pet_info = Pets.query.all()
+            if pet_info == None:
+                responseObject = {
+                'status': 'error',
+                'message': 'no pet found'
+                }
+                return make_response(jsonify(responseObject)), 500
+            else:
+                responseObject = {
+                'status': 'success',
+                'pet': this_pet,
+                'message': 'successfully added pet'
+                }
+                return make_response(jsonify(responseObject)), 201
+        except Exception as e:
+                print(e)
+                responseObject = {
+                    'status' : 'failed',
+                    'message': 'something went wrong try again'
+                }
+                return make_response(jsonify(responseObject)), 404
+
 
 class UploadImageAPI(Resource):
     @jwt_required
@@ -148,3 +175,5 @@ class UploadImageAPI(Resource):
                 'url': "http://localhost:5000/" + filename
         }
         return make_response(jsonify(responseObject)), 200
+
+
