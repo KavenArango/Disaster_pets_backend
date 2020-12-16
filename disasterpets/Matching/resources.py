@@ -10,7 +10,7 @@ from disasterpets.Pictures.models import PetImageJoin
 from disasterpets.Pictures.schema import PetsImageJoinSchema
 
 class PetMatchAPI(Resource):
-    @jwt_required
+    
     def get(self):
         searchingfor = request.get_json()
         #pets_schema = PetsSchema(many=True)
