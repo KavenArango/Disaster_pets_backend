@@ -10,7 +10,7 @@ class Location(db.Model):
     house_number = db.Column(db.String(20), nullable = True)
     city = db.Column(db.String(50), nullable=False)
     state = db.Column(db.String(20), nullable = False)
-    zipcode = db.Columne(db.String(20), nullable = True)
+    zipcode = db.Column(db.String(20), nullable = True)
 
     def __init__(self, street_name, house_number, city, state, zipcode):
         self.street_name = street_name

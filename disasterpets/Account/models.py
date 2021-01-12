@@ -39,8 +39,6 @@ class User(db.Model):
         self.social = social
         
 
-
-
 class Role(db.Model):
     __tablename__ = 'roles'
 
@@ -62,5 +60,26 @@ class SocialMedia(db.Model):
         self.fb = fb
         self.twitter = twitter
         self.insta = insta
+
+
+class ReporterInfo(db.Model):
+    __tablename__ = "reporter"
+
+    id = db.Column(db.Integer, primary_key =True, autoincrement=True)
+    spottedlocation = db.Column(db.Integer, db.ForeignKey("locationjoin.id"))
+    spottedimage = db.Column(db.Integer, db.ForeignKey("petimage.id"), nullable = True)
+    userid = db.Column(db.Integer, db.ForeignKey('users.id'))
+    notes = db.Column(db.String(100), nullable = True)
+
+class ReporterInfoJoin(db.Model):
+    __tablename__ = "reporterinfojoin"
+
+    id = db.Column(db.Integer, primary_key =True, autoincrement=True)
+    petid = db.Column(db.Integer, db.ForeignKey("pets.id"))
+    reporterid = db.Column(db.Integer, db.ForeignKey('reporter.id'))
+
+    def __init__(self, petid, reporterid):
+        self.petid = petid
+        self.reporterid = reporterid
 
     

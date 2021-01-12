@@ -1,4 +1,4 @@
-from disasterpets import db, bcrypt, jwtmanager
+from disasterpets import db
 from flask import Flask, current_app
 import jwt
 
@@ -27,7 +27,7 @@ class PotentialMatchJoin(db.Model):
 class RejectMatch(db.Model):
     __tablename__ = 'rejectmatch'
 
-    id = db.Column(db.Integer, primary_key = True, Autoincrement=True)
+    id = db.Column(db.Integer, primary_key = True, autoincrement=True)
     petid = db.Column(db.Integer, db.ForeignKey('pets.id'))
     admincheck = db.Column(db.Boolean)
 
@@ -46,9 +46,4 @@ class RejectMatchJoin(db.Model):
         self.petid = petid
         self.rejectid = rejectid
 
-class PetStatus(db.Model):
-    __tablename__ = 'petstatus' 
-
-    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-    
        
