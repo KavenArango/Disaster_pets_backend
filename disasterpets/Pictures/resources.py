@@ -60,4 +60,55 @@ class PetGalleryAPI(Resource):
             return make_response(jsonify(responseObject)), 404
 
 
+class RainbowGalleryAPI(Resource):
+    def get(self):
+        searchingfor = request.get_json()
+        #pets_schema = PetsSchema(many=True)
+        imagejoin_schema = PetsImageJoinSchema(many = True)
+        breeds_schema = BreedSchema(many=True)
+        genders_schema = GenderSchema(many = True)
+        petstat_schema = PetStatusSchema(many =True)
+        animals_schema = AnimalSchema(many=True)
+        altered_schema = AlteredSchema(many=True)
+
+        try:
+            if searchingfor == None:
+                #searchingfor = Pets.query.all()
+                searchingfor = PetImageJoin.query.all()
+                #jresults = pets_schema.dump(searchingfor)
+                jresults = imagejoin_schema.dump(searchingfor)
+                allbreeds = Breeds.query.all()
+                breedresult = breeds_schema.dump(allbreeds)
+                allgenders = Gender.query.all()
+                genderesults = genders_schema.dump(allgenders)
+                allpetstat = PetStatus.query.all()
+                statusresults = petstat_schema.dump(allpetstat)
+                allanimals = Animals.query.all()
+                animalresults = animals_schema.dump(allanimals)
+                altered = AlteredStatus.query.all()
+                alteredresults = altered_schema.dump(altered)
+
+            
+                responseObject = {
+                    'status' : 'success',
+                    'message': 'successfully Pulled!',
+                    'pets': jresults,
+                    'breeds': breedresult,
+                    'genders': genderesults,
+                    'animal': animalresults,
+                    'status': statusresults,
+                    'altered': alteredresults
+                }
+                return make_response(jsonify(responseObject)), 201
+                
+           
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status' : 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+
         
