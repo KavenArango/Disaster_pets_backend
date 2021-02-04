@@ -17,9 +17,7 @@ class User(db.Model):
     date_created = db.Column(db.Date,nullable = False )
     last_logged = db.Column(db.Date, nullable = True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    #reporter = db.Column(db.Boolean)
-    #owner = db.Column(db.Boolean)
-    social = db.Column(db.Integer, db.ForeignKey('socialmedia.id'))
+    social = db.Column(db.Integer, db.ForeignKey('socialmedia.id'), nullable=True)
 
 
     def __init__(self, fname, lname, email, password, phone, phone2, role_id, social):
