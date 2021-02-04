@@ -93,17 +93,18 @@ class ManageUserAPI(Resource):
     @jwt_required
     def get(self):  # taking from client giving to db
         try:
-            if True:
-                user = User.query.all()
+            allUser = User.query.all()
+            if allUser:
+                
                 responseObject = {
                     'status': 'error',
-                    'user': '',
-                    'message': 'post'
+                    'message': 'No users found'
                 }
                 return make_response(jsonify(responseObject)), 500
             else:
                 responseObject = {
                     'status': 'success',
+                    'user': allUser,
                     'message': 'post 2'
                 }
                 return make_response(jsonify(responseObject)), 201
