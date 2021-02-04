@@ -23,15 +23,20 @@ class PetGalleryAPI(Resource):
         try:
             if searchingfor == None:
                 #searchingfor = Pets.query.all()
-                searchingfor = PetImageJoin.query.all()
+                searchingfor = PetImageJoin.query.filter().all()
                 #jresults = pets_schema.dump(searchingfor)
                 jresults = imagejoin_schema.dump(searchingfor)
+
+                pets = []
+                for results in jresults:
+                    if results['pet_status'] == "Living":
+                        pets.append(results)
+
+        
                 allbreeds = Breeds.query.all()
                 breedresult = breeds_schema.dump(allbreeds)
                 allgenders = Gender.query.all()
                 genderesults = genders_schema.dump(allgenders)
-                allpetstat = PetStatus.query.all()
-                statusresults = petstat_schema.dump(allpetstat)
                 allanimals = Animals.query.all()
                 animalresults = animals_schema.dump(allanimals)
                 altered = AlteredStatus.query.all()
@@ -41,11 +46,10 @@ class PetGalleryAPI(Resource):
                 responseObject = {
                     'status' : 'success',
                     'message': 'successfully Pulled!',
-                    'pets': jresults,
+                    'pets': pets,
                     'breeds': breedresult,
                     'genders': genderesults,
                     'animal': animalresults,
-                    'status': statusresults,
                     'altered': alteredresults
                 }
                 return make_response(jsonify(responseObject)), 201
@@ -76,12 +80,15 @@ class RainbowGalleryAPI(Resource):
                 searchingfor = PetImageJoin.query.all()
                 #jresults = pets_schema.dump(searchingfor)
                 jresults = imagejoin_schema.dump(searchingfor)
+                pets = []
+                for results in jresults:
+                    if results['pet_status'] == "Deceased":
+                        pets.append(results)
+
                 allbreeds = Breeds.query.all()
                 breedresult = breeds_schema.dump(allbreeds)
                 allgenders = Gender.query.all()
                 genderesults = genders_schema.dump(allgenders)
-                allpetstat = PetStatus.query.all()
-                statusresults = petstat_schema.dump(allpetstat)
                 allanimals = Animals.query.all()
                 animalresults = animals_schema.dump(allanimals)
                 altered = AlteredStatus.query.all()
@@ -90,11 +97,10 @@ class RainbowGalleryAPI(Resource):
                 responseObject = {
                     'status' : 'success',
                     'message': 'successfully Pulled!',
-                    'pets': jresults,
+                    'pets': pets,
                     'breeds': breedresult,
                     'genders': genderesults,
                     'animal': animalresults,
-                    'status': statusresults,
                     'altered': alteredresults
                 }
                 return make_response(jsonify(responseObject)), 201
