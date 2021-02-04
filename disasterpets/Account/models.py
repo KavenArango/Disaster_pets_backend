@@ -35,6 +35,9 @@ class User(db.Model):
         #self.reporter = reporter
         #self.owner = owner
         self.social = social
+
+
+        
         
 
 class Role(db.Model):

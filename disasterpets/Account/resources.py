@@ -9,7 +9,7 @@ from disasterpets.Pictures.schema import PetsImageJoinSchema
 from disasterpets import bcrypt, db
 import datetime
 from flask_restful import Resource
-import simplejson as json
+
 
 class RegisterAPI(Resource):
     def post(self):
@@ -93,8 +93,9 @@ class LoginAPI(Resource):
 			return make_response(jsonify(responseObject)), 404
 
 class DashboardAPI(Resource):
+    @jwt_required
     def get(self):
-        current_user = request.get_json()
+        current_user = jsonify(user_loggedin)
 
         imagejoin_schema = PetsImageJoinSchema(many = True)
         petsjoin_schema = PetsJoinSchema(many = True)
