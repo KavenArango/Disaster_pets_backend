@@ -20,7 +20,8 @@ class RegisterAPI(Resource):
                     password = new_user.get('password'),
                     phone = new_user.get('phone'),
                     phone2 = new_user.get('phone2'),
-                    role_id = new_user.get('role_id')
+                    role_id = new_user.get('role_id'),
+                    social = new_user.get('social')
                 )
                 db.session.add(user)
                 db.session.commit()

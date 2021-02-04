@@ -17,12 +17,12 @@ class User(db.Model):
     date_created = db.Column(db.Date,nullable = False )
     last_logged = db.Column(db.Date, nullable = True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    reporter = db.Column(db.Boolean)
-    owner = db.Column(db.Boolean)
+    #reporter = db.Column(db.Boolean)
+    #owner = db.Column(db.Boolean)
     social = db.Column(db.Integer, db.ForeignKey('socialmedia.id'))
 
 
-    def __init__(self, fname, lname, email, password, phone, phone2, role_id, reporter, owner, social):
+    def __init__(self, fname, lname, email, password, phone, phone2, role_id, social):
         self.fname = fname
         self.lname = lname
         self.email = email
@@ -34,8 +34,8 @@ class User(db.Model):
         self.date_created = datetime.now()
         self.last_logged = datetime.now()
         self.role_id = role_id
-        self.reporter = reporter
-        self.owner = owner
+        #self.reporter = reporter
+        #self.owner = owner
         self.social = social
         
 
