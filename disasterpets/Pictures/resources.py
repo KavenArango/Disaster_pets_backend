@@ -50,7 +50,6 @@ class PetGalleryAPI(Resource):
                 }
                 return make_response(jsonify(responseObject)), 201
                 
-           
         except Exception as e:
             print(e)
             responseObject = {
@@ -87,8 +86,7 @@ class RainbowGalleryAPI(Resource):
                 animalresults = animals_schema.dump(allanimals)
                 altered = AlteredStatus.query.all()
                 alteredresults = altered_schema.dump(altered)
-
-            
+                
                 responseObject = {
                     'status' : 'success',
                     'message': 'successfully Pulled!',
@@ -100,8 +98,6 @@ class RainbowGalleryAPI(Resource):
                     'altered': alteredresults
                 }
                 return make_response(jsonify(responseObject)), 201
-                
-           
         except Exception as e:
             print(e)
             responseObject = {

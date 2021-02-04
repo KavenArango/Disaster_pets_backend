@@ -5,7 +5,7 @@ petgallerybp = Blueprint('petgallerybp', __name__)
 rainbowgallerybp = Blueprint('rainbowgallerybp', __name__)
 
 petgallery_view = PetGalleryAPI.as_view('petgallery_api')
-rainbowgallery_view = RainbowGalleryAPI('rainbowgallery_api')
+rainbowgallery_view = RainbowGalleryAPI.as_view('rainbowgallery_api')
 
 petgallerybp.add_url_rule(
     '/petgallery',
@@ -15,6 +15,6 @@ petgallerybp.add_url_rule(
 
 rainbowgallerybp.add_url_rule(
     '/rainbowgallery',
-    view_func= petgallery_view,
+    view_func= rainbowgallery_view,
     methods=['GET']
 )
