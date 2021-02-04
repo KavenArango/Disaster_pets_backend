@@ -4,12 +4,13 @@ from disasterpets import db, bcrypt
 from flask.views import MethodView
 import jwt 
 import datetime
-from disasterpets.Account.resources import LoginAPI, RegisterAPI# LogoutAPI
+from disasterpets.Account.resources import LoginAPI, RegisterAPI, ManageUserAPI# LogoutAPI
 
 account = Blueprint('account', __name__)
 
 registration_view = RegisterAPI.as_view('register_api')
 login_view = LoginAPI.as_view('login_api')
+manageruser_view = ManageUserAPI.as_view('manageuser_api')
 # logout_view = LogoutAPI.as_view('logout_api')
 
 account.add_url_rule(
@@ -23,6 +24,14 @@ account.add_url_rule(
     view_func= login_view,
     methods=['POST']
 )
+
+account.add_url_rule(
+    '/manageuser',
+    view_func= manageruser_view,
+    methods=['POST','GET']
+)
+
+
 
 # account.add_url_rule(
 #     '/logout/access',
