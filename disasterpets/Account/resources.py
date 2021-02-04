@@ -2,9 +2,14 @@ from flask_jwt_extended import (create_access_token, create_refresh_token,
 jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
 from flask import Flask, Blueprint, jsonify, request, make_response, current_app
 from disasterpets.Account.models import User
+from disasterpets.Pets.models import PetsJoin
+from disasterpets.Pets.schema import PetsJoinSchema
+from disasterpets.Pictures.models import PetImageJoin
+from disasterpets.Pictures.schema import PetsImageJoinSchema
 from disasterpets import bcrypt, db
 import datetime
 from flask_restful import Resource
+import simplejson as json
 
 class RegisterAPI(Resource):
     def post(self):
@@ -87,17 +92,37 @@ class LoginAPI(Resource):
 			}
 			return make_response(jsonify(responseObject)), 404
 
-# class LogoutAPI(Resource):
-#    @jwt_required
-#    def post(self):
-#         jti = get_raw_jwt()['jti']
-#         try:
-#             revoked_token = RevokedTokenModel(jti = jti)
-#             revoked_token.add()
-#             return {'message': 'Access token has been revoked'}
-#         except Exception as e:
-#             print(e)
-#             return {'message': 'Something went wrong'}, 500
+class DashboardAPI(Resource):
+    def get(self):
+        current_user = request.get_json()
+
+        imagejoin_schema = PetsImageJoinSchema(many = True)
+        petsjoin_schema = PetsJoinSchema(many = True)
+
+        try:
+            gettingpetid = PetsJoin.query.filter(PetsJoin.user_id == current_user['id']).with_entities(PetsJoin.pet_id).all()
+            m_pets = petsjoin_schema.dump(gettingpetid)
 
 
-
+            pets = []
+            for x in m_pets:
+                petinfo = PetImageJoin.query.filter(PetImageJoin.pet_id == x['pet_id']).all()
+                jresults = imagejoin_schema.dump(petinfo)
+                pets.append(jresults)
+        
+            responseObject = {
+                'status' : 'success',
+                'message': 'successfully Pulled!',
+                'user': current_user,
+                'pets': pets
+            }
+            return make_response(jsonify(responseObject)), 201
+                
+           
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status' : 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404

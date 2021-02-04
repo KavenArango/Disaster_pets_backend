@@ -1,6 +1,6 @@
 from marshmallow import Schema, fields, ValidationError, pre_load, post_load, pre_dump
 from disasterpets import ma
-from disasterpets.Pets.models import Breeds, Gender, AlteredStatus, Animals, PetStatus, Pets
+from disasterpets.Pets.models import Breeds, Gender, AlteredStatus, Animals, PetStatus, Pets, PetsJoin
 
 
 
@@ -29,7 +29,12 @@ class PetStatusSchema(ma.Schema):
         model = PetStatus
         fields = ("id", "status")
     
-  
+class PetsJoinSchema(ma.Schema):
+    class Meta:
+        model = PetsJoin
+        fields = ("id", "user_id", "pet_id")
+
+
 class PetsSchema(ma.Schema):
     class Meta:
         model = Pets

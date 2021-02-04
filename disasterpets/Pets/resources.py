@@ -125,12 +125,24 @@ class AddPetAPI(Resource):
                 }
                 return make_response(jsonify(responseObject)), 404
 
+
 class PetDetailAPI(Resource):
-    @jwt_required
     def get(self):
         this_pet = request.get_json()
+
+        pet_schema = PetsSchema(many = True)
+
         try:
-            pet_info = Pets.query.all()
+            pet_info = PetImageJoin.query.filter(this_pet['id'] == PetImageJoin.pet_id).with_entities(PetImageJoin.petimage_id).all()
+
+            images = []
+            for x in pet_info:
+                pet_images = PetImage.query.filter(PetImage.id == x['petimage_id']).with_entities(PetImage.image_url).all()
+                images.append(pet_images)
+
+            pets = Pets.query.filter(this_pet['id'] == Pets.id).query.filter.all()
+            jresults = pet_schema.dump(pets)
+            
             if pet_info == None:
                 responseObject = {
                 'status': 'error',
@@ -140,10 +152,12 @@ class PetDetailAPI(Resource):
             else:
                 responseObject = {
                 'status': 'success',
-                'pet': this_pet,
+                'pet': jresults,
+                'images': images,
                 'message': 'successfully added pet'
                 }
                 return make_response(jsonify(responseObject)), 201
+
         except Exception as e:
                 print(e)
                 responseObject = {
