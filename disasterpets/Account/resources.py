@@ -94,7 +94,6 @@ class LoginAPI(Resource):
 
 class DashboardAPI(Resource):
     def get(self):
-        #flask_login.current_user()
         current_user = request.get_json()
 
         imagejoin_schema = PetsImageJoinSchema(many = True)
