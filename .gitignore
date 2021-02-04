@@ -367,3 +367,4 @@ MigrationBackup/
 .ionide/
 .vscode/settings.json
 settings.json
+.vscode/
