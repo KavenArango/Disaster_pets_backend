@@ -105,20 +105,17 @@ class DashboardAPI(Resource):
             m_pets = petsjoin_schema.dump(gettingpetid)
 
 
-            pet_ids = []
+            pets = []
             for x in m_pets:
                 petinfo = PetImageJoin.query.filter(PetImageJoin.pet_id == x['pet_id']).all()
                 jresults = imagejoin_schema.dump(petinfo)
-                pet_ids.append(jresults)
-
-            
-
+                pets.append(jresults)
         
             responseObject = {
                 'status' : 'success',
                 'message': 'successfully Pulled!',
                 'user': current_user,
-                'pets': pet_ids
+                'pets': pets
             }
             return make_response(jsonify(responseObject)), 201
                 
