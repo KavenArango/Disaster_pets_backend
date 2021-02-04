@@ -10,7 +10,6 @@ from disasterpets.Pictures.models import PetImageJoin
 from disasterpets.Pictures.schema import PetsImageJoinSchema
 
 class PetMatchAPI(Resource):
-    
     def get(self):
         searchingfor = request.get_json()
         #pets_schema = PetsSchema(many=True)
@@ -23,9 +22,7 @@ class PetMatchAPI(Resource):
 
         try:
             if searchingfor == None:
-                #searchingfor = Pets.query.all()
                 searchingfor = PetImageJoin.query.all()
-                #jresults = pets_schema.dump(searchingfor)
                 jresults = imagejoin_schema.dump(searchingfor)
                 allbreeds = Breeds.query.all()
                 breedresult = breeds_schema.dump(allbreeds)

@@ -12,7 +12,6 @@ from disasterpets.Pictures.schema import PetsImageJoinSchema
 class PetGalleryAPI(Resource):
     def get(self):
         searchingfor = request.get_json()
-        #pets_schema = PetsSchema(many=True)
         imagejoin_schema = PetsImageJoinSchema(many = True)
         breeds_schema = BreedSchema(many=True)
         genders_schema = GenderSchema(many = True)
@@ -22,11 +21,9 @@ class PetGalleryAPI(Resource):
 
         try:
             if searchingfor == None:
-                #searchingfor = Pets.query.all()
+                
                 searchingfor = PetImageJoin.query.filter().all()
-                #jresults = pets_schema.dump(searchingfor)
                 jresults = imagejoin_schema.dump(searchingfor)
-
                 pets = []
                 for results in jresults:
                     if results['pet_status'] == "Living":
@@ -35,10 +32,13 @@ class PetGalleryAPI(Resource):
         
                 allbreeds = Breeds.query.all()
                 breedresult = breeds_schema.dump(allbreeds)
+
                 allgenders = Gender.query.all()
                 genderesults = genders_schema.dump(allgenders)
+
                 allanimals = Animals.query.all()
                 animalresults = animals_schema.dump(allanimals)
+
                 altered = AlteredStatus.query.all()
                 alteredresults = altered_schema.dump(altered)
 
@@ -65,8 +65,8 @@ class PetGalleryAPI(Resource):
 
 class RainbowGalleryAPI(Resource):
     def get(self):
+
         searchingfor = request.get_json()
-        #pets_schema = PetsSchema(many=True)
         imagejoin_schema = PetsImageJoinSchema(many = True)
         breeds_schema = BreedSchema(many=True)
         genders_schema = GenderSchema(many = True)
@@ -76,9 +76,8 @@ class RainbowGalleryAPI(Resource):
 
         try:
             if searchingfor == None:
-                #searchingfor = Pets.query.all()
+
                 searchingfor = PetImageJoin.query.all()
-                #jresults = pets_schema.dump(searchingfor)
                 jresults = imagejoin_schema.dump(searchingfor)
                 pets = []
                 for results in jresults:
@@ -87,10 +86,13 @@ class RainbowGalleryAPI(Resource):
 
                 allbreeds = Breeds.query.all()
                 breedresult = breeds_schema.dump(allbreeds)
+
                 allgenders = Gender.query.all()
                 genderesults = genders_schema.dump(allgenders)
+
                 allanimals = Animals.query.all()
                 animalresults = animals_schema.dump(allanimals)
+                
                 altered = AlteredStatus.query.all()
                 alteredresults = altered_schema.dump(altered)
                 
