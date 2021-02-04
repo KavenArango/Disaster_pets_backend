@@ -35,6 +35,9 @@ class User(db.Model):
         #self.reporter = reporter
         #self.owner = owner
         self.social = social
+
+
+        
         
     def encode_auth_token(self, user_id, user_role_id):
         try:

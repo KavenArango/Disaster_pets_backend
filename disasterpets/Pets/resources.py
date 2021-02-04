@@ -127,7 +127,8 @@ class AddPetAPI(Resource):
 
 
 class PetDetailAPI(Resource):
-    def get(self):
+    @jwt_required
+    def get(self, pet_id):
         this_pet = request.get_json()
 
         pet_schema = PetsSchema(many = True)
@@ -137,11 +138,11 @@ class PetDetailAPI(Resource):
 
             images = []
             for x in pet_info:
-                pet_images = PetImage.query.filter(PetImage.id == x['petimage_id']).with_entities(PetImage.image_url).all()
-                images.append(pet_images)
+                pet_image = PetImage.query.filter(PetImage.id == x[0]).with_entities(PetImage.image_url).all()
+                images.append(pet_image)
 
-            pets = Pets.query.filter(this_pet['id'] == Pets.id).query.filter.all()
-            jresults = pet_schema.dump(pets)
+            pet_result = Pets.query.all()
+            jresults = pet_schema.dump(pet_result)
             
             if pet_info == None:
                 responseObject = {
@@ -152,8 +153,8 @@ class PetDetailAPI(Resource):
             else:
                 responseObject = {
                 'status': 'success',
-                'pet': jresults,
                 'images': images,
+                'pet': jresults,
                 'message': 'successfully added pet'
                 }
                 return make_response(jsonify(responseObject)), 201
