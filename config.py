@@ -14,6 +14,7 @@ class Config:
 
     # JWT
     JWT_SECRET_KEY = "for_the_pets_jwt"
+    JWT_DECODE_ALGORITHMS = ['HS512']
 
     # JWT_BLACKLIST_ENABLED = True
     # JWT_BLACKLIST_TOKEN_CHECKS = ['access', 'refresh']

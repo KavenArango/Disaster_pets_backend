@@ -128,7 +128,7 @@ class AddPetAPI(Resource):
 
 class PetDetailAPI(Resource):
     @jwt_required
-    def get(self, pet_id):
+    def get(self):
         this_pet = request.get_json()
 
         pet_schema = PetsSchema(many = True)
