@@ -104,8 +104,7 @@ class DashboardAPI(Resource):
         try:
             gettingpetid = PetsJoin.query.filter(PetsJoin.user_id == current).with_entities(PetsJoin.pet_id).all()
             m_pets = petsjoin_schema.dump(gettingpetid)
-
-
+            
             pets = []
             for x in m_pets:
                 petinfo = PetImageJoin.query.filter(PetImageJoin.pet_id == x['pet_id']).all()
