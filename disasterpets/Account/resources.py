@@ -6,10 +6,10 @@ from disasterpets.Pets.models import PetsJoin
 from disasterpets.Pets.schema import PetsJoinSchema
 from disasterpets.Pictures.models import PetImageJoin
 from disasterpets.Pictures.schema import PetsImageJoinSchema
-from disasterpets import bcrypt, db, jwt
+from disasterpets import bcrypt, db
 import datetime
 from flask_restful import Resource
-
+import json as simplejson
 
 class RegisterAPI(Resource):
     def post(self):
@@ -30,14 +30,15 @@ class RegisterAPI(Resource):
                 )
                 db.session.add(user)
                 db.session.commit()
-
-                access_token = create_access_token(identity = user.id)
+                access_token = user.encode_auth_token(user.id,user.role_id)
+                string_token = access_token.decode("utf-8")
+                #access_token = create_access_token(identity = user.id)
                 refresh_token = create_refresh_token(identity = user.id)
 
                 responseObject = {
                     'status' : 'success',
                     'message': 'successfully registered!',
-                    'access_token': access_token,
+                    'access_token': string_token,
                     'refresh_token': refresh_token
                 }
                 return make_response(jsonify(responseObject)), 201
@@ -62,14 +63,16 @@ class LoginAPI(Resource):
 		user = User.query.filter_by(email = current_user.get('email')).first()
 		if user:
 			if bcrypt.check_password_hash(user.password, current_user.get("password")):
-				access_token = create_access_token(identity = user.id)
+				access_token = user.encode_auth_token(user.id, user.role_id)
+				string_token = access_token.decode("utf-8")
+				#access_token = create_access_token(identity = user.id)
 				refresh_token = create_refresh_token(identity = user.id)
 
 				if access_token:
 					responseObject = {
 						'status' : 'success',
 						'message': 'successfully logged in!',
-						'access_token': access_token,
+						'access_token': string_token,
 						'refresh_token': refresh_token
 					}
 					return make_response(jsonify(responseObject)), 200
@@ -93,18 +96,20 @@ class LoginAPI(Resource):
 			return make_response(jsonify(responseObject)), 404
 
 class DashboardAPI(Resource):
-    @jwt_required
     def get(self):
-        current = get_jwt_identity()
-        
-
+        current = request.headers.get('Authorization')
+        if current:
+            current = current.split(" ")[1]
+        else:
+            current = ''
+        if current:
+            resp = User.decode_auth_token(current)
         imagejoin_schema = PetsImageJoinSchema(many = True)
         petsjoin_schema = PetsJoinSchema(many = True)
 
         try:
-            gettingpetid = PetsJoin.query.filter(PetsJoin.user_id == current).with_entities(PetsJoin.pet_id).all()
+            gettingpetid = PetsJoin.query.filter(PetsJoin.user_id == resp['identity']).with_entities(PetsJoin.pet_id).all()
             m_pets = petsjoin_schema.dump(gettingpetid)
-            
             pets = []
             for x in m_pets:
                 petinfo = PetImageJoin.query.filter(PetImageJoin.pet_id == x['pet_id']).all()
@@ -118,7 +123,6 @@ class DashboardAPI(Resource):
             }
             return make_response(jsonify(responseObject)), 201
                 
-           
         except Exception as e:
             print(e)
             responseObject = {
