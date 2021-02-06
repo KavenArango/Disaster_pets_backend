@@ -13,7 +13,6 @@ from disasterpets.Pets.schema import PetsSchema, BreedSchema, GenderSchema, PetS
 from disasterpets.Pets.models import Pets, PetsJoin, Breeds, Gender, AlteredStatus, PetStatus, Animals
 
 class AddPetAPI(Resource):
-    @jwt_required
     def post(self):
         new_pet = request.get_json()
         current_user = get_jwt_identity()
@@ -87,7 +86,6 @@ class AddPetAPI(Resource):
             }
             return make_response(jsonify(responseObject)), 404
 
-    @jwt_required
     def get(self):
         breeds_schema = BreedSchema(many=True)
         genders_schema = GenderSchema(many = True)
@@ -127,7 +125,6 @@ class AddPetAPI(Resource):
 
 
 class PetDetailAPI(Resource):
-    @jwt_required
     def post(self):
         this_pet = request.get_json()
 
@@ -141,7 +138,7 @@ class PetDetailAPI(Resource):
                 pet_image = PetImage.query.filter(PetImage.id == x[0]).with_entities(PetImage.image_url).all()
                 images.append(pet_image)
 
-            pet_result = Pets.query.all()
+            pet_result = Pets.query.filter(this_pet['id'] == Pets.id).all()
             results = pet_schema.dump(pet_result)
             
             if pet_info == None:
@@ -169,7 +166,6 @@ class PetDetailAPI(Resource):
 
 
 class UploadImageAPI(Resource):
-    @jwt_required
     def post(self):
         target=os.path.join('static/images')
         if not os.path.isdir(target):
