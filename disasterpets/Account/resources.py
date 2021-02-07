@@ -1,8 +1,8 @@
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
 from flask import Flask, Blueprint, json, jsonify, request, make_response, current_app
-from disasterpets.Account.models import User
-from disasterpets.Account.Schema import UserSchema
+from disasterpets.Account.models import User, Role
+from disasterpets.Account.Schema import UserSchema, RoleSchema
 from disasterpets.Pets.models import PetsJoin
 from disasterpets.Pets.schema import PetsJoinSchema
 from disasterpets.Pictures.models import PetImageJoin
@@ -164,6 +164,7 @@ def collectAllUsers():
 
 def collectOneUser(requestedData):
     oneUsers = User.query.filter(requestedData['id'] == User.id)
+    
     userSchema = UserSchema(many = True)
     userresults = userSchema.dump(oneUsers)
     responseObject = {
@@ -172,6 +173,11 @@ def collectOneUser(requestedData):
         'message': 'user has been returned'
         }
     return responseObject
+
+def getrole(oneuser):
+    oneuser.role_id = Role.query.filter(oneuser.role_id == Role.id)
+
+
 
 
 def editUser(requestedData):
@@ -182,6 +188,7 @@ def editUser(requestedData):
     oneUser.phone = requestedData['phone']
     oneUser.phone2 = requestedData['phone2']
     oneUser.role_id = requestedData['role_id']
+    
     # oneUser.social = requestedData['social']
     db.session.commit()
 
