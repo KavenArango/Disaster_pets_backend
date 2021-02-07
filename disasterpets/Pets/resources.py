@@ -1,16 +1,16 @@
 
-from flask_jwt_extended import (create_access_token, create_refresh_token, 
-jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
-from flask import Flask, Blueprint, jsonify, request, make_response, current_app, session, url_for, app
-from disasterpets.Pets.models import Pets, PetsJoin
-from disasterpets import bcrypt, db, jwt
-from flask_restful import Resource
-from werkzeug.utils import secure_filename
 import os
+from flask_restful import Resource
+from disasterpets import bcrypt, db, jwt
+from werkzeug.utils import secure_filename
 from disasterpets.Location.models import Location, LocationJoin
 from disasterpets.Pictures.models import PetImage, PetImageJoin
-from disasterpets.Pets.schema import PetsSchema, BreedSchema, GenderSchema, PetStatusSchema, AnimalSchema, AlteredSchema
 from disasterpets.Pets.models import Pets, PetsJoin, Breeds, Gender, AlteredStatus, PetStatus, Animals
+from flask import Flask, Blueprint, jsonify, request, make_response, current_app, session, url_for, app
+from disasterpets.Pets.schema import PetsSchema, BreedSchema, GenderSchema, PetStatusSchema, AnimalSchema, AlteredSchema
+from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
+# from disasterpets.Pets.models import Pets, PetsJoin
+
 
 class AddPetAPI(Resource):
     def post(self):
@@ -42,7 +42,7 @@ class AddPetAPI(Resource):
             db.session.commit()
 
             petimage = PetImage(
-               image_url = new_pet.get('image_url')
+                image_url = new_pet.get('image_url')
             )
             db.session.add(petimage)
             db.session.commit()
@@ -188,3 +188,58 @@ class UploadImageAPI(Resource):
         return make_response(jsonify(responseObject)), 200
 
 
+
+
+
+
+
+
+def editPet(requestedData):
+    onePet = Pets.query.filter(requestedData['id'] == '1').first()
+    
+    # onePet.fname = requestedData['fname']
+
+    db.session.commit()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class ManagePetAPI(Resource):
+    # @jwt_required
+    def get(self):  # taking from client giving to db
+        try:
+            requestedData = request.get_json()
+            editPet(requestedData)
+            
+            onePet = Pets.query.filter(requestedData['id'] == '1').first()
+            
+            
+            responseObject = {
+                'status': 'success',
+                'message': 'user updated'
+                }
+            
+            return make_response(jsonify(responseObject)), 201
+        
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
