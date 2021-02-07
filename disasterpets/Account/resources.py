@@ -1,12 +1,13 @@
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
-from flask import Flask, Blueprint, jsonify, request, make_response, current_app
+from flask import Flask, Blueprint, json, jsonify, request, make_response, current_app
 from disasterpets.Account.models import User
+from disasterpets.Account.Schema import UserSchema
 from disasterpets.Pets.models import PetsJoin
 from disasterpets.Pets.schema import PetsJoinSchema
 from disasterpets.Pictures.models import PetImageJoin
 from disasterpets.Pictures.schema import PetsImageJoinSchema
-from disasterpets import bcrypt, db
+from disasterpets import bcrypt, db, jwt
 import datetime
 from flask_restful import Resource
 import json as simplejson
@@ -59,41 +60,40 @@ class RegisterAPI(Resource):
 
 class LoginAPI(Resource):
     def post(self):
-		current_user = request.get_json()
-		user = User.query.filter_by(email = current_user.get('email')).first()
-		if user:
-			if bcrypt.check_password_hash(user.password, current_user.get("password")):
-				access_token = user.encode_auth_token(user.id, user.role_id)
-				string_token = access_token.decode("utf-8")
+        current_user = request.get_json()
+        user = User.query.filter_by(email = current_user.get('email')).first()
+        if user:
+            if bcrypt.check_password_hash(user.password, current_user.get("password")):
+                access_token = user.encode_auth_token(user.id, user.role_id)
+                string_token = access_token.decode("utf-8")
 				#access_token = create_access_token(identity = user.id)
-				refresh_token = create_refresh_token(identity = user.id)
-
-				if access_token:
-					responseObject = {
+                refresh_token = create_refresh_token(identity = user.id)
+                if access_token:
+                    responseObject = {
 						'status' : 'success',
 						'message': 'successfully logged in!',
 						'access_token': string_token,
 						'refresh_token': refresh_token
 					}
-					return make_response(jsonify(responseObject)), 200
-				else:
-					responseObject = {
+                    return make_response(jsonify(responseObject)), 200
+                else:
+                    responseObject = {
 						'status' : 'failed',
 						'message': 'something went wrong',
 					}
-					return make_response(jsonify(responseObject)), 200
-			else:
-				responseObject = {
-							'status' : 'failed',
-							'message': 'Email or Password Inncorect'
+                    return make_response(jsonify(responseObject)), 200
+            else:
+                responseObject = {
+                    'status' : 'failed',
+					'message': 'Email or Password Inncorect'
 				}
-				return make_response(jsonify(responseObject)), 500
-		else:
-			responseObject = {
+                return make_response(jsonify(responseObject)), 500
+        else:
+            responseObject = {
 				'status' : 'fail',
 				'message': 'user does not exist'
 			}
-			return make_response(jsonify(responseObject)), 404
+            return make_response(jsonify(responseObject)), 404
 
 class DashboardAPI(Resource):
     @jwt_required
@@ -131,25 +131,84 @@ class DashboardAPI(Resource):
             return make_response(jsonify(responseObject)), 404
 
 
+
+
+
+def collectAllUsers():
+    userSchema = UserSchema(many = True)
+    allUsers = User.query.all()
+    userresults = userSchema.dump(allUsers)
+    responseObject = {
+        'status': 'sucess',
+        'allUsers': userresults,
+        'message': 'all users returned'
+        }
+    return responseObject
+
+
+
+
+def collectAllUsers():
+    userSchema = UserSchema(many = True)
+    allUsers = User.query.all()
+    userresults = userSchema.dump(allUsers)
+    responseObject = {
+        'status': 'sucess',
+        'Users': userresults,
+        'message': 'all users returned'
+        }
+    return responseObject
+
+
+def collectOneUser(requestedData):
+    oneUsers = User.query.filter(requestedData['id'] == User.id)
+    userSchema = UserSchema(many = True)
+    userresults = userSchema.dump(oneUsers)
+    responseObject = {
+        'status': 'sucess',
+        'Users': userresults,
+        'message': 'user has been returned'
+        }
+    return responseObject
+
+
+def editUser(requestedData):
+    oneUser = User.query.filter(requestedData['id'] == User.id)
+    oneUser.fname = "why"
+    db.session.commit()
+    
+    print(oneUser.fname)
+    print("neew")
+    
+    # userSchema = UserSchema(many = True)
+    # userresults = userSchema.dump(oneUser)
+    # return userresults
+
+
+
+
 class ManageUserAPI(Resource):
-    @jwt_required
+    # @jwt_required
     def get(self):  # taking from client giving to db
         try:
-            allUser = User.query.all()
-            if allUser:
-                
+            requestedData = request.get_json()
+            if True:
+                editUser(requestedData)
+                data = collectOneUser(requestedData)
                 responseObject = {
                     'status': 'error',
+                    'change': data,
                     'message': 'No users found'
                 }
                 return make_response(jsonify(responseObject)), 500
+            
             else:
-                responseObject = {
-                    'status': 'success',
-                    'user': allUser,
-                    'message': 'post 2'
-                }
+                # responseObject['email'] = requestedData['email']
+                
+                
+                
                 return make_response(jsonify(responseObject)), 201
+            
         except Exception as e:
             print(e)
             responseObject = {
@@ -160,18 +219,26 @@ class ManageUserAPI(Resource):
 
     def post(self):  # asking from db to client
         try:
-            if True:
+            requestedData = request.get_json()
+            responseObject = {}
+            if requestedData.get('id') == 'null': # giving back all the users
+                
+                found, responseObject = collectAllUsers()
+                
+            
+            elif requestedData  != 'null': # asking for a specific user
+                
+                responseObject = collectOneUser(requestedData)
+                
+            
+            if responseObject['Users'] == []:
                 responseObject = {
                     'status': 'error',
-                    'message': 'Get'
+                    'message': 'No user found'
                 }
                 return make_response(jsonify(responseObject)), 500
-            else:
-                responseObject = {
-                    'status': 'success',
-                    'message': 'Get 2'
-                }
-                return make_response(jsonify(responseObject)), 201
+            
+            return make_response(jsonify(responseObject)), 200
         except Exception as e:
             print(e)
             responseObject = {
@@ -181,15 +248,5 @@ class ManageUserAPI(Resource):
             return make_response(jsonify(responseObject)), 404
 
 
-# class LogoutAPI(Resource):
-#    @jwt_required
-#    def post(self):
-#         jti = get_raw_jwt()['jti']
-#         try:
-#             revoked_token = RevokedTokenModel(jti = jti)
-#             revoked_token.add()
-#             return {'message': 'Access token has been revoked'}
-#         except Exception as e:
-#             print(e)
-#             return {'message': 'Something went wrong'}, 500
+
 
