@@ -13,7 +13,6 @@ from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_r
 
 
 class AddPetAPI(Resource):
-    @jwt_required
     def post(self):
         new_pet = request.get_json()
         current_user = get_jwt_identity()
@@ -87,7 +86,6 @@ class AddPetAPI(Resource):
             }
             return make_response(jsonify(responseObject)), 404
 
-    @jwt_required
     def get(self):
         breeds_schema = BreedSchema(many=True)
         genders_schema = GenderSchema(many = True)
@@ -127,8 +125,7 @@ class AddPetAPI(Resource):
 
 
 class PetDetailAPI(Resource):
-    @jwt_required
-    def get(self, pet_id):
+    def post(self):
         this_pet = request.get_json()
 
         pet_schema = PetsSchema(many = True)
@@ -141,8 +138,8 @@ class PetDetailAPI(Resource):
                 pet_image = PetImage.query.filter(PetImage.id == x[0]).with_entities(PetImage.image_url).all()
                 images.append(pet_image)
 
-            pet_result = Pets.query.all()
-            jresults = pet_schema.dump(pet_result)
+            pet_result = Pets.query.filter(this_pet['id'] == Pets.id).all()
+            results = pet_schema.dump(pet_result)
             
             if pet_info == None:
                 responseObject = {
@@ -154,7 +151,7 @@ class PetDetailAPI(Resource):
                 responseObject = {
                 'status': 'success',
                 'images': images,
-                'pet': jresults,
+                'pets': results,
                 'message': 'successfully added pet'
                 }
                 return make_response(jsonify(responseObject)), 201
@@ -169,7 +166,6 @@ class PetDetailAPI(Resource):
 
 
 class UploadImageAPI(Resource):
-    @jwt_required
     def post(self):
         target=os.path.join('static/images')
         if not os.path.isdir(target):

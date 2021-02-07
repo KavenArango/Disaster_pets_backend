@@ -33,13 +33,14 @@ class RegisterAPI(Resource):
                 db.session.add(user)
                 db.session.commit()
                 access_token = user.encode_auth_token(user.id,user.role_id)
+                string_token = access_token.decode("utf-8")
                 #access_token = create_access_token(identity = user.id)
                 refresh_token = create_refresh_token(identity = user.id)
 
                 responseObject = {
                     'status': 'success',
                     'message': 'successfully registered!',
-                    'access_token': access_token,
+                    'access_token': string_token,
                     'refresh_token': refresh_token
                 }
                 return make_response(jsonify(responseObject)), 201
@@ -96,18 +97,20 @@ class LoginAPI(Resource):
             return make_response(jsonify(responseObject)), 404
 
 class DashboardAPI(Resource):
-    @jwt_required
     def get(self):
-        current_user = jsonify(user_loggedin)
-
+        current = request.headers.get('Authorization')
+        if current:
+            current = current.split(" ")[1]
+        else:
+            current = ''
+        if current:
+            resp = User.decode_auth_token(current)
         imagejoin_schema = PetsImageJoinSchema(many = True)
         petsjoin_schema = PetsJoinSchema(many = True)
 
         try:
-            gettingpetid = PetsJoin.query.filter(PetsJoin.user_id == current_user['id']).with_entities(PetsJoin.pet_id).all()
+            gettingpetid = PetsJoin.query.filter(PetsJoin.user_id == resp['identity']).with_entities(PetsJoin.pet_id).all()
             m_pets = petsjoin_schema.dump(gettingpetid)
-
-
             pets = []
             for x in m_pets:
                 petinfo = PetImageJoin.query.filter(PetImageJoin.pet_id == x['pet_id']).all()
@@ -117,8 +120,7 @@ class DashboardAPI(Resource):
             responseObject = {
                 'status' : 'success',
                 'message': 'successfully Pulled!',
-                'user': current_user,
-                'pets': pets
+                'pets': pets,
             }
             return make_response(jsonify(responseObject)), 201
                 

@@ -44,7 +44,7 @@ class User(db.Model):
             payload = {
                 'exp': datetime.utcnow() + timedelta(days=1),
                 'iat': datetime.utcnow(),
-                'sub': user_id,
+                'identity': user_id,
                 'role': user_role_id
             }
             return jwt.encode(
@@ -59,7 +59,7 @@ class User(db.Model):
     def decode_auth_token(auth_token):
         try:
             payload = jwt.decode(auth_token, current_app.secret_key)
-            return payload['sub']
+            return payload
         except jwt.ExpiredSignatureError:
             return 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:

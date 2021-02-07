@@ -46,7 +46,7 @@ class PetsSchema(ma.Schema):
     gender = ma.Function(lambda obj: obj.sex.gender)
     altered_status = ma.Function(lambda obj: obj.alteredstat.status)
     animal_type = ma.Function(lambda obj: obj.animal.animal)
-    pet_status = ma.Function(lambda obj: obj.pet.pet_status)
+    pet_status = ma.Function(lambda obj: obj.pet_status)
     date_created = ma.Function(lambda obj: obj.date_created)
     trapper_id = ma.Function(lambda obj: obj.trapper_id)
     fields = ('id', 'pet_name', 'primary_breed', 'primary_bid', 'secondary_breed',

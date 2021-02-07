@@ -23,7 +23,7 @@ petbp.add_url_rule(
 petbp.add_url_rule(
     '/petdetails',
     view_func= pet_detail,
-    methods = ['GET']
+    methods = ['POST']
 )
 
 
