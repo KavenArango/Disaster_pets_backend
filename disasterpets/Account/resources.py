@@ -190,7 +190,7 @@ def editUser(requestedData):
 
 class ManageUserAPI(Resource):
     # @jwt_required
-    def get(self):  # taking from client giving to db
+    def patch(self):  # taking from client giving to db
         try:
             requestedData = request.get_json()
             data = collectOneUser(requestedData)

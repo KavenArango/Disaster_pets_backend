@@ -36,7 +36,7 @@ account.add_url_rule(
 account.add_url_rule(
     '/manageuser',
     view_func= manageruser_view,
-    methods=['POST','GET']
+    methods=['PATCH','GET']
 )
 
 # account.add_url_rule(
