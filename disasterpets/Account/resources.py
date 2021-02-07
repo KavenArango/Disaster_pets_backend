@@ -223,7 +223,7 @@ class ManageUserAPI(Resource):
             responseObject = {}
             if requestedData.get('id') == 'null': # giving back all the users
                 
-                found, responseObject = collectAllUsers()
+                responseObject = collectAllUsers()
                 
             
             elif requestedData  != 'null': # asking for a specific user
@@ -232,6 +232,7 @@ class ManageUserAPI(Resource):
                 
             
             if responseObject['Users'] == []:
+                
                 responseObject = {
                     'status': 'error',
                     'message': 'No user found'
