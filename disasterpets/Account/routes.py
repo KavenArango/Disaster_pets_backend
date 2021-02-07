@@ -21,13 +21,28 @@ dashboard_view = DashboardAPI.as_view("dashboard_api")
 manageruser_view = ManageUserAPI.as_view("manageuser_api")
 
 
-account.add_url_rule("/register", view_func=registration_view, methods=["POST"])
-
-account.add_url_rule("/login", view_func=login_view, methods=["POST"])
-
-account.add_url_rule("/dashboard", view_func=dashboard_view, methods=["GET"])
 account.add_url_rule(
-    "/manageuser", view_func=manageruser_view, methods=["PATCH", "POST"]
+    "/register",
+    view_func=registration_view,
+    methods=["POST"]
+    )
+
+account.add_url_rule(
+    "/login", 
+    view_func=login_view, 
+    methods=["POST"]
+    )
+
+account.add_url_rule(
+    "/dashboard", 
+    view_func=dashboard_view, 
+    methods=["GET"]
+    )
+
+account.add_url_rule(
+    "/manageuser", 
+    view_func=manageruser_view, 
+    methods=["PATCH", "POST"]
 )
 
 # account.add_url_rule(
