@@ -173,16 +173,15 @@ def collectOneUser(requestedData):
 
 
 def editUser(requestedData):
-    oneUser = User.query.filter(requestedData['id'] == User.id)
-    oneUser.fname = "why"
+    oneUser = User.query.filter(requestedData['id'] == User.id).first()
+    oneUser.fname = requestedData['fname']
+    oneUser.lname = requestedData['lname']
+    oneUser.email = requestedData['email']
+    oneUser.phone = requestedData['phone']
+    oneUser.phone2 = requestedData['phone2']
+    oneUser.role_id = requestedData['role_id']
+    # oneUser.social = requestedData['social']
     db.session.commit()
-    
-    print(oneUser.fname)
-    print("neew")
-    
-    # userSchema = UserSchema(many = True)
-    # userresults = userSchema.dump(oneUser)
-    # return userresults
 
 
 
@@ -192,20 +191,21 @@ class ManageUserAPI(Resource):
     def get(self):  # taking from client giving to db
         try:
             requestedData = request.get_json()
-            if True:
-                editUser(requestedData)
-                data = collectOneUser(requestedData)
+            data = collectOneUser(requestedData)
+            if data == []:
                 responseObject = {
                     'status': 'error',
-                    'change': data,
                     'message': 'No users found'
-                }
+                    }
                 return make_response(jsonify(responseObject)), 500
             
             else:
-                # responseObject['email'] = requestedData['email']
                 
-                
+                editUser(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'user updated'
+                    }
                 
                 return make_response(jsonify(responseObject)), 201
             
