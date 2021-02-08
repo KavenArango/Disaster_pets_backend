@@ -13,6 +13,14 @@ from disasterpets.Pets.models import (
     PetStatus,
     Animals,
 )
+from disasterpets.Pets.schema import (
+    PetsSchema,
+    BreedSchema,
+    GenderSchema,
+    PetStatusSchema,
+    AnimalSchema,
+    AlteredSchema,
+)
 from flask import (
     Flask,
     Blueprint,
@@ -23,14 +31,6 @@ from flask import (
     session,
     url_for,
     app,
-)
-from disasterpets.Pets.schema import (
-    PetsSchema,
-    BreedSchema,
-    GenderSchema,
-    PetStatusSchema,
-    AnimalSchema,
-    AlteredSchema,
 )
 from flask_jwt_extended import (
     create_access_token,
@@ -231,19 +231,627 @@ class ManagePetAPI(Resource):
     def get(self):  # taking from client giving to db
         try:
             requestedData = request.get_json()
-            editPet(requestedData)
-
-            responseObject = {
-                "status": "success", 
-                "message": "Pet updated"
-                }
-
-            return make_response(jsonify(responseObject)), 201
-
+            
+            if bool(PetsJoin.query.filter_by(id=requestedData['id']).first()):
+                editPet(requestedData)
+                responseObject = {
+                    "status": "success", 
+                    "message": "Pet updated"
+                    }
+                return make_response(jsonify(responseObject)), 201
+            else:
+                responseObject = {
+                    "status": "error", 
+                    "message": "Pet not found"
+                    }
+                return make_response(jsonify(responseObject)), 500
         except Exception as e:
             print(e)
             responseObject = {
                 "status": "failed",
                 "message": "something went wrong try again",
+            }
+            return make_response(jsonify(responseObject)), 404
+
+
+
+
+def editAlturedStat(requestedData):
+    oneEntry = AlteredStatus.query.filter(requestedData['id'] == AlteredStatus.id).first()
+    oneEntry.role_name = requestedData['status']
+    db.session.commit()
+
+
+
+def addAlturedStat(requestedData):
+    newEntery = AlteredStatus(status = requestedData['status'])
+    db.session.add(newEntery)
+    db.session.commit()
+
+
+
+def collectOneAlturedStat(requestedData):
+    oneAlturedStat = AlteredStatus.query.filter(requestedData['id'] == AlteredStatus.id)
+    alturedStatSchema = AlteredSchema(many = True)
+    Results = alturedStatSchema.dump(oneAlturedStat)
+    
+    return Results
+
+
+
+def collectAllAlturedStat():
+    
+    alturedStatSchema = AlteredSchema(many = True)
+    allAlturedStat = AlteredStatus.query.all()
+    alturedStatResults = alturedStatSchema.dump(allAlturedStat)
+    return alturedStatResults
+
+
+
+# Patch: EDIT ROLE
+# POST: ONE ROLE, NEW
+# GET: ALL
+
+
+class ManageAlteredStatAPI(Resource):
+    # @jwt_required
+    def patch(self):
+        try:
+            requestedData = request.get_json()
+            if bool(AlteredStatus.query.filter_by(id=requestedData['id']).first()):
+                
+                editAlturedStat(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Altured Status Updated'
+                    }    
+                return make_response(jsonify(responseObject)), 201
+            
+            else:
+                
+                responseObject = {
+                    'status': 'error',
+                    'message': 'No Altered Status found'
+                    }
+                return make_response(jsonify(responseObject)), 500
+                
+            
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+    def post(self):  # asking from db to client
+        try:
+            requestedData = request.get_json()
+            responseObject = {}
+            
+            if 'status' in requestedData: # adding role
+                
+                addAlturedStat(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'New Altered Status Has been Added'
+                }
+                
+            else: # giving back one the roles
+                
+                responseObject = {
+                    'status': 'success',
+                    'Roles': collectOneAlturedStat(requestedData),
+                    'message': 'All Roles Have Been Returned'
+                }
+                
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+    
+    def get(self):
+        
+        try:
+            responseObject = {
+                    'status': 'success',
+                    'Roles': collectAllAlturedStat(),
+                    'message': 'All Altered Statuses Have Been Returned'
+                }
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+
+
+def editAnimalType(requestedData):
+    oneEntry = Animals.query.filter(requestedData['id'] == Animals.id).first()
+    oneEntry.animal = requestedData['animal']
+    db.session.commit()
+
+
+
+def addAnimalType(requestedData):
+    newEntery = Animals(animal = requestedData['animal'])
+    db.session.add(newEntery)
+    db.session.commit()
+
+
+
+def collectOneAnimalType(requestedData):
+    oneAnimalType = Animals.query.filter(requestedData['id'] == Animals.id)
+    animalSchema = AnimalSchema(many = True)
+    Results = animalSchema.dump(oneAnimalType)
+    
+    return Results
+
+
+
+def collectAllAnimalType():
+    
+    animalSchema = AnimalSchema(many = True)
+    allAnimalType = Animals.query.all()
+    Results = animalSchema.dump(allAnimalType)
+    return Results
+
+
+
+# Patch: EDIT ROLE
+# POST: ONE ROLE, NEW
+# GET: ALL
+
+
+class ManageAnimalTypeAPI(Resource):
+    # @jwt_required
+    def patch(self):
+        try:
+            requestedData = request.get_json()
+            if bool(Animals.query.filter_by(id=requestedData['id']).first()):
+                editAnimalType(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Animal Type Updated'
+                    }
+                return make_response(jsonify(responseObject)), 201
+            
+            else:
+                
+                responseObject = {
+                    'status': 'error',
+                    'message': 'No Animal Type found'
+                    }
+                return make_response(jsonify(responseObject)), 500
+            
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+    def post(self):  # asking from db to client
+        try:
+            requestedData = request.get_json()
+            responseObject = {}
+            
+            if 'animal' in requestedData: # adding role
+                
+                addAnimalType(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'New Animal Type Has been Added'
+                }
+                
+            else: # giving back one the roles
+                
+                responseObject = {
+                    'status': 'success',
+                    'Animal Types': collectOneAnimalType(requestedData),
+                    'message': 'All Animal Types Have Been Returned'
+                }
+                
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+    
+    def get(self):
+        try:
+            responseObject = {
+                    'status': 'success',
+                    'Roles': collectAllAnimalType(),
+                    'message': 'All Animal Types Have Been Returned'
+                }
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+
+
+
+
+
+
+
+
+
+
+
+def editBreed(requestedData):
+    oneEntry = Breeds.query.filter(requestedData['id'] == Breeds.id).first()
+    oneEntry.breed = requestedData['breed']
+    db.session.commit()
+
+
+
+def addBreed(requestedData):
+    newEntery = Breeds(breed = requestedData['breed'])
+    db.session.add(newEntery)
+    db.session.commit()
+
+
+
+def collectOneBreed(requestedData):
+    oneBreed = Breeds.query.filter(requestedData['id'] == Breeds.id)
+    breedSchema = BreedSchema(many = True)
+    Results = breedSchema.dump(oneBreed)
+    
+    return Results
+
+
+
+def collectAllBreeds():
+    
+    breedSchema = BreedSchema(many = True)
+    allBreeds = Breeds.query.all()
+    Results = breedSchema.dump(allBreeds)
+    return Results
+
+
+
+# Patch: EDIT ROLE
+# POST: ONE ROLE, NEW
+# GET: ALL
+
+
+class ManageBreedsAPI(Resource):
+    # @jwt_required
+    def patch(self):
+        try:
+            requestedData = request.get_json()
+            if bool(Breeds.query.filter_by(id=requestedData['id']).first()):
+                editBreed(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Breed Updated'
+                    }
+                return make_response(jsonify(responseObject)), 201
+            
+            else:
+                
+                responseObject = {
+                    'status': 'error',
+                    'message': 'No Breed found'
+                    }
+                return make_response(jsonify(responseObject)), 500
+            
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+    def post(self):  # asking from db to client
+        try:
+            requestedData = request.get_json()
+            responseObject = {}
+            
+            if 'animal' in requestedData: # adding role
+                
+                addBreed(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'New Breed Has been Added'
+                }
+                
+            else: # giving back one the roles
+                
+                responseObject = {
+                    'status': 'success',
+                    'Animal Types': collectOneBreed(requestedData),
+                    'message': 'Breed Has Been Returned'
+                }
+                
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+    
+    def get(self):
+        try:
+            responseObject = {
+                    'status': 'success',
+                    'Roles': collectAllBreeds(),
+                    'message': 'All Breeds Have Been Returned'
+                }
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+
+
+
+
+
+
+
+
+
+
+def editGender(requestedData):
+    oneEntry = Gender.query.filter(requestedData['id'] == Gender.id).first()
+    oneEntry.gender = requestedData['gender']
+    db.session.commit()
+
+
+
+def addGender(requestedData):
+    newEntery = Gender(gender = requestedData['gender'])
+    db.session.add(newEntery)
+    db.session.commit()
+
+
+
+def collectOneGender(requestedData):
+    oneGender = Gender.query.filter(requestedData['id'] == Gender.id)
+    genderSchema = GenderSchema(many = True)
+    Results = genderSchema.dump(oneGender)
+    
+    return Results
+
+
+
+def collectAllGender():
+    
+    genderSchema = GenderSchema(many = True)
+    allGender = Gender.query.all()
+    Results = genderSchema.dump(allGender)
+    return Results
+
+
+
+# Patch: EDIT ROLE
+# POST: ONE ROLE, NEW
+# GET: ALL
+
+
+class ManageGenderAPI(Resource):
+    # @jwt_required
+    def patch(self):
+        try:
+            requestedData = request.get_json()
+            if bool(Gender.query.filter_by(id=requestedData['id']).first()):
+                editGender(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Gender Updated'
+                    }
+                return make_response(jsonify(responseObject)), 201
+            
+            else:
+                
+                responseObject = {
+                    'status': 'error',
+                    'message': 'No Gender found'
+                    }
+                return make_response(jsonify(responseObject)), 500
+            
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+    def post(self):  # asking from db to client
+        try:
+            requestedData = request.get_json()
+            responseObject = {}
+            
+            if 'gender' in requestedData: # adding role
+                
+                addGender(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'New Gender Has been Added'
+                }
+                
+            else: # giving back one the roles
+                
+                responseObject = {
+                    'status': 'success',
+                    'Animal Types': collectOneGender(requestedData),
+                    'message': 'Gender Has Been Returned'
+                }
+                
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+    
+    def get(self):
+        try:
+            responseObject = {
+                    'status': 'success',
+                    'Roles': collectAllGender(),
+                    'message': 'All Genders Have Been Returned'
+                }
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def editPetStatus(requestedData):
+    oneEntry = PetStatus.query.filter(requestedData['id'] == PetStatus.id).first()
+    oneEntry.status = requestedData['status']
+    db.session.commit()
+
+
+
+def addPetStatus(requestedData):
+    newEntery = PetStatus(status = requestedData['status'])
+    db.session.add(newEntery)
+    db.session.commit()
+
+
+
+def collectOnePetStatus(requestedData):
+    onePetStatus = PetStatus.query.filter(requestedData['id'] == PetStatus.id)
+    petStatusSchema = PetStatusSchema(many = True)
+    Results = petStatusSchema.dump(onePetStatus)
+    
+    return Results
+
+
+
+def collectAllPetStatus():
+    
+    petStatusSchema = PetStatusSchema(many = True)
+    allPetStatus = PetStatus.query.all()
+    Results = petStatusSchema.dump(allPetStatus)
+    return Results
+
+
+
+# Patch: EDIT ROLE
+# POST: ONE ROLE, NEW
+# GET: ALL
+
+
+class ManagePetStatusAPI(Resource):
+    # @jwt_required
+    def patch(self):
+        try:
+            requestedData = request.get_json()
+            if bool(PetStatus.query.filter_by(id=requestedData['id']).first()):
+                editPetStatus(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Pet Status Updated'
+                    }
+                return make_response(jsonify(responseObject)), 201
+            
+            else:
+                
+                responseObject = {
+                    'status': 'error',
+                    'message': 'No Pet Status found'
+                    }
+                return make_response(jsonify(responseObject)), 500
+            
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+    def post(self):  # asking from db to client
+        try:
+            requestedData = request.get_json()
+            responseObject = {}
+            
+            if 'status' in requestedData: # adding role
+                
+                addPetStatus(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'New Pet Status Has been Added'
+                }
+                
+            else: # giving back one the roles
+                
+                responseObject = {
+                    'status': 'success',
+                    'Animal Types': collectOnePetStatus(requestedData),
+                    'message': 'Pet Status Has Been Returned'
+                }
+                
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+    
+    def get(self):
+        try:
+            responseObject = {
+                    'status': 'success',
+                    'Roles': collectAllPetStatus(),
+                    'message': 'All Pet Status Have Been Returned'
+                }
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
             }
             return make_response(jsonify(responseObject)), 404

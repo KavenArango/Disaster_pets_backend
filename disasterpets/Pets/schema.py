@@ -17,10 +17,12 @@ class GenderSchema(ma.Schema):
 
 class AlteredSchema(ma.Schema):
     class Meta:
+        model = AlteredStatus
         fields = ('id', 'status')
 
 class AnimalSchema(ma.Schema):
     class Meta:
+        model = Animals
         fields = ('id', 'animal')
 
 

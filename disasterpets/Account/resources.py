@@ -148,8 +148,6 @@ def collectAllUsers():
     return responseObject
 
 
-
-
 def collectAllUsers():
     userSchema = UserSchema(many = True)
     allUsers = User.query.all()
@@ -165,16 +163,12 @@ def collectOneUser(requestedData):
     return userresults
 
 
-
-
-def getAllRole():
+def collectAllRoles():
     
     roleSchema = RoleSchema(many = True)
     allRole = Role.query.all()
     roleRresults = roleSchema.dump(allRole)
     return roleRresults
-
-
 
 
 def editUser(requestedData):
@@ -190,8 +184,6 @@ def editUser(requestedData):
     db.session.commit()
 
 
-
-
 class ManageUserAPI(Resource):
     # @jwt_required
     def patch(self):  # taking from client giving to db
@@ -199,21 +191,21 @@ class ManageUserAPI(Resource):
             requestedData = request.get_json()
             
             if bool(User.query.filter_by(id=requestedData['id']).first()):
-                responseObject = {
-                    'status': 'error',
-                    'message': 'No users found'
-                    }
-                return make_response(jsonify(responseObject)), 500
-            
-            else:
                 
                 editUser(requestedData)
                 responseObject = {
                     'status': 'success',
                     'message': 'user updated'
                     }
-                
                 return make_response(jsonify(responseObject)), 201
+            
+            else:
+                
+                responseObject = {
+                    'status': 'error',
+                    'message': 'No users found'
+                    }
+                return make_response(jsonify(responseObject)), 500
             
         except Exception as e:
             print(e)
@@ -232,7 +224,7 @@ class ManageUserAPI(Resource):
                 responseObject = {
                     'status': 'sucess',
                     'Users': collectAllUsers(),
-                    'Roles' : getAllRole(),
+                    'Roles' : collectAllRoles(),
                     'message': 'all users returned'
                     }
             
@@ -240,7 +232,7 @@ class ManageUserAPI(Resource):
                 responseObject = {
                     'status': 'sucess',
                     'Users': collectOneUser(requestedData),
-                    'Roles' : getAllRole(),
+                    'Roles' : collectAllRoles(),
                     'message': 'single user has been returned'
                     }
             
@@ -268,28 +260,49 @@ class ManageUserAPI(Resource):
 # GET: ALL
 
 
+def editRole(requestedData):
+    oneRole = Role.query.filter(requestedData['id'] == User.id).first()
+    oneRole.role_name = requestedData['role_name']
+    db.session.commit()
+
+
+
+def addRole(requestedData):
+    newrole = Role(
+        role_name = requestedData['role_name']
+    )
+    db.session.add(newrole)
+    db.session.commit()
+
+def collectOneRole(requestedData):
+    oneRole = Role.query.filter(requestedData['id'] == Role.id)
+    roleSchema = RoleSchema(many = True)
+    roleResults = roleSchema.dump(oneRole)
+    
+    return roleResults
+
 
 class ManageRoleAPI(Resource):
     # @jwt_required
-    def patch(self):  # taking from client giving to db
+    def patch(self):
         try:
             requestedData = request.get_json()
             if bool(Role.query.filter_by(id=requestedData['id']).first()):
-                responseObject = {
-                    'status': 'error',
-                    'message': 'No users found'
-                    }
-                return make_response(jsonify(responseObject)), 500
             
-            else:
-                
-                editUser(requestedData)
+                editRole(requestedData)
                 responseObject = {
                     'status': 'success',
-                    'message': 'user updated'
-                    }
-                
+                    'message': 'Role updated'
+                    }        
                 return make_response(jsonify(responseObject)), 201
+            
+            else:
+            
+                responseObject = {
+                    'status': 'error',
+                    'message': 'No Role found'
+                    }
+                return make_response(jsonify(responseObject)), 500
             
         except Exception as e:
             print(e)
@@ -303,24 +316,40 @@ class ManageRoleAPI(Resource):
         try:
             requestedData = request.get_json()
             responseObject = {}
-            if requestedData.get('id') == 'null': # giving back all the users
-                
-                responseObject = getAllRole()
-                
             
-            elif requestedData  != 'null': # asking for a specific user
+            if 'role_name' in requestedData: # adding role
                 
-                responseObject = collectOneUser(requestedData)
+                addRole(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'New Role Has been Added'
+                }
                 
-            
-            if responseObject['Users'] == []:
+            else: # giving back one the roles
                 
                 responseObject = {
-                    'status': 'error',
-                    'message': 'No user found'
+                    'status': 'success',
+                    'Roles': collectOneRole(requestedData),
+                    'message': 'All Roles Have Been Returned'
                 }
-                return make_response(jsonify(responseObject)), 500
-            
+                
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+    
+    def get(self):
+        
+        try:
+            responseObject = {
+                    'status': 'success',
+                    'Roles': collectAllRoles(),
+                    'message': 'All Roles Have Been Returned'
+                }
             return make_response(jsonify(responseObject)), 200
         except Exception as e:
             print(e)
