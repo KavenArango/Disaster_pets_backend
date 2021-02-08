@@ -154,28 +154,15 @@ def collectAllUsers():
     userSchema = UserSchema(many = True)
     allUsers = User.query.all()
     userresults = userSchema.dump(allUsers)
-    responseObject = {
-        'status': 'sucess',
-        'Users': userresults,
-        'Roles' : getAllRole(),
-        'message': 'all users returned'
-        }
-    return responseObject
+    return userresults
 
 
 def collectOneUser(requestedData):
     oneUsers = User.query.filter(requestedData['id'] == User.id)
-    
     userSchema = UserSchema(many = True)
     userresults = userSchema.dump(oneUsers)
     
-    
-    responseObject = {
-        'status': 'sucess',
-        'Users': userresults,
-        'message': 'user has been returned'
-        }
-    return responseObject
+    return userresults
 
 
 
@@ -210,8 +197,85 @@ class ManageUserAPI(Resource):
     def patch(self):  # taking from client giving to db
         try:
             requestedData = request.get_json()
-            data = collectOneUser(requestedData)
-            if data == []:
+            
+            if bool(User.query.filter_by(id=requestedData['id']).first()):
+                responseObject = {
+                    'status': 'error',
+                    'message': 'No users found'
+                    }
+                return make_response(jsonify(responseObject)), 500
+            
+            else:
+                
+                editUser(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'user updated'
+                    }
+                
+                return make_response(jsonify(responseObject)), 201
+            
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+    def post(self):  # asking from db to client
+        try:
+            requestedData = request.get_json()
+            responseObject = {}
+            if 'id' not in requestedData: # giving back all the users
+                
+                responseObject = {
+                    'status': 'sucess',
+                    'Users': collectAllUsers(),
+                    'Roles' : getAllRole(),
+                    'message': 'all users returned'
+                    }
+            
+            else: # asking for a specific user
+                responseObject = {
+                    'status': 'sucess',
+                    'Users': collectOneUser(requestedData),
+                    'message': 'single user has been returned'
+                    }
+            
+            if responseObject['Users'] == []:
+                
+                responseObject = {
+                    'status': 'error',
+                    'message': 'No user found'
+                }
+                return make_response(jsonify(responseObject)), 500
+            
+            
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+
+# Patch: EDIT ROLE
+# POST: GET ALL ROLES OR ONE ROLE
+# GET: ?????
+
+
+
+
+class ManageRoleAPI(Resource):
+    # @jwt_required
+    def patch(self):  # taking from client giving to db
+        try:
+            requestedData = request.get_json()
+            data = collectOneRole(requestedData)
+            if bool(Role.query.filter_by(id=requestedData['id']).first()):
                 responseObject = {
                     'status': 'error',
                     'message': 'No users found'
@@ -242,7 +306,7 @@ class ManageUserAPI(Resource):
             responseObject = {}
             if requestedData.get('id') == 'null': # giving back all the users
                 
-                responseObject = collectAllUsers()
+                responseObject = getAllRole()
                 
             
             elif requestedData  != 'null': # asking for a specific user
@@ -266,7 +330,3 @@ class ManageUserAPI(Resource):
                 'message': 'something went wrong try again'
             }
             return make_response(jsonify(responseObject)), 404
-
-
-
-
