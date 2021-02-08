@@ -20,6 +20,7 @@ from disasterpets.Pets.schema import (
     PetStatusSchema,
     AnimalSchema,
     AlteredSchema,
+    PetsIDSchema
 )
 from flask import (
     Flask,
@@ -209,8 +210,6 @@ class UploadImageAPI(Resource):
 
 
 
-
-
 def editPet(requestedData):
     onePet = Pets.query.filter(requestedData['id'] == Pets.id).first()
     
@@ -226,6 +225,16 @@ def editPet(requestedData):
     db.session.commit()
 
 
+
+def collectOnePet(requestedData):
+    onePet = Pets.query.filter(requestedData['id'] == Pets.id)
+    petsIDSchema = PetsIDSchema(many = True)
+    Results = petsIDSchema.dump(onePet)
+    
+    return Results
+
+
+
 class ManagePetAPI(Resource):
     # @jwt_required
     def patch(self):  # taking from client giving to db
@@ -237,6 +246,30 @@ class ManagePetAPI(Resource):
                 responseObject = {
                     "status": "success", 
                     "message": "Pet updated"
+                    }
+                return make_response(jsonify(responseObject)), 201
+            else:
+                responseObject = {
+                    "status": "error", 
+                    "message": "Pet not found"
+                    }
+                return make_response(jsonify(responseObject)), 500
+        except Exception as e:
+            print(e)
+            responseObject = {
+                "status": "failed",
+                "message": "something went wrong try again",
+            }
+            return make_response(jsonify(responseObject)), 404
+    def post(sefl):
+        try:
+            requestedData = request.get_json()
+            if bool(Pets.query.filter_by(id=requestedData['id']).first()):
+                
+                responseObject = {
+                    "status": "success",
+                    "Pet": collectOnePet(requestedData),
+                    "message": "Pet Returned"
                     }
                 return make_response(jsonify(responseObject)), 201
             else:
