@@ -496,34 +496,34 @@ class ManageAnimalTypeAPI(Resource):
 
 
 
-def editAnimalType(requestedData):
-    oneEntry = Animals.query.filter(requestedData['id'] == Animals.id).first()
-    oneEntry.animal = requestedData['animal']
+def editBreed(requestedData):
+    oneEntry = Breeds.query.filter(requestedData['id'] == Breeds.id).first()
+    oneEntry.breed = requestedData['breed']
     db.session.commit()
 
 
 
-def addAnimalType(requestedData):
-    newEntery = Animals(status = requestedData['animal'])
+def addBreed(requestedData):
+    newEntery = Breeds(status = requestedData['breed'])
     db.session.add(newEntery)
     db.session.commit()
 
 
 
-def collectOneAnimalType(requestedData):
-    oneAnimalType = Animals.query.filter(requestedData['id'] == Animals.id)
-    animalSchema = AnimalSchema(many = True)
-    Results = animalSchema.dump(oneAnimalType)
+def collectOneBreed(requestedData):
+    oneBreed = Breeds.query.filter(requestedData['id'] == Breeds.id)
+    breedSchema = BreedSchema(many = True)
+    Results = breedSchema.dump(oneBreed)
     
     return Results
 
 
 
-def collectAllAnimalType():
+def collectAllBreeds():
     
-    animalSchema = AnimalSchema(many = True)
-    allAnimalType = Animals.query.all()
-    Results = animalSchema.dump(allAnimalType)
+    breedSchema = BreedSchema(many = True)
+    allBreeds = Breeds.query.all()
+    Results = breedSchema.dump(allBreeds)
     return Results
 
 
@@ -533,16 +533,16 @@ def collectAllAnimalType():
 # GET: ALL
 
 
-class ManageAnimalTypeAPI(Resource):
+class ManageBreedsAPI(Resource):
     # @jwt_required
     def patch(self):
         try:
             requestedData = request.get_json()
-            if bool(Animals.query.filter_by(id=requestedData['id']).first()):
-                editAnimalType(requestedData)
+            if bool(Breeds.query.filter_by(id=requestedData['id']).first()):
+                editBreed(requestedData)
                 responseObject = {
                     'status': 'success',
-                    'message': 'Animal Type Updated'
+                    'message': 'Breed Updated'
                     }
                 return make_response(jsonify(responseObject)), 201
             
@@ -550,7 +550,7 @@ class ManageAnimalTypeAPI(Resource):
                 
                 responseObject = {
                     'status': 'error',
-                    'message': 'No Animal Type found'
+                    'message': 'No Breed found'
                     }
                 return make_response(jsonify(responseObject)), 500
             
@@ -569,18 +569,18 @@ class ManageAnimalTypeAPI(Resource):
             
             if 'animal' in requestedData: # adding role
                 
-                addAnimalType(requestedData)
+                addBreed(requestedData)
                 responseObject = {
                     'status': 'success',
-                    'message': 'New Animal Type Has been Added'
+                    'message': 'New Breed Has been Added'
                 }
                 
             else: # giving back one the roles
                 
                 responseObject = {
                     'status': 'success',
-                    'Animal Types': collectOneAnimalType(requestedData),
-                    'message': 'All Animal Types Have Been Returned'
+                    'Animal Types': collectOneBreed(requestedData),
+                    'message': 'Breed Has Been Returned'
                 }
                 
             return make_response(jsonify(responseObject)), 200
@@ -596,8 +596,130 @@ class ManageAnimalTypeAPI(Resource):
         try:
             responseObject = {
                     'status': 'success',
-                    'Roles': collectAllAnimalType(),
-                    'message': 'All Animal Types Have Been Returned'
+                    'Roles': collectAllBreeds(),
+                    'message': 'All Breeds Have Been Returned'
+                }
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+
+
+
+
+
+
+
+
+
+
+def editGender(requestedData):
+    oneEntry = Gender.query.filter(requestedData['id'] == Gender.id).first()
+    oneEntry.gender = requestedData['gender']
+    db.session.commit()
+
+
+
+def addGender(requestedData):
+    newEntery = Gender(status = requestedData['gender'])
+    db.session.add(newEntery)
+    db.session.commit()
+
+
+
+def collectOneGender(requestedData):
+    oneGender = Gender.query.filter(requestedData['id'] == Gender.id)
+    genderSchema = GenderSchema(many = True)
+    Results = genderSchema.dump(oneGender)
+    
+    return Results
+
+
+
+def collectAllGender():
+    
+    genderSchema = GenderSchema(many = True)
+    allGender = Gender.query.all()
+    Results = genderSchema.dump(allGender)
+    return Results
+
+
+
+# Patch: EDIT ROLE
+# POST: ONE ROLE, NEW
+# GET: ALL
+
+
+class ManageBreedsAPI(Resource):
+    # @jwt_required
+    def patch(self):
+        try:
+            requestedData = request.get_json()
+            if bool(Gender.query.filter_by(id=requestedData['id']).first()):
+                editGender(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Gender Updated'
+                    }
+                return make_response(jsonify(responseObject)), 201
+            
+            else:
+                
+                responseObject = {
+                    'status': 'error',
+                    'message': 'No Gender found'
+                    }
+                return make_response(jsonify(responseObject)), 500
+            
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+    def post(self):  # asking from db to client
+        try:
+            requestedData = request.get_json()
+            responseObject = {}
+            
+            if 'gender' in requestedData: # adding role
+                
+                addGender(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'New Gender Has been Added'
+                }
+                
+            else: # giving back one the roles
+                
+                responseObject = {
+                    'status': 'success',
+                    'Animal Types': collectOneGender(requestedData),
+                    'message': 'Gender Has Been Returned'
+                }
+                
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+    
+    def get(self):
+        try:
+            responseObject = {
+                    'status': 'success',
+                    'Roles': collectAllGender(),
+                    'message': 'All Genders Have Been Returned'
                 }
             return make_response(jsonify(responseObject)), 200
         except Exception as e:
