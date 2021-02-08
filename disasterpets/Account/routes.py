@@ -10,6 +10,7 @@ from disasterpets.Account.resources import (
     RegisterAPI,
     ManageUserAPI,
     DashboardAPI,
+    ManageRoleAPI
 )  # LogoutAPI, DashboardAPI
 
 
@@ -19,7 +20,7 @@ registration_view = RegisterAPI.as_view("register_api")
 login_view = LoginAPI.as_view("login_api")
 dashboard_view = DashboardAPI.as_view("dashboard_api")
 manageruser_view = ManageUserAPI.as_view("manageuser_api")
-
+managerole_view = ManageRoleAPI.as_view('managerole_api')
 
 account.add_url_rule(
     "/register",
@@ -43,6 +44,13 @@ account.add_url_rule(
     "/manageuser", 
     view_func=manageruser_view, 
     methods=["PATCH", "POST"]
+)
+
+
+account.add_url_rule(
+    '/managerole',
+    view_func= managerole_view,
+    methods=['POST', 'PATCH', 'GET']
 )
 
 # account.add_url_rule(
