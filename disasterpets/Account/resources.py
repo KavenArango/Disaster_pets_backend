@@ -191,21 +191,21 @@ class ManageUserAPI(Resource):
             requestedData = request.get_json()
             
             if bool(User.query.filter_by(id=requestedData['id']).first()):
-                responseObject = {
-                    'status': 'error',
-                    'message': 'No users found'
-                    }
-                return make_response(jsonify(responseObject)), 500
-            
-            else:
                 
                 editUser(requestedData)
                 responseObject = {
                     'status': 'success',
                     'message': 'user updated'
                     }
-                
                 return make_response(jsonify(responseObject)), 201
+            
+            else:
+                
+                responseObject = {
+                    'status': 'error',
+                    'message': 'No users found'
+                    }
+                return make_response(jsonify(responseObject)), 500
             
         except Exception as e:
             print(e)
@@ -288,21 +288,21 @@ class ManageRoleAPI(Resource):
         try:
             requestedData = request.get_json()
             if bool(Role.query.filter_by(id=requestedData['id']).first()):
+            
+                editRole(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Role updated'
+                    }        
+                return make_response(jsonify(responseObject)), 201
+            
+            else:
+            
                 responseObject = {
                     'status': 'error',
                     'message': 'No Role found'
                     }
                 return make_response(jsonify(responseObject)), 500
-            
-            else:
-                
-                editRole(requestedData)
-                responseObject = {
-                    'status': 'success',
-                    'message': 'Role updated'
-                    }
-                
-                return make_response(jsonify(responseObject)), 201
             
         except Exception as e:
             print(e)

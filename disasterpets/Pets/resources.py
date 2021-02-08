@@ -299,21 +299,22 @@ class ManageAlteredStatAPI(Resource):
         try:
             requestedData = request.get_json()
             if bool(AlteredStatus.query.filter_by(id=requestedData['id']).first()):
-                responseObject = {
-                    'status': 'error',
-                    'message': 'No Altered Status found'
-                    }
-                return make_response(jsonify(responseObject)), 500
-            
-            else:
                 
                 editAlturedStat(requestedData)
                 responseObject = {
                     'status': 'success',
                     'message': 'Altured Status Updated'
-                    }
-                
+                    }    
                 return make_response(jsonify(responseObject)), 201
+            
+            else:
+                
+                responseObject = {
+                    'status': 'error',
+                    'message': 'No Altered Status found'
+                    }
+                return make_response(jsonify(responseObject)), 500
+                
             
         except Exception as e:
             print(e)
@@ -372,6 +373,122 @@ class ManageAlteredStatAPI(Resource):
 
 
 
+def editAnimalType(requestedData):
+    oneEntry = Animals.query.filter(requestedData['id'] == Animals.id).first()
+    oneEntry.animal = requestedData['animal']
+    db.session.commit()
+
+
+
+def addAnimalType(requestedData):
+    newEntery = Animals(status = requestedData['animal'])
+    db.session.add(newEntery)
+    db.session.commit()
+
+
+
+def collectOneAnimalType(requestedData):
+    oneAnimalType = Animals.query.filter(requestedData['id'] == Animals.id)
+    animalSchema = AnimalSchema(many = True)
+    Results = animalSchema.dump(oneAnimalType)
+    
+    return Results
+
+
+
+def collectAllAnimalType():
+    
+    animalSchema = AnimalSchema(many = True)
+    allAnimalType = Animals.query.all()
+    Results = animalSchema.dump(allAnimalType)
+    return Results
+
+
+
+# Patch: EDIT ROLE
+# POST: ONE ROLE, NEW
+# GET: ALL
+
+
+class ManageAnimalTypeAPI(Resource):
+    # @jwt_required
+    def patch(self):
+        try:
+            requestedData = request.get_json()
+            if bool(Animals.query.filter_by(id=requestedData['id']).first()):
+                editAnimalType(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Animal Type Updated'
+                    }
+                return make_response(jsonify(responseObject)), 201
+            
+            else:
+                
+                responseObject = {
+                    'status': 'error',
+                    'message': 'No Animal Type found'
+                    }
+                return make_response(jsonify(responseObject)), 500
+            
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+    def post(self):  # asking from db to client
+        try:
+            requestedData = request.get_json()
+            responseObject = {}
+            
+            if 'animal' in requestedData: # adding role
+                
+                addAnimalType(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'New Animal Type Has been Added'
+                }
+                
+            else: # giving back one the roles
+                
+                responseObject = {
+                    'status': 'success',
+                    'Animal Types': collectOneAnimalType(requestedData),
+                    'message': 'All Animal Types Have Been Returned'
+                }
+                
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+    
+    def get(self):
+        try:
+            responseObject = {
+                    'status': 'success',
+                    'Roles': collectAllAnimalType(),
+                    'message': 'All Animal Types Have Been Returned'
+                }
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+
+
+
+
 
 
 
@@ -422,21 +539,20 @@ class ManageAnimalTypeAPI(Resource):
         try:
             requestedData = request.get_json()
             if bool(Animals.query.filter_by(id=requestedData['id']).first()):
-                responseObject = {
-                    'status': 'error',
-                    'message': 'No Animal Type found'
-                    }
-                return make_response(jsonify(responseObject)), 500
-            
-            else:
-                
                 editAnimalType(requestedData)
                 responseObject = {
                     'status': 'success',
                     'message': 'Animal Type Updated'
                     }
-                
                 return make_response(jsonify(responseObject)), 201
+            
+            else:
+                
+                responseObject = {
+                    'status': 'error',
+                    'message': 'No Animal Type found'
+                    }
+                return make_response(jsonify(responseObject)), 500
             
         except Exception as e:
             print(e)
