@@ -1,12 +1,5 @@
 from flask import Flask, Blueprint
-from disasterpets.Pets.resources import (
-    AddPetAPI,
-    UploadImageAPI,
-    PetDetailAPI,
-    ManagePetAPI,
-    ManageAlteredStatAPI,
-    ManageAnimalTypeAPI
-    )
+from disasterpets.Pets.resources import AddPetAPI, UploadImageAPI, PetDetailAPI, ManagePetAPI, ManageAlteredStatAPI, ManageAnimalTypeAPI
 
 petbp = Blueprint('petbp', __name__)
 
