@@ -1,5 +1,5 @@
 from flask import Flask, Blueprint
-from disasterpets.Pets.resources import AddPetAPI, UploadImageAPI, PetDetailAPI, ManagePetAPI
+from disasterpets.Pets.resources import AddPetAPI, UploadImageAPI, PetDetailAPI, ManagePetAPI, ManageAlteredStatAPI, ManageAnimalTypeAPI
 
 petbp = Blueprint('petbp', __name__)
 
@@ -7,6 +7,7 @@ addpet_view = AddPetAPI.as_view('addpet_api')
 upload_image = UploadImageAPI.as_view('uploadimage_api')
 pet_detail = PetDetailAPI.as_view('petdetail_api')
 managepet_view = ManagePetAPI.as_view('managepet_api')
+managealteredstatus_view = ManageAlteredStatAPI.as_view('managealteredstatus_api')
 
 
 
@@ -37,3 +38,8 @@ petbp.add_url_rule(
 
 
 
+petbp.add_url_rule(
+    '/managealteredstatus',
+    view_func= managealteredstatus_view,
+    methods=['POST', 'PATCH', 'GET']
+)
