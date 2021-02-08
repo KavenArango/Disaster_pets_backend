@@ -380,23 +380,23 @@ class ManageAlteredStatAPI(Resource):
 
 
 def editAnimalType(requestedData):
-    oneEntry = Animals.query.filter(requestedData['id'] == AlteredStatus.id).first()
-    oneEntry.role_name = requestedData['status']
+    oneEntry = Animals.query.filter(requestedData['id'] == Animals.id).first()
+    oneEntry.animal = requestedData['animal']
     db.session.commit()
 
 
 
 def addAnimalType(requestedData):
-    newEntery = AlteredStatus(status = requestedData['status'])
+    newEntery = Animals(status = requestedData['animal'])
     db.session.add(newEntery)
     db.session.commit()
 
 
 
 def collectOneAnimalType(requestedData):
-    oneAlturedStat = AlteredStatus.query.filter(requestedData['id'] == AlteredStatus.id)
-    alturedStatSchema = AlteredSchema(many = True)
-    Results = alturedStatSchema.dump(oneAlturedStat)
+    oneAnimalType = Animals.query.filter(requestedData['id'] == Animals.id)
+    animalSchema = AnimalSchema(many = True)
+    Results = animalSchema.dump(oneAnimalType)
     
     return Results
 
@@ -404,10 +404,10 @@ def collectOneAnimalType(requestedData):
 
 def collectAllAnimalType():
     
-    alturedStatSchema = AlteredSchema(many = True)
-    allAlturedStat = AlteredStatus.query.all()
-    alturedStatResults = alturedStatSchema.dump(allAlturedStat)
-    return alturedStatResults
+    animalSchema = AnimalSchema(many = True)
+    allAnimalType = Animals.query.all()
+    Results = animalSchema.dump(allAnimalType)
+    return Results
 
 
 
@@ -421,19 +421,19 @@ class ManageAnimalTypeAPI(Resource):
     def patch(self):
         try:
             requestedData = request.get_json()
-            if bool(AlteredStatus.query.filter_by(id=requestedData['id']).first()):
+            if bool(Animals.query.filter_by(id=requestedData['id']).first()):
                 responseObject = {
                     'status': 'error',
-                    'message': 'No Altered Status found'
+                    'message': 'No Animal Type found'
                     }
                 return make_response(jsonify(responseObject)), 500
             
             else:
                 
-                editAlturedStat(requestedData)
+                editAnimalType(requestedData)
                 responseObject = {
                     'status': 'success',
-                    'message': 'Altured Status Updated'
+                    'message': 'Animal Type Updated'
                     }
                 
                 return make_response(jsonify(responseObject)), 201
@@ -451,20 +451,20 @@ class ManageAnimalTypeAPI(Resource):
             requestedData = request.get_json()
             responseObject = {}
             
-            if 'status' in requestedData: # adding role
+            if 'animal' in requestedData: # adding role
                 
-                addAlturedStat(requestedData)
+                addAnimalType(requestedData)
                 responseObject = {
                     'status': 'success',
-                    'message': 'New Altered Status Has been Added'
+                    'message': 'New Animal Type Has been Added'
                 }
                 
             else: # giving back one the roles
                 
                 responseObject = {
                     'status': 'success',
-                    'Roles': collectOneAlturedStat(requestedData),
-                    'message': 'All Roles Have Been Returned'
+                    'Animal Types': collectOneAnimalType(requestedData),
+                    'message': 'All Animal Types Have Been Returned'
                 }
                 
             return make_response(jsonify(responseObject)), 200
@@ -477,12 +477,11 @@ class ManageAnimalTypeAPI(Resource):
             return make_response(jsonify(responseObject)), 404
     
     def get(self):
-        
         try:
             responseObject = {
                     'status': 'success',
-                    'Roles': collectAllAlturedStat(),
-                    'message': 'All Altered Statuses Have Been Returned'
+                    'Roles': collectAllAnimalType(),
+                    'message': 'All Animal Types Have Been Returned'
                 }
             return make_response(jsonify(responseObject)), 200
         except Exception as e:
