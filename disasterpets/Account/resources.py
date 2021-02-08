@@ -240,6 +240,7 @@ class ManageUserAPI(Resource):
                 responseObject = {
                     'status': 'sucess',
                     'Users': collectOneUser(requestedData),
+                    'Roles' : getAllRole(),
                     'message': 'single user has been returned'
                     }
             
@@ -263,9 +264,8 @@ class ManageUserAPI(Resource):
 
 
 # Patch: EDIT ROLE
-# POST: GET ALL ROLES OR ONE ROLE
-# GET: ?????
-
+# POST: ONE ROLE, NEW
+# GET: ALL
 
 
 
@@ -274,7 +274,6 @@ class ManageRoleAPI(Resource):
     def patch(self):  # taking from client giving to db
         try:
             requestedData = request.get_json()
-            data = collectOneRole(requestedData)
             if bool(Role.query.filter_by(id=requestedData['id']).first()):
                 responseObject = {
                     'status': 'error',
