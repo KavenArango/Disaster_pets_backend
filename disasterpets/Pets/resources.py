@@ -172,7 +172,7 @@ class PetDetailAPI(Resource):
                     "status": "success",
                     "images": images,
                     "pets": results,
-                    "message": "successfully added pet",
+                    "message": "single pet has been returned",
                 }
                 return make_response(jsonify(responseObject)), 201
 
@@ -228,7 +228,7 @@ def editPet(requestedData):
 
 class ManagePetAPI(Resource):
     # @jwt_required
-    def get(self):  # taking from client giving to db
+    def patch(self):  # taking from client giving to db
         try:
             requestedData = request.get_json()
             
