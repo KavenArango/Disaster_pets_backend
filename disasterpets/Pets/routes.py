@@ -1,5 +1,15 @@
 from flask import Flask, Blueprint
-from disasterpets.Pets.resources import AddPetAPI, UploadImageAPI, PetDetailAPI, ManagePetAPI, ManageAlteredStatAPI, ManageAnimalTypeAPI, ManageBreedsAPI
+from disasterpets.Pets.resources import (
+    AddPetAPI,
+    UploadImageAPI,
+    PetDetailAPI,
+    ManagePetAPI,
+    ManageAlteredStatAPI,
+    ManageAnimalTypeAPI,
+    ManageBreedsAPI,
+    ManageGenderAPI,
+    ManagePetStatusAPI
+    )
 
 petbp = Blueprint('petbp', __name__)
 
@@ -10,6 +20,9 @@ managepet_view = ManagePetAPI.as_view('managepet_api')
 managealteredstatus_view = ManageAlteredStatAPI.as_view('managealteredstatus_api')
 manageanimaltype_view = ManageAnimalTypeAPI.as_view('manageanimaltype_api')
 managebreeds_view = ManageBreedsAPI.as_view('managebreeds_api')
+managegender_view = ManageGenderAPI.as_view('managegender_api')
+managepetstatus_view = ManagePetStatusAPI.as_view('managepetstatus_api')
+
 
 
 petbp.add_url_rule(
@@ -50,5 +63,21 @@ petbp.add_url_rule(
 petbp.add_url_rule(
     '/managebreeds',
     view_func= managebreeds_view,
+    methods=['POST', 'PATCH', 'GET']
+)
+
+
+
+petbp.add_url_rule(
+    '/managegender',
+    view_func= managegender_view,
+    methods=['POST', 'PATCH', 'GET']
+)
+
+
+
+petbp.add_url_rule(
+    '/managepetstatus',
+    view_func= managepetstatus_view,
     methods=['POST', 'PATCH', 'GET']
 )
