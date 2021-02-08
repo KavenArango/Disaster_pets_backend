@@ -212,7 +212,7 @@ class UploadImageAPI(Resource):
 
 
 def editPet(requestedData):
-    onePet = PetsJoin.query.filter(requestedData['id'] == Pets.id).first()
+    onePet = Pets.query.filter(requestedData['id'] == Pets.id).first()
     
     onePet.pet_name = requestedData["pet_name"]
     onePet.pet_status = requestedData["pet_status"]
@@ -228,7 +228,7 @@ def editPet(requestedData):
 
 class ManagePetAPI(Resource):
     # @jwt_required
-    def get(self):  # taking from client giving to db
+    def patch(self):  # taking from client giving to db
         try:
             requestedData = request.get_json()
             
