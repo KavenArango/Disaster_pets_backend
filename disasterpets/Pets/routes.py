@@ -9,6 +9,7 @@ pet_detail = PetDetailAPI.as_view('petdetail_api')
 managepet_view = ManagePetAPI.as_view('managepet_api')
 
 
+
 petbp.add_url_rule(
     '/addpet',
     view_func= addpet_view,
@@ -33,3 +34,6 @@ petbp.add_url_rule(
     view_func= managepet_view,
     methods=['POST', 'GET']
 )
+
+
+

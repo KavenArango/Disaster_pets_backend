@@ -231,15 +231,20 @@ class ManagePetAPI(Resource):
     def get(self):  # taking from client giving to db
         try:
             requestedData = request.get_json()
-            editPet(requestedData)
-
-            responseObject = {
-                "status": "success", 
-                "message": "Pet updated"
-                }
-
-            return make_response(jsonify(responseObject)), 201
-
+            
+            if bool(PetsJoin.query.filter_by(id=requestedData['id']).first()):
+                editPet(requestedData)
+                responseObject = {
+                    "status": "success", 
+                    "message": "Pet updated"
+                    }
+                return make_response(jsonify(responseObject)), 201
+            else:
+                responseObject = {
+                    "status": "error", 
+                    "message": "Pet not found"
+                    }
+                return make_response(jsonify(responseObject)), 500
         except Exception as e:
             print(e)
             responseObject = {
@@ -247,3 +252,11 @@ class ManagePetAPI(Resource):
                 "message": "something went wrong try again",
             }
             return make_response(jsonify(responseObject)), 404
+
+
+
+# Patch: EDIT ROLE
+# POST: GET ALL ROLES OR ONE ROLE
+# GET: ?????
+
+
