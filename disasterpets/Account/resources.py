@@ -329,7 +329,7 @@ class ManageRoleAPI(Resource):
                 
                 responseObject = {
                     'status': 'success',
-                    'Roles': collectAllRoles(),
+                    'Roles': collectOneRole(requestedData),
                     'message': 'All Roles Have Been Returned'
                 }
                 
