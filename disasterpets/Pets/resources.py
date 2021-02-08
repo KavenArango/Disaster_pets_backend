@@ -13,6 +13,14 @@ from disasterpets.Pets.models import (
     PetStatus,
     Animals,
 )
+from disasterpets.Pets.schema import (
+    PetsSchema,
+    BreedSchema,
+    GenderSchema,
+    PetStatusSchema,
+    AnimalSchema,
+    AlteredSchema,
+)
 from flask import (
     Flask,
     Blueprint,
@@ -23,14 +31,6 @@ from flask import (
     session,
     url_for,
     app,
-)
-from disasterpets.Pets.schema import (
-    PetsSchema,
-    BreedSchema,
-    GenderSchema,
-    PetStatusSchema,
-    AnimalSchema,
-    AlteredSchema,
 )
 from flask_jwt_extended import (
     create_access_token,
@@ -255,8 +255,117 @@ class ManagePetAPI(Resource):
 
 
 
+
+def editAlturedStat(requestedData):
+    oneEntry = AlteredStatus.query.filter(requestedData['id'] == AlteredStatus.id).first()
+    oneEntry.role_name = requestedData['status']
+    db.session.commit()
+
+
+
+def addAlturedStat(requestedData):
+    newEntery = AlteredStatus(status = requestedData['status'])
+    db.session.add(newEntery)
+    db.session.commit()
+
+
+
+def collectOneAlturedStat(requestedData):
+    oneAlturedStat = AlteredStatus.query.filter(requestedData['id'] == AlteredStatus.id)
+    alturedStatSchema = AlteredSchema(many = True)
+    Results = alturedStatSchema.dump(oneAlturedStat)
+    
+    return Results
+
+
+
+def collectAllAlturedStat():
+    
+    alturedStatSchema = AlteredSchema(many = True)
+    allAlturedStat = AlteredStatus.query.all()
+    alturedStatResults = alturedStatSchema.dump(allAlturedStat)
+    return alturedStatResults
+
+
+
 # Patch: EDIT ROLE
-# POST: GET ALL ROLES OR ONE ROLE
-# GET: ?????
+# POST: ONE ROLE, NEW
+# GET: ALL
 
 
+class ManageAlteredStatAPI(Resource):
+    # @jwt_required
+    def patch(self):
+        try:
+            requestedData = request.get_json()
+            if bool(AlteredStatus.query.filter_by(id=requestedData['id']).first()):
+                responseObject = {
+                    'status': 'error',
+                    'message': 'No Altered Status found'
+                    }
+                return make_response(jsonify(responseObject)), 500
+            
+            else:
+                
+                editAlturedStat(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Altured Status Updated'
+                    }
+                
+                return make_response(jsonify(responseObject)), 201
+            
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+    def post(self):  # asking from db to client
+        try:
+            requestedData = request.get_json()
+            responseObject = {}
+            
+            if 'status' in requestedData: # adding role
+                
+                addAlturedStat(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'New Altered Status Has been Added'
+                }
+                
+            else: # giving back one the roles
+                
+                responseObject = {
+                    'status': 'success',
+                    'Roles': collectOneAlturedStat(requestedData),
+                    'message': 'All Roles Have Been Returned'
+                }
+                
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+    
+    def get(self):
+        
+        try:
+            responseObject = {
+                    'status': 'success',
+                    'Roles': collectAllAlturedStat(),
+                    'message': 'All Altered Statuses Have Been Returned'
+                }
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
