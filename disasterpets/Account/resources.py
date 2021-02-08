@@ -157,6 +157,7 @@ def collectAllUsers():
     responseObject = {
         'status': 'sucess',
         'Users': userresults,
+        'Roles' : getAllRole(),
         'message': 'all users returned'
         }
     return responseObject
@@ -167,6 +168,8 @@ def collectOneUser(requestedData):
     
     userSchema = UserSchema(many = True)
     userresults = userSchema.dump(oneUsers)
+    
+    
     responseObject = {
         'status': 'sucess',
         'Users': userresults,
@@ -174,8 +177,15 @@ def collectOneUser(requestedData):
         }
     return responseObject
 
-def getrole(oneuser):
-    oneuser.role_id = Role.query.filter(oneuser.role_id == Role.id)
+
+
+
+def getAllRole():
+    
+    roleSchema = RoleSchema(many = True)
+    allRole = Role.query.all()
+    roleRresults = roleSchema.dump(allRole)
+    return roleRresults
 
 
 
