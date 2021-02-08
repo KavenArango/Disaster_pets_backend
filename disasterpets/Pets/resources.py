@@ -212,7 +212,7 @@ class UploadImageAPI(Resource):
 
 
 def editPet(requestedData):
-    onePet = PetsJoin.query.filter(requestedData['id'] == Pets.id).first()
+    onePet = Pets.query.filter(requestedData['id'] == Pets.id).first()
     
     onePet.pet_name = requestedData["pet_name"]
     onePet.pet_status = requestedData["pet_status"]
