@@ -374,8 +374,8 @@ class ManageAlteredStatAPI(Resource):
                 
                 responseObject = {
                     'status': 'success',
-                    'Roles': collectOneAlturedStat(requestedData),
-                    'message': 'All Roles Have Been Returned'
+                    'AlteredStatus': collectOneAlturedStat(requestedData),
+                    'message': 'Single Altered Status Have Been Returned'
                 }
                 
             return make_response(jsonify(responseObject)), 200
@@ -392,7 +392,7 @@ class ManageAlteredStatAPI(Resource):
         try:
             responseObject = {
                     'status': 'success',
-                    'Roles': collectAllAlturedStat(),
+                    'AlteredStatus': collectAllAlturedStat(),
                     'message': 'All Altered Statuses Have Been Returned'
                 }
             return make_response(jsonify(responseObject)), 200
@@ -489,8 +489,8 @@ class ManageAnimalTypeAPI(Resource):
                 
                 responseObject = {
                     'status': 'success',
-                    'Animal Types': collectOneAnimalType(requestedData),
-                    'message': 'All Animal Types Have Been Returned'
+                    'AnimalTypes': collectOneAnimalType(requestedData),
+                    'message': 'Single Animal Types Have Been Returned'
                 }
                 
             return make_response(jsonify(responseObject)), 200
@@ -506,7 +506,7 @@ class ManageAnimalTypeAPI(Resource):
         try:
             responseObject = {
                     'status': 'success',
-                    'Roles': collectAllAnimalType(),
+                    'AnimalType': collectAllAnimalType(),
                     'message': 'All Animal Types Have Been Returned'
                 }
             return make_response(jsonify(responseObject)), 200
