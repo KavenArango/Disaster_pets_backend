@@ -600,7 +600,7 @@ class ManageBreedsAPI(Resource):
             requestedData = request.get_json()
             responseObject = {}
             
-            if 'animal' in requestedData: # adding role
+            if 'breed' in requestedData: # adding role
                 
                 addBreed(requestedData)
                 responseObject = {
