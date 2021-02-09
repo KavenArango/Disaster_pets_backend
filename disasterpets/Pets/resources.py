@@ -860,7 +860,7 @@ class ManagePetStatusAPI(Resource):
                 
                 responseObject = {
                     'status': 'success',
-                    'Animal Types': collectOnePetStatus(requestedData),
+                    'Status': collectOnePetStatus(requestedData),
                     'message': 'Pet Status Has Been Returned'
                 }
                 
@@ -877,7 +877,7 @@ class ManagePetStatusAPI(Resource):
         try:
             responseObject = {
                     'status': 'success',
-                    'Roles': collectAllPetStatus(),
+                    'Status': collectAllPetStatus(),
                     'message': 'All Pet Status Have Been Returned'
                 }
             return make_response(jsonify(responseObject)), 200
