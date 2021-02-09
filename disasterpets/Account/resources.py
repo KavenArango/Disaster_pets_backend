@@ -330,7 +330,7 @@ class ManageRoleAPI(Resource):
                 responseObject = {
                     'status': 'success',
                     'Roles': collectOneRole(requestedData),
-                    'message': 'All Roles Have Been Returned'
+                    'message': 'Single Roles Have Been Returned'
                 }
                 
             return make_response(jsonify(responseObject)), 200
