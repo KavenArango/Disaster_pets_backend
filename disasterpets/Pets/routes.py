@@ -82,9 +82,8 @@ petbp.add_url_rule(
     methods=['POST', 'PATCH', 'GET']
 )
 
-
 petbp.add_url_rule(
-    '/manageanimal',
+    '/manageanimaltype',
     view_func= manageanimaltype_view,
     methods=['POST', 'PATCH', 'GET']
 )

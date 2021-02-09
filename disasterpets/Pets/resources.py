@@ -374,8 +374,8 @@ class ManageAlteredStatAPI(Resource):
                 
                 responseObject = {
                     'status': 'success',
-                    'Roles': collectOneAlturedStat(requestedData),
-                    'message': 'All Roles Have Been Returned'
+                    'AlteredStatus': collectOneAlturedStat(requestedData),
+                    'message': 'Single Altered Status Have Been Returned'
                 }
                 
             return make_response(jsonify(responseObject)), 200
@@ -392,7 +392,7 @@ class ManageAlteredStatAPI(Resource):
         try:
             responseObject = {
                     'status': 'success',
-                    'Roles': collectAllAlturedStat(),
+                    'AlteredStatus': collectAllAlturedStat(),
                     'message': 'All Altered Statuses Have Been Returned'
                 }
             return make_response(jsonify(responseObject)), 200
@@ -489,8 +489,8 @@ class ManageAnimalTypeAPI(Resource):
                 
                 responseObject = {
                     'status': 'success',
-                    'Animal Types': collectOneAnimalType(requestedData),
-                    'message': 'All Animal Types Have Been Returned'
+                    'AnimalTypes': collectOneAnimalType(requestedData),
+                    'message': 'Single Animal Types Have Been Returned'
                 }
                 
             return make_response(jsonify(responseObject)), 200
@@ -506,7 +506,7 @@ class ManageAnimalTypeAPI(Resource):
         try:
             responseObject = {
                     'status': 'success',
-                    'Roles': collectAllAnimalType(),
+                    'AnimalType': collectAllAnimalType(),
                     'message': 'All Animal Types Have Been Returned'
                 }
             return make_response(jsonify(responseObject)), 200
@@ -612,7 +612,7 @@ class ManageBreedsAPI(Resource):
                 
                 responseObject = {
                     'status': 'success',
-                    'Animal Types': collectOneBreed(requestedData),
+                    'Breed': collectOneBreed(requestedData),
                     'message': 'Breed Has Been Returned'
                 }
                 
@@ -629,7 +629,7 @@ class ManageBreedsAPI(Resource):
         try:
             responseObject = {
                     'status': 'success',
-                    'Roles': collectAllBreeds(),
+                    'Breeds': collectAllBreeds(),
                     'message': 'All Breeds Have Been Returned'
                 }
             return make_response(jsonify(responseObject)), 200
@@ -734,7 +734,7 @@ class ManageGenderAPI(Resource):
                 
                 responseObject = {
                     'status': 'success',
-                    'Animal Types': collectOneGender(requestedData),
+                    'Genders': collectOneGender(requestedData),
                     'message': 'Gender Has Been Returned'
                 }
                 
@@ -751,7 +751,7 @@ class ManageGenderAPI(Resource):
         try:
             responseObject = {
                     'status': 'success',
-                    'Roles': collectAllGender(),
+                    'Genders': collectAllGender(),
                     'message': 'All Genders Have Been Returned'
                 }
             return make_response(jsonify(responseObject)), 200
@@ -860,7 +860,7 @@ class ManagePetStatusAPI(Resource):
                 
                 responseObject = {
                     'status': 'success',
-                    'Animal Types': collectOnePetStatus(requestedData),
+                    'Status': collectOnePetStatus(requestedData),
                     'message': 'Pet Status Has Been Returned'
                 }
                 
@@ -877,7 +877,7 @@ class ManagePetStatusAPI(Resource):
         try:
             responseObject = {
                     'status': 'success',
-                    'Roles': collectAllPetStatus(),
+                    'Status': collectAllPetStatus(),
                     'message': 'All Pet Status Have Been Returned'
                 }
             return make_response(jsonify(responseObject)), 200
