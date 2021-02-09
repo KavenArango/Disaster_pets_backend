@@ -34,7 +34,7 @@ class Animals(db.Model):
     animal = db.Column(db.String(50), unique = True, nullable = False)
     pet = db.relationship('Pets')
 
-    def __init__(self, breed):
+    def __init__(self, animal):
         self.animal = animal
 
 class PetsJoin(db.Model):
