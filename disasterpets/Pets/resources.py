@@ -291,7 +291,7 @@ class ManagePetAPI(Resource):
 
 def editAlturedStat(requestedData):
     oneEntry = AlteredStatus.query.filter(requestedData['id'] == AlteredStatus.id).first()
-    oneEntry.role_name = requestedData['status']
+    oneEntry.status = requestedData['status']
     db.session.commit()
 
 
@@ -332,12 +332,12 @@ class ManageAlteredStatAPI(Resource):
         try:
             requestedData = request.get_json()
             if bool(AlteredStatus.query.filter_by(id=requestedData['id']).first()):
-                
+                print("HELLO")
                 editAlturedStat(requestedData)
                 responseObject = {
                     'status': 'success',
                     'message': 'Altured Status Updated'
-                    }    
+                    }
                 return make_response(jsonify(responseObject)), 201
             
             else:
