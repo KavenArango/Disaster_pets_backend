@@ -1,13 +1,15 @@
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
-from flask import Flask, Blueprint, json, jsonify, request, make_response, current_app
+from flask import Flask, Blueprint, json, jsonify, request, make_response, current_app, url_for
 from disasterpets.Account.models import User, Role
 from disasterpets.Account.Schema import UserSchema, RoleSchema
 from disasterpets.Pets.models import PetsJoin
 from disasterpets.Pets.schema import PetsJoinSchema
 from disasterpets.Pictures.models import PetImageJoin
 from disasterpets.Pictures.schema import PetsImageJoinSchema
-from disasterpets import bcrypt, db, jwt
+from disasterpets import bcrypt, db, jwt, url, mail
+from flask_mail import Message
+from itsdangerous import SignatureExpired
 import datetime
 from flask_restful import Resource
 import json as simplejson
@@ -358,3 +360,63 @@ class ManageRoleAPI(Resource):
                 'message': 'something went wrong try again'
             }
             return make_response(jsonify(responseObject)), 404
+
+class ForgotPasswordAPI(Resource):
+	def post(self):
+		try:
+			requestedData = request.get_json()
+			user = User.query.filter_by(email=requestedData.get('email')).first()
+			if user:
+				token = url.dumps(requestedData.get('email'), salt='pass-confirm')
+				msg = Message(subject='Forgot Password', recipients=[requestedData.get('email')])
+				link = 'http://localhost:3000/resetPassword/'+token
+				msg.html = 'Please Click on the link to reset password! <a href="{}">Click Me </a>'.format(link)
+				mail.send(msg)
+				responseObject = {
+					'status': 'success',
+					'message': 'Email has been sent'
+				}
+				return make_response(jsonify(responseObject)), 202
+			else:
+				responseObject = {
+					'status': 'failed',
+					'message': 'User does not exists'
+				}
+				return make_response(jsonify(responseObject)), 202
+		except Exception as e:
+			print(e)
+
+class ResetPasswordAPI(Resource):
+	def post(self):
+		try:
+			requestedData = request.get_json()
+			email = url.loads(requestedData.get('token'), salt='pass-confirm', max_age=1000)
+			user = User.query.filter_by(email=email).first()
+			if user:
+				password = bcrypt.generate_password_hash(requestedData.get('password'), current_app.config.get('BCRYPT_LOG_ROUNDS'))
+				user.password = password
+				db.session.add(user)
+				db.session.commit()
+				responseObject = {
+					'status': 'success',
+					'message': 'Password has been chnaged'
+				}
+				return make_response(jsonify(responseObject)), 200
+			else:
+				responseObject = {
+					'status': 'failed',
+					'message': 'User does not exists',
+				}
+				return make_response(jsonify(responseObject)), 202
+		except SignatureExpired:
+			responseObject = {
+					'status': 'failed',
+					'message': 'Token Expired'
+			}
+			return make_response(jsonify(responseObject)), 202
+		except:
+			responseObject = {
+					'status': 'failed',
+					'message': 'The Token doesnt Exisit'
+			}
+			return make_response(jsonify(responseObject)), 202

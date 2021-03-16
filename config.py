@@ -27,5 +27,16 @@ class Config:
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    # Email
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 465
+    MAIL_USE_TLS = False
+    MAIL_USE_SSL = True
+    MAIL_USERNAME = "pet.reunification22@gmail.com"
+    MAIL_PASSWORD = "forthepets22"
+    MAIL_DEFAULT_SENDER = "Pet Disasters"
+    MAIL_MAX_EMAILS = None
+    MAIL_SUPRESS_SEND = False
+    MAIL_ASCII_ATTACHMENTS = False
     # UPLOAD_FOLDER =
     # ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'raw'}
