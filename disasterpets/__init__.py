@@ -9,7 +9,7 @@ from jwt import PyJWT
 import jwt
 from flask_jwt_extended import JWTManager
 from flask_marshmallow import Marshmallow
-
+from azure.storage.blob import BlobServiceClient
 
 
 db = SQLAlchemy()
@@ -18,6 +18,7 @@ bcrypt = Bcrypt()
 api = Api()
 jwtmanager = JWTManager()
 ma = Marshmallow()
+
 
 def create_app(test_config=None, instance_relative_config=False):
     app = Flask(__name__, instance_relative_config=True)
