@@ -531,14 +531,6 @@ class ManageAnimalTypeAPI(Resource):
 
 
 
-
-
-
-
-
-
-
-
 def editBreed(requestedData):
     oneEntry = Breeds.query.filter(requestedData['id'] == Breeds.id).first()
     oneEntry.breed = requestedData['breed']
@@ -932,7 +924,7 @@ class ManageFeaturesAPI():
     def patch(self):
         try:
             requestedData = request.get_json()
-            if bool(Breeds.query.filter_by(id=requestedData['id']).first()): # TODO this needs to be fixed
+            if bool(UniqueFeature.query.filter_by(id=requestedData['id']).first()):
                 editFeature(requestedData)
                 responseObject = {
                     'status': 'success',
@@ -1004,31 +996,37 @@ class ManageFeaturesAPI():
 
 
 
-
-
-
-
-
-
 def editFeature(requestedData):# TODO this needs to be fixed
-    oneEntry = PetStatus.query.filter(requestedData['id'] == PetStatus.id).first()
-    oneEntry.status = requestedData['status']
+    oneEntry = UniqueFeature.query.filter(requestedData['id'] == UniqueFeature.id).first()
+    oneEntry.breed = requestedData['breed']
+    oneEntry.animal = requestedData['animal']
+    oneEntry.feature = requestedData['feature']
+    oneEntry.bodyPart = requestedData['bodyPart']
+    oneEntry.position = requestedData['position']
+    oneEntry.color = requestedData['color']
     db.session.commit()
 
 
 
 def addFeature(requestedData):# TODO this needs to be fixed
     
-    newEntery = PetStatus(status = requestedData['status'])
+    newEntery = UniqueFeature(
+        breed = requestedData['breed'],
+        animal = requestedData['animal'],
+        feature = requestedData['feature'],
+        bodyPart = requestedData['bodyPart'],
+        position = requestedData['position'],
+        color = requestedData['color']
+        )
     db.session.add(newEntery)
     db.session.commit()
 
 
 
 def collectOneFeature(requestedData):# TODO this needs to be fixed
-    onePetStatus = PetStatus.query.filter(requestedData['id'] == PetStatus.id)
-    petStatusSchema = PetStatusSchema(many = True)
-    Results = petStatusSchema.dump(onePetStatus)
+    oneFeature = UniqueFeature.query.filter(requestedData['id'] == UniqueFeature.id)
+    FeatureSchema = UniqueFeatureSchema(many = True)
+    Results = FeatureSchema.dump(oneFeature)
     
     return Results
 
@@ -1036,9 +1034,9 @@ def collectOneFeature(requestedData):# TODO this needs to be fixed
 
 def collectAllFeature():# TODO this needs to be fixed
     
-    petStatusSchema = PetStatusSchema(many = True)
-    allPetStatus = PetStatus.query.all()
-    Results = petStatusSchema.dump(allPetStatus)
+    FeatureSchema = UniqueFeatureSchema(many = True)
+    allFeature = UniqueFeature.query.all()
+    Results = FeatureSchema.dump(allFeature)
     return Results
 
 
