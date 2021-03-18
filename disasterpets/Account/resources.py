@@ -263,7 +263,7 @@ class ManageUserAPI(Resource):
 
 
 def editRole(requestedData):
-    oneRole = Role.query.filter(requestedData['id'] == User.id).first()
+    oneRole = Role.query.filter(requestedData['id'] == Role.id).first()
     oneRole.role_name = requestedData['role_name']
     db.session.commit()
 
@@ -290,7 +290,7 @@ class ManageRoleAPI(Resource):
         try:
             requestedData = request.get_json()
             if bool(Role.query.filter_by(id=requestedData['id']).first()):
-            
+				
                 editRole(requestedData)
                 responseObject = {
                     'status': 'success',
