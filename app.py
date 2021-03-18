@@ -1,10 +1,8 @@
 from disasterpets import create_app
-from flask_cors import CORS
 from flask import url_for, redirect, send_file
 import os
 
 app = create_app()
-CORS(app)
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 APP_STATIC = os.path.join(APP_ROOT, 'static')
 
