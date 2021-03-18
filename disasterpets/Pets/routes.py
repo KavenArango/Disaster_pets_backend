@@ -8,7 +8,8 @@ from disasterpets.Pets.resources import (
     ManageAnimalTypeAPI,
     ManageBreedsAPI,
     ManageGenderAPI,
-    ManagePetStatusAPI
+    ManagePetStatusAPI,
+    ManageFeaturesAPI
     )
 
 petbp = Blueprint('petbp', __name__)
@@ -22,6 +23,18 @@ manageanimaltype_view = ManageAnimalTypeAPI.as_view('manageanimaltype_api')
 managebreeds_view = ManageBreedsAPI.as_view('managebreeds_api')
 managegender_view = ManageGenderAPI.as_view('managegender_api')
 managepetstatus_view = ManagePetStatusAPI.as_view('managepetstatus_api')
+managefeatures_view = ManageFeaturesAPI.as_view('managefeatures_api')
+
+
+
+petbp.add_url_rule(
+    '/managefeature',
+    view_func= managefeatures_view,
+    methods=['POST', 'PATCH', 'GET']
+)
+
+
+
 
 
 
