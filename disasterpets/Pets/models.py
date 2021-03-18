@@ -49,6 +49,27 @@ class PetsJoin(db.Model):
         self.pet_id = pet_id
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class BodyParts(db.Model):
     __tablename__ = 'bodyParts'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -97,6 +118,7 @@ class UniqueFeature(db.Model):
         self.color = color
 
 
+
 class UniqueFeaturesJoin(db.Model):
     __tablename__ = 'uniquefeaturesjoin'
 
@@ -107,6 +129,12 @@ class UniqueFeaturesJoin(db.Model):
     def __init__(self, petid, featureid):
         self.petid = petid
         self.featureid = featureid
+
+
+
+
+
+
 
 class PetStatus(db.Model):
     __tablename__ = 'petstatus' 

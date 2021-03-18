@@ -33,16 +33,12 @@ petbp.add_url_rule(
     methods=['POST', 'PATCH', 'GET']
 )
 
-
-
-
-
-
 petbp.add_url_rule(
     '/addpet',
     view_func= addpet_view,
     methods=['POST', 'GET']
 )
+
 petbp.add_url_rule(
     '/uploadimage',
     view_func= upload_image,
@@ -55,15 +51,11 @@ petbp.add_url_rule(
     methods = ['POST']
 )
 
-
-
 petbp.add_url_rule(
     '/managepets',
     view_func= managepet_view,
     methods=['PATCH', 'POST']
 )
-
-
 
 petbp.add_url_rule(
     '/managealteredstatus',
@@ -71,23 +63,17 @@ petbp.add_url_rule(
     methods=['POST', 'PATCH', 'GET']
 )
 
-
-
 petbp.add_url_rule(
     '/managebreeds',
     view_func= managebreeds_view,
     methods=['POST', 'PATCH', 'GET']
 )
 
-
-
 petbp.add_url_rule(
     '/managegender',
     view_func= managegender_view,
     methods=['POST', 'PATCH', 'GET']
 )
-
-
 
 petbp.add_url_rule(
     '/managepetstatus',
