@@ -12,6 +12,11 @@ from disasterpets.Pets.models import (
     AlteredStatus,
     PetStatus,
     Animals,
+    UniqueFeature,
+    BodyParts,
+    Positions,
+    Colors,
+    UniqueFeaturesJoin
 )
 from disasterpets.Pets.schema import (
     PetsSchema,
@@ -20,7 +25,12 @@ from disasterpets.Pets.schema import (
     PetStatusSchema,
     AnimalSchema,
     AlteredSchema,
-    PetsIDSchema
+    PetsIDSchema,
+    UniqueFeatureSchema,
+    UniqueFeaturesJoinSchema,
+    BodyPartSchema,
+    PositionSchema,
+    ColorSchema,
 )
 from flask import (
     Flask,
@@ -642,15 +652,6 @@ class ManageBreedsAPI(Resource):
             return make_response(jsonify(responseObject)), 404
 
 
-
-
-
-
-
-
-
-
-
 def editGender(requestedData):
     oneEntry = Gender.query.filter(requestedData['id'] == Gender.id).first()
     oneEntry.gender = requestedData['gender']
@@ -766,17 +767,6 @@ class ManageGenderAPI(Resource):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 def editPetStatus(requestedData):
     oneEntry = PetStatus.query.filter(requestedData['id'] == PetStatus.id).first()
     oneEntry.status = requestedData['status']
@@ -812,7 +802,6 @@ def collectAllPetStatus():
 # Patch: EDIT ROLE
 # POST: ONE ROLE, NEW
 # GET: ALL
-
 
 class ManagePetStatusAPI(Resource):
     # @jwt_required
@@ -888,3 +877,172 @@ class ManagePetStatusAPI(Resource):
                 'message': 'something went wrong try again'
             }
             return make_response(jsonify(responseObject)), 404
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class ManageFeaturesAPI():
+    # @jwt_required
+    def patch(self):
+        try:
+            requestedData = request.get_json()
+            if bool(Breeds.query.filter_by(id=requestedData['id']).first()): # TODO this needs to be fixed
+                editFeature(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Feature Updated'
+                    }
+                return make_response(jsonify(responseObject)), 201
+            
+            else:
+                
+                responseObject = {
+                    'status': 'error',
+                    'message': 'No Feature found'
+                    }
+                return make_response(jsonify(responseObject)), 500
+            
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+    def post(self):  # asking from db to client
+        try:
+            requestedData = request.get_json()
+            responseObject = {}
+            
+            if 'feature' in requestedData: # adding role
+                
+                addFeature(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'New Feature Has been Added'
+                }
+                
+            else: # giving back one the roles
+                
+                responseObject = {
+                    'status': 'success',
+                    'Feature': collectOneFeature(requestedData),
+                    'message': 'Feature Has Been Returned'
+                }
+                
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+    
+    def get(self):
+        try:
+            responseObject = {
+                    'status': 'success',
+                    'Feature': collectAllFeature(),
+                    'message': 'All Features Have Been Returned'
+                }
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+
+
+
+
+
+
+
+
+def editFeature(requestedData):# TODO this needs to be fixed
+    oneEntry = PetStatus.query.filter(requestedData['id'] == PetStatus.id).first()
+    oneEntry.status = requestedData['status']
+    db.session.commit()
+
+
+
+def addFeature(requestedData):# TODO this needs to be fixed
+    
+    newEntery = PetStatus(status = requestedData['status'])
+    db.session.add(newEntery)
+    db.session.commit()
+
+
+
+def collectOneFeature(requestedData):# TODO this needs to be fixed
+    onePetStatus = PetStatus.query.filter(requestedData['id'] == PetStatus.id)
+    petStatusSchema = PetStatusSchema(many = True)
+    Results = petStatusSchema.dump(onePetStatus)
+    
+    return Results
+
+
+
+def collectAllFeature():# TODO this needs to be fixed
+    
+    petStatusSchema = PetStatusSchema(many = True)
+    allPetStatus = PetStatus.query.all()
+    Results = petStatusSchema.dump(allPetStatus)
+    return Results
+
+
+
+# Patch: EDIT ROLE
+# POST: ONE ROLE, NEW
+# GET: ALL
