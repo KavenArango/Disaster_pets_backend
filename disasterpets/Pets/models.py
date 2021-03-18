@@ -48,18 +48,54 @@ class PetsJoin(db.Model):
         self.user_id = user_id
         self.pet_id = pet_id
 
+
+class BodyParts(db.Model):
+    __tablename__ = 'bodyParts'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    bodypart = db.Column(db.String(10), nullable = False)
+    
+    def __init__(self, bodypart):
+        self.bodypart = bodypart
+
+
+class Positions(db.Model):
+    __tablename__ = 'positions'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    position = db.Column(db.String(50), nullable = False)
+    
+    def __init__(self, position):
+        self.position = position
+
+
+class Colors(db.Model):
+    __tablename__ = 'colors'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    color = db.Column(db.String(50), nullable = False)
+    
+    def __init__(self, color):
+        self.color = color
+
+
 class UniqueFeature(db.Model):
     __tablename__ ='uniquefeature'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    breed = db.Column(db.Integer, db.ForeignKey('breeds.id'))
-    animal = db.Column(db.Integer, db.ForeignKey('animals.id'))
+    breed = db.Column(db.Integer, db.ForeignKey('breeds.id'), nullable = True)
+    animal = db.Column(db.Integer, db.ForeignKey('animals.id'), nullable = True)
     feature = db.Column(db.String(50))
+    
+    bodyPart =  db.Column(db.Integer, db.ForeignKey('bodyParts.id'))
+    position =  db.Column(db.Integer, db.ForeignKey('positions.id'))
+    color =  db.Column(db.Integer, db.ForeignKey('colors.id'), nullable = True)
 
-    def __init__(self, breed, animal, feature):
+    def __init__(self, breed, animal, feature, bodyPart, position, color):
         self.breed = breed
         self.animal = animal
         self.feature = feature
+        self.bodyPart = bodyPart
+        self.position = position
+        self.color = color
+
 
 class UniqueFeaturesJoin(db.Model):
     __tablename__ = 'uniquefeaturesjoin'
