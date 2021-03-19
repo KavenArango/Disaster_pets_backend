@@ -1,6 +1,6 @@
 from marshmallow import Schema, fields, ValidationError, pre_load, post_load, pre_dump
 from disasterpets import ma
-from disasterpets.Pets.models import Breeds, Gender, AlteredStatus, Animals, PetStatus, Pets, PetsJoin, BodyParts, Positions, Colors, UniqueFeature, UniqueFeaturesJoin
+from disasterpets.Pets.models import Breeds, Gender, AlteredStatus, Animals, PetStatus, Pets, PetsJoin, BodyParts, Positions, Colors, UniqueFeature, UniqueFeaturesJoin, Feature
 
 
 
@@ -60,6 +60,10 @@ class ColorSchema(ma.Schema):
         fields = ("id", "color")
 
 
+class FeaturesSchema(ma.Schema):
+    class Meta:
+        model = Feature
+        fields = ("id", "Feature")
 
 
 

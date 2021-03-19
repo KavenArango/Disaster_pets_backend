@@ -49,31 +49,10 @@ class PetsJoin(db.Model):
         self.pet_id = pet_id
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class BodyParts(db.Model):
     __tablename__ = 'bodyParts'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    bodypart = db.Column(db.String(10), nullable = False)
+    bodypart = db.Column(db.String(10))
     
     def __init__(self, bodypart):
         self.bodypart = bodypart
@@ -82,7 +61,7 @@ class BodyParts(db.Model):
 class Positions(db.Model):
     __tablename__ = 'positions'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    position = db.Column(db.String(50), nullable = False)
+    position = db.Column(db.String(50))
     
     def __init__(self, position):
         self.position = position
@@ -91,32 +70,38 @@ class Positions(db.Model):
 class Colors(db.Model):
     __tablename__ = 'colors'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    color = db.Column(db.String(50), nullable = False)
+    color = db.Column(db.String(50))
     
     def __init__(self, color):
         self.color = color
+
+
+class Feature(db.Model):
+    __tablename__ = 'feature'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    feature = db.Column(db.String(50))
+    
+    def __init__(self, feature):
+        self.feature = feature
 
 
 class UniqueFeature(db.Model):
     __tablename__ ='uniquefeature'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    breed = db.Column(db.Integer, db.ForeignKey('breeds.id'), nullable = True)
-    animal = db.Column(db.Integer, db.ForeignKey('animals.id'), nullable = True)
-    feature = db.Column(db.String(50))
+    animal = db.Column(db.Integer, db.ForeignKey('animals.id'))
+    feature = db.Column(db.Integer, db.ForeignKey('feature.id'), nullable = True)
     
     bodyPart =  db.Column(db.Integer, db.ForeignKey('bodyParts.id'))
     position =  db.Column(db.Integer, db.ForeignKey('positions.id'))
     color =  db.Column(db.Integer, db.ForeignKey('colors.id'), nullable = True)
 
-    def __init__(self, breed, animal, feature, bodyPart, position, color):
-        self.breed = breed
+    def __init__(self, animal, feature, bodyPart, position, color):
         self.animal = animal
         self.feature = feature
         self.bodyPart = bodyPart
         self.position = position
         self.color = color
-
 
 
 class UniqueFeaturesJoin(db.Model):
