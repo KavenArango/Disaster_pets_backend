@@ -1,6 +1,20 @@
 from marshmallow import Schema, fields, ValidationError, pre_load, post_load, pre_dump
 from disasterpets import ma
-from disasterpets.Pets.models import Breeds, Gender, AlteredStatus, Animals, PetStatus, Pets, PetsJoin, BodyParts, Positions, Colors, UniqueFeature, UniqueFeaturesJoin, Feature
+from disasterpets.Pets.models import(
+    Breeds, 
+    Gender, 
+    AlteredStatus, 
+    Animals,
+    PetStatus,
+    Pets,
+    PetsJoin,
+    BodyParts,
+    Positions,
+    Colors,
+    UniqueFeature,
+    UniqueFeaturesJoin,
+    Feature,
+    )
 
 
 
@@ -43,11 +57,24 @@ class PetsJoinSchema(ma.Schema):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class BodyPartSchema(ma.Schema):
     class Meta:
         model = BodyParts
         fields = ("id", "bodypart")
-
 
 class PositionSchema(ma.Schema):
     class Meta:
@@ -59,8 +86,34 @@ class ColorSchema(ma.Schema):
         model = Colors
         fields = ("id", "color")
 
+class UniqueFeaturesJoinSchema(ma.Schema):
+    class Meta:
+        model = UniqueFeaturesJoin
+        fields = ("id", "petid", "featureid")
 
-class FeaturesSchema(ma.Schema):
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class FeatureSchema(ma.Schema):
     class Meta:
         model = Feature
         fields = ("id", "Feature")
@@ -74,10 +127,7 @@ class UniqueFeatureSchema(ma.Schema):
         model = UniqueFeature
         fields = ("id", "breed", "animal", "feature", "bodyPart", "position", "color")
 
-class UniqueFeaturesJoinSchema(ma.Schema):
-    class Meta:
-        model = UniqueFeaturesJoin
-        fields = ("id", "petid", "featureid")
+
 
 
 

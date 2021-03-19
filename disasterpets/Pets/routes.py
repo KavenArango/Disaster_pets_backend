@@ -9,7 +9,11 @@ from disasterpets.Pets.resources import (
     ManageBreedsAPI,
     ManageGenderAPI,
     ManagePetStatusAPI,
-    ManageFeaturesAPI
+    ManageUniqueFeaturesAPI,
+    ManageFeaturesAPI,
+    ManageColorsAPI,
+    ManagePositionsAPI,
+    ManageBodyPartsAPI,
     )
 
 petbp = Blueprint('petbp', __name__)
@@ -23,13 +27,43 @@ manageanimaltype_view = ManageAnimalTypeAPI.as_view('manageanimaltype_api')
 managebreeds_view = ManageBreedsAPI.as_view('managebreeds_api')
 managegender_view = ManageGenderAPI.as_view('managegender_api')
 managepetstatus_view = ManagePetStatusAPI.as_view('managepetstatus_api')
+manageuniquefeatures_view = ManageUniqueFeaturesAPI.as_view('manageuniquefeatures_api')
 managefeatures_view = ManageFeaturesAPI.as_view('managefeatures_api')
+managecolor_view = ManageColorsAPI.as_view('managecolor_api')
+manageposition_view = ManagePositionsAPI.as_view('manageposition_api')
+managebodypart_view = ManageBodyPartsAPI.as_view('managebodypart_api')
+
+
 
 
 
 petbp.add_url_rule(
-    '/managefeature',
+    '/managefeatures',
     view_func= managefeatures_view,
+    methods=['POST', 'PATCH', 'GET']
+)
+
+petbp.add_url_rule(
+    '/managecolor',
+    view_func= managecolor_view,
+    methods=['POST', 'PATCH', 'GET']
+)
+
+petbp.add_url_rule(
+    '/manageposition',
+    view_func= manageposition_view,
+    methods=['POST', 'PATCH', 'GET']
+)
+
+petbp.add_url_rule(
+    '/managebodypart',
+    view_func= managebodypart_view,
+    methods=['POST', 'PATCH', 'GET']
+)
+
+petbp.add_url_rule(
+    '/manageuniquefeatures',
+    view_func= manageuniquefeatures_view,
     methods=['POST', 'PATCH', 'GET']
 )
 

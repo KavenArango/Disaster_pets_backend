@@ -12,7 +12,7 @@ from jwt import PyJWT
 import jwt
 from flask_jwt_extended import JWTManager
 from flask_marshmallow import Marshmallow
-from azure.storage.blob import BlobServiceClient
+
 
 
 db = SQLAlchemy()

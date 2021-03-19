@@ -16,7 +16,8 @@ from disasterpets.Pets.models import (
     BodyParts,
     Positions,
     Colors,
-    UniqueFeaturesJoin
+    UniqueFeaturesJoin,
+    Feature,
 )
 from disasterpets.Pets.schema import (
     PetsSchema,
@@ -31,6 +32,7 @@ from disasterpets.Pets.schema import (
     BodyPartSchema,
     PositionSchema,
     ColorSchema,
+    FeatureSchema,
 )
 from flask import (
     Flask,
@@ -872,50 +874,131 @@ class ManagePetStatusAPI(Resource):
 
 
 
+class ManageUniqueFeaturesAPI(Resource):
+    # @jwt_required
+    def patch(self):
+        try:
+            requestedData = request.get_json()
+            if bool(UniqueFeature.query.filter_by(id=requestedData['id']).first()):
+                editUniqueFeature(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Feature Updated'
+                    }
+                return make_response(jsonify(responseObject)), 201
+            
+            else:
+                
+                responseObject = {
+                    'status': 'error',
+                    'message': 'No Feature found'
+                    }
+                return make_response(jsonify(responseObject)), 500
+            
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+    def post(self):  # asking from db to client
+        try:
+            requestedData = request.get_json()
+            responseObject = {}
+            
+            if 'feature' in requestedData: # adding role
+                
+                addUniqueFeature(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'New Feature Has been Added'
+                }
+                
+            else: # giving back one the roles
+                
+                responseObject = {
+                    'status': 'success',
+                    'Feature': collectOneUniqueFeature(requestedData),
+                    'message': 'Feature Has Been Returned'
+                }
+                
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+    
+    def get(self):
+        try:
+            responseObject = {
+                    'status': 'success',
+                    'Feature': collectAllUniqueFeature(),
+                    'message': 'All Features Have Been Returned'
+                }
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
 
 
 
+def editUniqueFeature(requestedData):# TODO this needs to be fixed
+    oneEntry = UniqueFeature.query.filter(requestedData['id'] == UniqueFeature.id).first()
+    oneEntry.breed = requestedData['breed']
+    oneEntry.animal = requestedData['animal']
+    oneEntry.feature = requestedData['feature']
+    oneEntry.bodyPart = requestedData['bodyPart']
+    oneEntry.position = requestedData['position']
+    oneEntry.color = requestedData['color']
+    db.session.commit()
 
 
 
+def addUniqueFeature(requestedData):# TODO this needs to be fixed
+    
+    newEntery = UniqueFeature(
+        breed = requestedData['breed'],
+        animal = requestedData['animal'],
+        feature = requestedData['feature'],
+        bodyPart = requestedData['bodyPart'],
+        position = requestedData['position'],
+        color = requestedData['color']
+        )
+    db.session.add(newEntery)
+    db.session.commit()
 
 
 
+def collectOneUniqueFeature(requestedData):# TODO this needs to be fixed
+    oneFeature = UniqueFeature.query.filter(requestedData['id'] == UniqueFeature.id)
+    FeatureSchema = UniqueFeatureSchema(many = True)
+    Results = FeatureSchema.dump(oneFeature)
+    
+    return Results
 
 
 
+def collectAllUniqueFeature():# TODO this needs to be fixed
+    
+    FeatureSchema = UniqueFeatureSchema(many = True)
+    allFeature = UniqueFeature.query.all()
+    Results = FeatureSchema.dump(allFeature)
+    return Results
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Patch: EDIT ROLE
+# POST: ONE ROLE, NEW
+# GET: ALL
 
 
 
@@ -924,7 +1007,7 @@ class ManageFeaturesAPI(Resource):
     def patch(self):
         try:
             requestedData = request.get_json()
-            if bool(UniqueFeature.query.filter_by(id=requestedData['id']).first()):
+            if bool(Feature.query.filter_by(id=requestedData['id']).first()):
                 editFeature(requestedData)
                 responseObject = {
                     'status': 'success',
@@ -996,27 +1079,17 @@ class ManageFeaturesAPI(Resource):
 
 
 
-def editFeature(requestedData):# TODO this needs to be fixed
-    oneEntry = UniqueFeature.query.filter(requestedData['id'] == UniqueFeature.id).first()
-    oneEntry.breed = requestedData['breed']
-    oneEntry.animal = requestedData['animal']
+def editFeature(requestedData):
+    oneEntry = Feature.query.filter(requestedData['id'] == Feature.id).first()
     oneEntry.feature = requestedData['feature']
-    oneEntry.bodyPart = requestedData['bodyPart']
-    oneEntry.position = requestedData['position']
-    oneEntry.color = requestedData['color']
     db.session.commit()
 
 
 
 def addFeature(requestedData):# TODO this needs to be fixed
     
-    newEntery = UniqueFeature(
-        breed = requestedData['breed'],
-        animal = requestedData['animal'],
-        feature = requestedData['feature'],
-        bodyPart = requestedData['bodyPart'],
-        position = requestedData['position'],
-        color = requestedData['color']
+    newEntery = Feature(
+        feature = requestedData['feature']
         )
     db.session.add(newEntery)
     db.session.commit()
@@ -1024,8 +1097,8 @@ def addFeature(requestedData):# TODO this needs to be fixed
 
 
 def collectOneFeature(requestedData):# TODO this needs to be fixed
-    oneFeature = UniqueFeature.query.filter(requestedData['id'] == UniqueFeature.id)
-    FeatureSchema = UniqueFeatureSchema(many = True)
+    oneFeature = Feature.query.filter(requestedData['id'] == Feature.id)
+    FeatureSchema = FeatureSchema(many = True)
     Results = FeatureSchema.dump(oneFeature)
     
     return Results
@@ -1034,9 +1107,368 @@ def collectOneFeature(requestedData):# TODO this needs to be fixed
 
 def collectAllFeature():# TODO this needs to be fixed
     
-    FeatureSchema = UniqueFeatureSchema(many = True)
-    allFeature = UniqueFeature.query.all()
+    FeatureSchema = FeatureSchema(many = True)
+    allFeature = Feature.query.all()
     Results = FeatureSchema.dump(allFeature)
+    return Results
+
+
+
+# Patch: EDIT ROLE
+# POST: ONE ROLE, NEW
+# GET: ALL
+
+
+
+class ManageColorsAPI(Resource):
+    # @jwt_required
+    def patch(self):
+        try:
+            requestedData = request.get_json()
+            if bool(Colors.query.filter_by(id=requestedData['id']).first()):
+                editColor(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Color Updated'
+                    }
+                return make_response(jsonify(responseObject)), 201
+            
+            else:
+                
+                responseObject = {
+                    'status': 'error',
+                    'message': 'No Color found'
+                    }
+                return make_response(jsonify(responseObject)), 500
+            
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+    def post(self):  # asking from db to client
+        try:
+            requestedData = request.get_json()
+            responseObject = {}
+            
+            if 'color' in requestedData: # adding role
+                
+                addColor(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'New Color Has been Added'
+                }
+                
+            else: # giving back one the roles
+                
+                responseObject = {
+                    'status': 'success',
+                    'Color': collectOneColor(requestedData),
+                    'message': 'Color Has Been Returned'
+                }
+                
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+    
+    def get(self):
+        try:
+            responseObject = {
+                    'status': 'success',
+                    'Color': collectAllColor(),
+                    'message': 'All Colors Have Been Returned'
+                }
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+
+
+def editColor(requestedData):# TODO this needs to be fixed
+    oneEntry = Colors.query.filter(requestedData['id'] == Colors.id).first()
+    oneEntry.color = requestedData['color']
+    db.session.commit()
+
+
+
+def addColor(requestedData):# TODO this needs to be fixed
+    
+    newEntery = Colors(
+        color = requestedData['color']
+        )
+    db.session.add(newEntery)
+    db.session.commit()
+
+
+
+def collectOneColor(requestedData):# TODO this needs to be fixed
+    oneColor = Colors.query.filter(requestedData['id'] == Colors.id)
+    ColorSchema = ColorSchema(many = True)
+    Results = ColorSchema.dump(oneColor)
+    
+    return Results
+
+
+
+def collectAllColor():# TODO this needs to be fixed
+    
+    ColorSchema = ColorSchema(many = True)
+    allColor = Colors.query.all()
+    Results = ColorSchema.dump(allColor)
+    return Results
+
+
+
+# Patch: EDIT ROLE
+# POST: ONE ROLE, NEW
+# GET: ALL
+
+
+
+
+
+
+
+
+class ManagePositionsAPI(Resource):
+    # @jwt_required
+    def patch(self):
+        try:
+            requestedData = request.get_json()
+            if bool(Positions.query.filter_by(id=requestedData['id']).first()):
+                editPosition(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Position Updated'
+                    }
+                return make_response(jsonify(responseObject)), 201
+            
+            else:
+                
+                responseObject = {
+                    'status': 'error',
+                    'message': 'No Position found'
+                    }
+                return make_response(jsonify(responseObject)), 500
+            
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+    def post(self):  # asking from db to client
+        try:
+            requestedData = request.get_json()
+            responseObject = {}
+            
+            if 'position' in requestedData: # adding role
+                
+                addPosition(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'New Position Has been Added'
+                }
+                
+            else: # giving back one the roles
+                
+                responseObject = {
+                    'status': 'success',
+                    'Position': collectOnePosition(requestedData),
+                    'message': 'Position Has Been Returned'
+                }
+                
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+    
+    def get(self):
+        try:
+            responseObject = {
+                    'status': 'success',
+                    'Position': collectAllPosition(),
+                    'message': 'All Positions Have Been Returned'
+                }
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+
+
+def editPosition(requestedData):# TODO this needs to be fixed
+    oneEntry = Positions.query.filter(requestedData['id'] == Positions.id).first()
+    oneEntry.position = requestedData['position']
+    db.session.commit()
+
+
+
+def addPosition(requestedData):# TODO this needs to be fixed
+    
+    newEntery = Positions(
+        position = requestedData['position']
+        )
+    db.session.add(newEntery)
+    db.session.commit()
+
+
+
+def collectOnePosition(requestedData):# TODO this needs to be fixed
+    onePosition = Positions.query.filter(requestedData['id'] == Positions.id)
+    PositionSchema = PositionSchema(many = True)
+    Results = PositionSchema.dump(onePosition)
+    
+    return Results
+
+
+
+def collectAllPosition():# TODO this needs to be fixed
+    
+    PositionSchema = PositionSchema(many = True)
+    allPosition = Positions.query.all()
+    Results = PositionSchema.dump(allPosition)
+    return Results
+
+
+
+# Patch: EDIT ROLE
+# POST: ONE ROLE, NEW
+# GET: ALL
+
+
+
+
+class ManageBodyPartsAPI(Resource):
+    # @jwt_required
+    def patch(self):
+        try:
+            requestedData = request.get_json()
+            if bool(BodyParts.query.filter_by(id=requestedData['id']).first()):
+                editBodyPart(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'BodyPart Updated'
+                    }
+                return make_response(jsonify(responseObject)), 201
+            
+            else:
+                
+                responseObject = {
+                    'status': 'error',
+                    'message': 'No BodyPart found'
+                    }
+                return make_response(jsonify(responseObject)), 500
+            
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+    def post(self):  # asking from db to client
+        try:
+            requestedData = request.get_json()
+            responseObject = {}
+            
+            if 'bodyPart' in requestedData: # adding role
+                addBodyPart(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'New BodyPart Has been Added'
+                }
+                
+            else: # giving back one the roles
+                
+                responseObject = {
+                    'status': 'success',
+                    'BodyPart': collectOneBodyPart(requestedData),
+                    'message': 'BodyPart Has Been Returned'
+                }
+                
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+    
+    def get(self):
+        try:
+            responseObject = {
+                    'status': 'success',
+                    'BodyPart': collectAllBodyPart(),
+                    'message': 'All BodyParts Have Been Returned'
+                }
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+
+
+
+def editBodyPart(requestedData):
+    oneEntry = BodyParts.query.filter(requestedData['id'] == BodyParts.id).first()
+    oneEntry.bodypart = requestedData['bodyPart']
+    db.session.commit()
+
+
+
+def addBodyPart(requestedData):# TODO this needs to be fixed
+    
+    newEntery = BodyParts(
+        bodypart = requestedData['bodyPart']
+        )
+    db.session.add(newEntery)
+    db.session.commit()
+
+
+
+def collectOneBodyPart(requestedData):# TODO this needs to be fixed
+    oneBodyPart = BodyParts.query.filter(requestedData['id'] == BodyParts.id)
+    BodyPartSchema = BodyPartSchema(many = True)
+    Results = BodyPartSchema.dump(oneBodyPart)
+    
+    return Results
+
+
+
+def collectAllBodyPart():# TODO this needs to be fixed
+    
+    bodyPartSchema = BodyPartSchema(many = True)
+    allBodyPart = BodyParts.query.all()
+    Results = bodyPartSchema.dump(allBodyPart)
     return Results
 
 
