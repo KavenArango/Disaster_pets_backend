@@ -919,7 +919,7 @@ class ManagePetStatusAPI(Resource):
 
 
 
-class ManageFeaturesAPI():
+class ManageFeaturesAPI(Resource):
     # @jwt_required
     def patch(self):
         try:
