@@ -76,7 +76,7 @@ class FeatureSchema(ma.Schema):
 class UniqueFeatureSchema(ma.Schema):
     class Meta:
         model = UniqueFeature
-        fields = ("id", "breed", "animal", "feature", "bodyPart", "position", "color")
+        fields = ("id", "animal", "featureFK", "bodyPart", "position", "color")
 
 class PetsSchema(ma.Schema):
     class Meta:
