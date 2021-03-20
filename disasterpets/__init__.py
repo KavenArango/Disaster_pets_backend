@@ -52,7 +52,7 @@ def register_blueprints(app):
     from disasterpets.Disaster.models import Disaster, DisasterLocationJoin, DisasterPetJoin
     #from disasterpets.Found.models import 
     #from disasterpets.Housing.models import 
-    from disasterpets.Location.models import Location, LocationJoin
+    from disasterpets.Location.models import Location, LocationJoin, CountyTable
     from disasterpets.Lost.models import LostTable, OwnerRequest, PropertyInfo
     from disasterpets.Matching.models import PotentialMatch, PotentialMatchJoin, RejectMatch, RejectMatchJoin
     from disasterpets.Pets.models import Pets, PetsJoin, PetStatus, Breeds, AlteredStatus, Animals, UniqueFeature, UniqueFeaturesJoin
@@ -62,11 +62,13 @@ def register_blueprints(app):
     from disasterpets.Pets.routes import petbp
     from disasterpets.Matching.routes import matchingbp
     from disasterpets.Pictures.routes import petgallerybp, rainbowgallerybp
+    from disasterpets.Disaster.routes import disastermanger
     app.register_blueprint(account)
     app.register_blueprint(petbp)
     app.register_blueprint(matchingbp)
     app.register_blueprint(petgallerybp)
     app.register_blueprint(rainbowgallerybp)
+    app.register_blueprint(disastermanger)
     return None
 
 

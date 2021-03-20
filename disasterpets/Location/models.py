@@ -30,3 +30,10 @@ class LocationJoin(db.Model):
     def __init__(self, petid, locationid):
         self.petid = petid
         self.locationid = locationid
+
+class CountyTable(db.Model):
+    __tablename__ = "countytable"
+
+    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    countyname = db.Column(db.String(50), nullable = False)
+    state = db.Column(db.String(10), nullable = False)
