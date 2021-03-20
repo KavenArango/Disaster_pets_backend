@@ -58,7 +58,7 @@ from flask_jwt_extended import (
 
 
 class AddPetAPI(Resource):
-    def post(self):
+    def post(self): # adds location and pet and joins
         new_pet = request.get_json()
         current_user = get_jwt_identity()
         try:
@@ -89,6 +89,9 @@ class AddPetAPI(Resource):
             db.session.add(petimage)
             db.session.commit()
 
+
+
+
             db.session.refresh(pet)
             petjoin = PetsJoin(user_id=current_user, pet_id=pet.id)
             db.session.add(petjoin)
@@ -106,6 +109,9 @@ class AddPetAPI(Resource):
             db.session.add(petimagejoin)
             db.session.commit()
 
+
+
+
             responseObject = {
                 "status": "success",
                 "message": "successfully added pet"
@@ -119,7 +125,7 @@ class AddPetAPI(Resource):
             }
             return make_response(jsonify(responseObject)), 404
 
-    def get(self):
+    def get(self): # gets everything a pet can have (general call is not tied to a pet)
         breeds_schema = BreedSchema(many=True)
         genders_schema = GenderSchema(many=True)
         petstat_schema = PetStatusSchema(many=True)
@@ -157,28 +163,27 @@ class AddPetAPI(Resource):
 
 
 class PetDetailAPI(Resource):
-    def post(self):
+    def post(self): # one pet
         this_pet = request.get_json()
 
         pet_schema = PetsSchema(many=True)
 
         try:
-            pet_info = (PetImageJoin.query.filter(
-                this_pet["id"] == PetImageJoin.pet_id).with_entities(
-                    PetImageJoin.petimage_id).all())
+            pet_info = (PetImageJoin.query.filter(this_pet["id"] == PetImageJoin.pet_id).with_entities(PetImageJoin.petimage_id).all()) # pet image join ID only
 
             images = []
             for x in pet_info:
-                pet_image = (PetImage.query.filter(
-                    PetImage.id == x[0]).with_entities(
-                        PetImage.image_url).all())
-                images.append(pet_image)
-
+                pet_image = (PetImage.query.filter(PetImage.id == x[0]).with_entities(PetImage.image_url).all()) # pet image url only
+                images.append(pet_image) # appends the image url to images
+            
             pet_result = Pets.query.filter(this_pet["id"] == Pets.id).all()
             results = pet_schema.dump(pet_result)
 
             if pet_info == None:
-                responseObject = {"status": "error", "message": "no pet found"}
+                responseObject = {
+                    "status": "error",
+                    "message": "no pet found"
+                }
                 return make_response(jsonify(responseObject)), 500
             else:
                 responseObject = {
@@ -1216,8 +1221,8 @@ def addColor(requestedData):# TODO this needs to be fixed
 
 def collectOneColor(requestedData):# TODO this needs to be fixed
     oneColor = Colors.query.filter(requestedData['id'] == Colors.id)
-    ColorSchema = ColorSchema(many = True)
-    Results = ColorSchema.dump(oneColor)
+    colorSchema = ColorSchema(many = True)
+    Results = colorSchema.dump(oneColor)
     
     return Results
 
@@ -1225,9 +1230,9 @@ def collectOneColor(requestedData):# TODO this needs to be fixed
 
 def collectAllColor():# TODO this needs to be fixed
     
-    ColorSchema = ColorSchema(many = True)
+    colorSchema = ColorSchema(many = True)
     allColor = Colors.query.all()
-    Results = ColorSchema.dump(allColor)
+    Results = colorSchema.dump(allColor)
     return Results
 
 
