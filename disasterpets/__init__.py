@@ -63,12 +63,14 @@ def register_blueprints(app):
     from disasterpets.Matching.routes import matchingbp
     from disasterpets.Pictures.routes import petgallerybp, rainbowgallerybp
     from disasterpets.Disaster.routes import disastermanger
+    from disasterpets.Location.routes import countymanger
     app.register_blueprint(account)
     app.register_blueprint(petbp)
     app.register_blueprint(matchingbp)
     app.register_blueprint(petgallerybp)
     app.register_blueprint(rainbowgallerybp)
     app.register_blueprint(disastermanger)
+    app.register_blueprint(countymanger)
     return None
 
 

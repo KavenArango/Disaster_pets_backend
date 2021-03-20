@@ -53,8 +53,6 @@ def removeDisasterLocations(requestedData):
                     disasterid=requestedData['dis_id'], dlocationid=location).delete()
                 db.session.commit()
                 
-                
-
     
 def addDisaster(requestedData):
 
@@ -83,7 +81,7 @@ def addDisaster(requestedData):
 
 
 class ManageDisasterAPI(Resource):
-    def patch(self): #edit disaster given id 
+    def patch(self): 
         try:
             requestedData = request.get_json()
             
@@ -114,7 +112,7 @@ class ManageDisasterAPI(Resource):
             }
             return make_response(jsonify(responseObject)), 404
     
-    def post(self): #add a disaster
+    def post(self): 
         try:
             requestedData = request.get_json()
             responseObject = {}
@@ -155,9 +153,6 @@ class ManageDisasterAPI(Resource):
             return make_response(jsonify(responseObject)), 404
 
 
-
-
-# class CountyManagerAPI(Resource):
 
 
 
