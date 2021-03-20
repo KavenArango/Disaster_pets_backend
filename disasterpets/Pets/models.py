@@ -90,15 +90,15 @@ class UniqueFeature(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     animal = db.Column(db.Integer, db.ForeignKey('animals.id'))
-    feature = db.Column(db.Integer, db.ForeignKey('feature.id'), nullable = True)
+    featureFK = db.Column(db.Integer, db.ForeignKey('feature.id'), nullable = True)
     
     bodyPart =  db.Column(db.Integer, db.ForeignKey('bodyParts.id'))
     position =  db.Column(db.Integer, db.ForeignKey('positions.id'))
     color =  db.Column(db.Integer, db.ForeignKey('colors.id'), nullable = True)
 
-    def __init__(self, animal, feature, bodyPart, position, color):
+    def __init__(self, animal, featureFK, bodyPart, position, color):
         self.animal = animal
-        self.feature = feature
+        self.featureFK = featureFK
         self.bodyPart = bodyPart
         self.position = position
         self.color = color
