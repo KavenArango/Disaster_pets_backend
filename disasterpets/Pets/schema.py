@@ -71,7 +71,7 @@ class UniqueFeaturesJoinSchema(ma.Schema):
 class FeatureSchema(ma.Schema):
     class Meta:
         model = Feature
-        fields = ("id", "Feature")
+        fields = ("id", "feature")
 
 class UniqueFeatureSchema(ma.Schema):
     class Meta:

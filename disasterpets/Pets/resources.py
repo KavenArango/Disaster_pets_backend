@@ -1113,8 +1113,8 @@ def collectOneFeature(requestedData):# TODO this needs to be fixed
 def collectAllFeature():# TODO this needs to be fixed
     
     Schema = FeatureSchema(many = True)
-    allFeature = Feature.query.all()
-    Results = Schema.dump(allFeature)
+    allFeatures = Feature.query.all()
+    Results = Schema.dump(allFeatures)
     return Results
 
 
