@@ -27,6 +27,7 @@ manageanimaltype_view = ManageAnimalTypeAPI.as_view('manageanimaltype_api')
 managebreeds_view = ManageBreedsAPI.as_view('managebreeds_api')
 managegender_view = ManageGenderAPI.as_view('managegender_api')
 managepetstatus_view = ManagePetStatusAPI.as_view('managepetstatus_api')
+
 manageuniquefeatures_view = ManageUniqueFeaturesAPI.as_view('manageuniquefeatures_api')
 managefeatures_view = ManageFeaturesAPI.as_view('managefeatures_api')
 managecolor_view = ManageColorsAPI.as_view('managecolor_api')

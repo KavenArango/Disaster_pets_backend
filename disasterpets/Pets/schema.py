@@ -22,7 +22,6 @@ class BreedSchema(ma.Schema):
     class Meta:
         model = Breeds
         fields = ('id', 'breed')
-    
 
 class GenderSchema(ma.Schema):
     class Meta:
@@ -39,37 +38,15 @@ class AnimalSchema(ma.Schema):
         model = Animals
         fields = ('id', 'animal')
 
-
 class PetStatusSchema(ma.Schema):
     class Meta:
         model = PetStatus
         fields = ("id", "status")
-    
+
 class PetsJoinSchema(ma.Schema):
     class Meta:
         model = PetsJoin
         fields = ("id", "user_id", "pet_id")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 class BodyPartSchema(ma.Schema):
     class Meta:
@@ -91,55 +68,15 @@ class UniqueFeaturesJoinSchema(ma.Schema):
         model = UniqueFeaturesJoin
         fields = ("id", "petid", "featureid")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class FeatureSchema(ma.Schema):
     class Meta:
         model = Feature
         fields = ("id", "Feature")
 
-
-
-
-
 class UniqueFeatureSchema(ma.Schema):
     class Meta:
         model = UniqueFeature
         fields = ("id", "breed", "animal", "feature", "bodyPart", "position", "color")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 class PetsSchema(ma.Schema):
     class Meta:
@@ -158,7 +95,6 @@ class PetsSchema(ma.Schema):
     fields = ('id', 'pet_name', 'primary_breed', 'primary_bid', 'secondary_breed',
         'gender', 'animal_type', 'pet_status', 'altered_status', 'trapper_id', 'date_created')  
 
-
 class PetsIDSchema(ma.Schema):
     class Meta:
         model = Pets
@@ -174,5 +110,5 @@ class PetsIDSchema(ma.Schema):
     date_created = ma.Function(lambda obj: obj.date_created)
     trapper_id = ma.Function(lambda obj: obj.trapper_id)
     fields = ('id', 'pet_name', 'primary_breed', 'primary_bid', 'secondary_breed',
-        'gender', 'animal_type', 'pet_status', 'altered_status', 'trapper_id', 'date_created')  
-        
+        'gender', 'animal_type', 'pet_status', 'altered_status', 'trapper_id', 'date_created')
+
