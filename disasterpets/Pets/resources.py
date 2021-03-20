@@ -985,8 +985,8 @@ def addUniqueFeature(requestedData):# TODO this needs to be fixed
 
 def collectOneUniqueFeature(requestedData):# TODO this needs to be fixed
     oneFeature = UniqueFeature.query.filter(requestedData['id'] == UniqueFeature.id)
-    FeatureSchema = UniqueFeatureSchema(many = True)
-    Results = FeatureSchema.dump(oneFeature)
+    Schema = UniqueFeatureSchema(many = True)
+    Results = Schema.dump(oneFeature)
     
     return Results
 
@@ -994,9 +994,9 @@ def collectOneUniqueFeature(requestedData):# TODO this needs to be fixed
 
 def collectAllUniqueFeature():# TODO this needs to be fixed
     
-    FeatureSchema = UniqueFeatureSchema(many = True)
+    Schema = UniqueFeatureSchema(many = True)
     allFeature = UniqueFeature.query.all()
-    Results = FeatureSchema.dump(allFeature)
+    Results = Schema.dump(allFeature)
     return Results
 
 
@@ -1103,8 +1103,8 @@ def addFeature(requestedData):# TODO this needs to be fixed
 
 def collectOneFeature(requestedData):# TODO this needs to be fixed
     oneFeature = Feature.query.filter(requestedData['id'] == Feature.id)
-    FeatureSchema = FeatureSchema(many = True)
-    Results = FeatureSchema.dump(oneFeature)
+    Schema = FeatureSchema(many = True)
+    Results = Schema.dump(oneFeature)
     
     return Results
 
@@ -1112,9 +1112,9 @@ def collectOneFeature(requestedData):# TODO this needs to be fixed
 
 def collectAllFeature():# TODO this needs to be fixed
     
-    FeatureSchema = FeatureSchema(many = True)
+    Schema = FeatureSchema(many = True)
     allFeature = Feature.query.all()
-    Results = FeatureSchema.dump(allFeature)
+    Results = Schema.dump(allFeature)
     return Results
 
 
@@ -1221,8 +1221,8 @@ def addColor(requestedData):# TODO this needs to be fixed
 
 def collectOneColor(requestedData):# TODO this needs to be fixed
     oneColor = Colors.query.filter(requestedData['id'] == Colors.id)
-    colorSchema = ColorSchema(many = True)
-    Results = colorSchema.dump(oneColor)
+    Schema = ColorSchema(many = True)
+    Results = Schema.dump(oneColor)
     
     return Results
 
@@ -1230,9 +1230,9 @@ def collectOneColor(requestedData):# TODO this needs to be fixed
 
 def collectAllColor():# TODO this needs to be fixed
     
-    colorSchema = ColorSchema(many = True)
+    Schema = ColorSchema(many = True)
     allColor = Colors.query.all()
-    Results = colorSchema.dump(allColor)
+    Results = Schema.dump(allColor)
     return Results
 
 
@@ -1344,8 +1344,8 @@ def addPosition(requestedData):# TODO this needs to be fixed
 
 def collectOnePosition(requestedData):# TODO this needs to be fixed
     onePosition = Positions.query.filter(requestedData['id'] == Positions.id)
-    PositionSchema = PositionSchema(many = True)
-    Results = PositionSchema.dump(onePosition)
+    Schema = PositionSchema(many = True)
+    Results = Schema.dump(onePosition)
     
     return Results
 
@@ -1353,9 +1353,9 @@ def collectOnePosition(requestedData):# TODO this needs to be fixed
 
 def collectAllPosition():# TODO this needs to be fixed
     
-    PositionSchema = PositionSchema(many = True)
+    Schema = PositionSchema(many = True)
     allPosition = Positions.query.all()
-    Results = PositionSchema.dump(allPosition)
+    Results = Schema.dump(allPosition)
     return Results
 
 
@@ -1462,8 +1462,8 @@ def addBodyPart(requestedData):# TODO this needs to be fixed
 
 def collectOneBodyPart(requestedData):# TODO this needs to be fixed
     oneBodyPart = BodyParts.query.filter(requestedData['id'] == BodyParts.id)
-    BodyPartSchema = BodyPartSchema(many = True)
-    Results = BodyPartSchema.dump(oneBodyPart)
+    Schema = BodyPartSchema(many = True)
+    Results = Schema.dump(oneBodyPart)
     
     return Results
 
@@ -1471,9 +1471,9 @@ def collectOneBodyPart(requestedData):# TODO this needs to be fixed
 
 def collectAllBodyPart():# TODO this needs to be fixed
     
-    bodyPartSchema = BodyPartSchema(many = True)
+    Schema = BodyPartSchema(many = True)
     allBodyPart = BodyParts.query.all()
-    Results = bodyPartSchema.dump(allBodyPart)
+    Results = Schema.dump(allBodyPart)
     return Results
 
 
