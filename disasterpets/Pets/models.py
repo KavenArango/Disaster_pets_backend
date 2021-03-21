@@ -89,19 +89,29 @@ class UniqueFeature(db.Model):
     __tablename__ ='uniquefeature'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    animal = db.Column(db.Integer, db.ForeignKey('animals.id'))
-    featureFK = db.Column(db.Integer, db.ForeignKey('feature.id'), nullable = True)
     
-    bodyPart =  db.Column(db.Integer, db.ForeignKey('bodyParts.id'))
-    position =  db.Column(db.Integer, db.ForeignKey('positions.id'))
-    color =  db.Column(db.Integer, db.ForeignKey('colors.id'), nullable = True)
+    animalid = db.Column(db.Integer, db.ForeignKey('animals.id'))
+    animal = db.relationship("Animals", uselist=False, lazy='select', foreign_keys=[animalid])
+    
+    featureid = db.Column(db.Integer, db.ForeignKey('feature.id'), nullable = True)
+    feature = db.relationship("Feature", uselist=False, lazy='select', foreign_keys=[featureid])
+    
+    bodyPartid =  db.Column(db.Integer, db.ForeignKey('bodyParts.id'))
+    bodyPart = db.relationship("BodyParts", uselist=False, lazy='select', foreign_keys=[bodyPartid])
+    
+    positionid =  db.Column(db.Integer, db.ForeignKey('positions.id'))
+    position = db.relationship("Positions", uselist=False, lazy='select', foreign_keys=[positionid])
+    
+    colorid =  db.Column(db.Integer, db.ForeignKey('colors.id'), nullable = True)
+    color = db.relationship("Colors", uselist=False, lazy='select', foreign_keys=[colorid])
 
-    def __init__(self, animal, featureFK, bodyPart, position, color):
-        self.animal = animal
-        self.featureFK = featureFK
-        self.bodyPart = bodyPart
-        self.position = position
-        self.color = color
+    def __init__(self, animalid, featureid, bodyPartid, positionid, colorid):
+        self.animalid = animalid
+        self.featureid = featureid
+        self.bodyPartid = bodyPartid
+        self.positionid = positionid
+        self.colorid = colorid
+
 
 
 class UniqueFeaturesJoin(db.Model):
@@ -130,6 +140,7 @@ class PetStatus(db.Model):
     def __init__(self, status):
         self.status = status
 
+
 class Gender(db.Model):
     __tablename__ = 'gender'
 
@@ -145,8 +156,10 @@ class Pets(db.Model):
 
     id = db.Column(db.Integer, primary_key =True, autoincrement=True)
     pet_name = db.Column(db.String(50), nullable=True)
+    
     animal_type = db.Column(db.Integer, db.ForeignKey('animals.id'), nullable = True)
     animal = db.relationship("Animals", uselist=False, lazy='select')
+    
     primary_breed = db.Column(db.Integer, db.ForeignKey('breeds.id'), nullable = True)
     secondary_breed = db.Column(db.Integer, db.ForeignKey('breeds.id'), nullable = True)
     pbreed = db.relationship("Breeds", uselist=False, lazy='select', foreign_keys=[primary_breed])

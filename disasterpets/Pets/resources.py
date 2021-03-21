@@ -28,7 +28,8 @@ from disasterpets.Pets.schema import (
     AlteredSchema,
     PetsIDSchema,
     UniqueFeatureSchema,
-    UniqueFeaturesJoinSchema,
+    # UniqueFeaturesJoinSchema,
+    UniqueFeatureNameSchema,
     BodyPartSchema,
     PositionSchema,
     ColorSchema,
@@ -958,25 +959,22 @@ class ManageUniqueFeaturesAPI(Resource):
 
 def editUniqueFeature(requestedData):# TODO this needs to be fixed
     oneEntry = UniqueFeature.query.filter(requestedData['id'] == UniqueFeature.id).first()
-    oneEntry.breed = requestedData['breed']
-    oneEntry.animal = requestedData['animal']
-    oneEntry.feature = requestedData['feature']
-    oneEntry.bodyPart = requestedData['bodyPart']
-    oneEntry.position = requestedData['position']
-    oneEntry.color = requestedData['color']
+    oneEntry.animalid = requestedData['animal']
+    oneEntry.featureid = requestedData['feature']
+    oneEntry.bodyPartid = requestedData['bodyPart']
+    oneEntry.positionid = requestedData['position']
+    oneEntry.colorid = requestedData['color']
     db.session.commit()
 
 
 
 def addUniqueFeature(requestedData):# TODO this needs to be fixed
-    
     newEntery = UniqueFeature(
-        breed = requestedData['breed'],
-        animal = requestedData['animal'],
-        feature = requestedData['feature'],
-        bodyPart = requestedData['bodyPart'],
-        position = requestedData['position'],
-        color = requestedData['color']
+        animalid = requestedData['animal'],
+        featureid = requestedData['feature'],
+        bodyPartid = requestedData['bodyPart'],
+        positionid = requestedData['position'],
+        colorid = requestedData['color']
         )
     db.session.add(newEntery)
     db.session.commit()
@@ -993,8 +991,8 @@ def collectOneUniqueFeature(requestedData):# TODO this needs to be fixed
 
 
 def collectAllUniqueFeature():# TODO this needs to be fixed
+    Schema = UniqueFeatureNameSchema(many = True)
     
-    Schema = UniqueFeatureSchema(many = True)
     allFeature = UniqueFeature.query.all()
     Results = Schema.dump(allFeature)
     return Results
@@ -1085,6 +1083,7 @@ class ManageFeaturesAPI(Resource):
 
 
 def editFeature(requestedData):
+    pass
     oneEntry = Feature.query.filter(requestedData['id'] == Feature.id).first()
     oneEntry.feature = requestedData['feature']
     db.session.commit()

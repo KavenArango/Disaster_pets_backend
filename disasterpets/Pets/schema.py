@@ -76,7 +76,25 @@ class FeatureSchema(ma.Schema):
 class UniqueFeatureSchema(ma.Schema):
     class Meta:
         model = UniqueFeature
-        fields = ("id", "animal", "featureFK", "bodyPart", "position", "color")
+        fields = ("id", "animalid", "featureid", "bodyPartid", "positionid", "colorid")
+
+
+
+
+class UniqueFeatureNameSchema(ma.Schema):
+    class Meta:
+        model = UniqueFeature
+        include_fk = True
+    id = ma.Function(lambda obj: obj.id)
+    animalid = ma.Function(lambda obj: obj.animal.animal)
+    featureid= ma.Function(lambda obj: obj.feature.feature)
+    bodyPartid = ma.Function(lambda obj: obj.bodyPart.bodypart)
+    positionid = ma.Function(lambda obj: obj.position.position)
+    colorid = ma.Function(lambda obj: obj.color.color)
+    fields = ("id", "animalid", "featureid", "bodyPartid", "positionid", "colorid")
+
+
+
 
 class PetsSchema(ma.Schema):
     class Meta:
@@ -93,7 +111,11 @@ class PetsSchema(ma.Schema):
     date_created = ma.Function(lambda obj: obj.date_created)
     trapper_id = ma.Function(lambda obj: obj.trapper_id)
     fields = ('id', 'pet_name', 'primary_breed', 'primary_bid', 'secondary_breed',
-        'gender', 'animal_type', 'pet_status', 'altered_status', 'trapper_id', 'date_created')  
+        'gender', 'animal_type', 'pet_status', 'altered_status', 'trapper_id', 'date_created')
+
+
+
+
 
 class PetsIDSchema(ma.Schema):
     class Meta:
