@@ -1480,3 +1480,29 @@ def collectAllBodyPart():# TODO this needs to be fixed
 # Patch: EDIT ROLE
 # POST: ONE ROLE, NEW
 # GET: ALL
+
+
+
+
+
+class UniqueFeaturesInfoAPI(Resource):
+    # @jwt_required
+    def get(self):
+        try:
+            responseObject = {
+                    'status': 'success',
+                    'animal':collectAllAnimalType(),
+                    'color': collectAllColor(),
+                    'feature':collectAllFeature(),
+                    'position':collectAllPosition(),
+                    'BodyPart': collectAllBodyPart(),
+                    'message': 'All BodyParts Have Been Returned'
+                }
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
