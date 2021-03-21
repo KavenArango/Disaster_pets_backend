@@ -28,7 +28,8 @@ from disasterpets.Pets.schema import (
     AlteredSchema,
     PetsIDSchema,
     UniqueFeatureSchema,
-    UniqueFeaturesJoinSchema,
+    # UniqueFeaturesJoinSchema,
+    UniqueFeatureNameSchema,
     BodyPartSchema,
     PositionSchema,
     ColorSchema,
@@ -968,7 +969,6 @@ def editUniqueFeature(requestedData):# TODO this needs to be fixed
 
 
 def addUniqueFeature(requestedData):# TODO this needs to be fixed
-    
     newEntery = UniqueFeature(
         animalid = requestedData['animal'],
         featureid = requestedData['feature'],
@@ -991,8 +991,8 @@ def collectOneUniqueFeature(requestedData):# TODO this needs to be fixed
 
 
 def collectAllUniqueFeature():# TODO this needs to be fixed
+    Schema = UniqueFeatureNameSchema(many = True)
     
-    Schema = UniqueFeatureSchema(many = True)
     allFeature = UniqueFeature.query.all()
     Results = Schema.dump(allFeature)
     return Results
@@ -1083,6 +1083,7 @@ class ManageFeaturesAPI(Resource):
 
 
 def editFeature(requestedData):
+    pass
     oneEntry = Feature.query.filter(requestedData['id'] == Feature.id).first()
     oneEntry.feature = requestedData['feature']
     db.session.commit()

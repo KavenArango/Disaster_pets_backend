@@ -87,11 +87,10 @@ class UniqueFeatureNameSchema(ma.Schema):
         include_fk = True
     id = ma.Function(lambda obj: obj.id)
     animalid = ma.Function(lambda obj: obj.animal.animal)
-    featureid= ma.Function(lambda obj: obj.featureFK.featureFK)
-    bodyPartid = ma.Function(lambda obj: obj.bodyPart.bodyPart)
-    positionid = ma.Function(lambda obj: obj.sex.gender)
-    colorid = ma.Function(lambda obj: obj.alteredstat.status)
-
+    featureid= ma.Function(lambda obj: obj.feature.feature)
+    bodyPartid = ma.Function(lambda obj: obj.bodyPart.bodypart)
+    positionid = ma.Function(lambda obj: obj.position.position)
+    colorid = ma.Function(lambda obj: obj.color.color)
     fields = ("id", "animalid", "featureid", "bodyPartid", "positionid", "colorid")
 
 
