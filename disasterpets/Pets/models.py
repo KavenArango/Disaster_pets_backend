@@ -89,19 +89,19 @@ class UniqueFeature(db.Model):
     __tablename__ ='uniquefeature'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    animal = db.Column(db.Integer, db.ForeignKey('animals.id'))
-    featureFK = db.Column(db.Integer, db.ForeignKey('feature.id'), nullable = True)
+    animalid = db.Column(db.Integer, db.ForeignKey('animals.id'))
+    featureid = db.Column(db.Integer, db.ForeignKey('feature.id'), nullable = True)
     
-    bodyPart =  db.Column(db.Integer, db.ForeignKey('bodyParts.id'))
-    position =  db.Column(db.Integer, db.ForeignKey('positions.id'))
-    color =  db.Column(db.Integer, db.ForeignKey('colors.id'), nullable = True)
+    bodyPartid =  db.Column(db.Integer, db.ForeignKey('bodyParts.id'))
+    positionid =  db.Column(db.Integer, db.ForeignKey('positions.id'))
+    colorid =  db.Column(db.Integer, db.ForeignKey('colors.id'), nullable = True)
 
-    def __init__(self, animal, featureFK, bodyPart, position, color):
-        self.animal = animal
-        self.featureFK = featureFK
-        self.bodyPart = bodyPart
-        self.position = position
-        self.color = color
+    def __init__(self, animalid, featureid, bodyPartid, positionid, colorid):
+        self.animalid = animalid
+        self.featureid = featureid
+        self.bodyPartid = bodyPartid
+        self.positionid = positionid
+        self.colorid = colorid
 
 
 class UniqueFeaturesJoin(db.Model):
