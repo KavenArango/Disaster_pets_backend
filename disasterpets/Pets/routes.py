@@ -14,6 +14,7 @@ from disasterpets.Pets.resources import (
     ManageColorsAPI,
     ManagePositionsAPI,
     ManageBodyPartsAPI,
+    UniqueFeaturesInfoAPI,
     )
 
 petbp = Blueprint('petbp', __name__)
@@ -33,8 +34,15 @@ managefeatures_view = ManageFeaturesAPI.as_view('managefeatures_api')
 managecolor_view = ManageColorsAPI.as_view('managecolor_api')
 manageposition_view = ManagePositionsAPI.as_view('manageposition_api')
 managebodypart_view = ManageBodyPartsAPI.as_view('managebodypart_api')
+uniquefeaturesinfo_view = UniqueFeaturesInfoAPI.as_view('uniquefeaturesinfo_api') # STEVE WANTED THIS NAME
 
 
+
+petbp.add_url_rule(
+    '/uniquefeaturesinfo',
+    view_func= uniquefeaturesinfo_view,
+    methods=['GET']
+)
 
 
 

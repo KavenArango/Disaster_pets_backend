@@ -1,4 +1,5 @@
 import os
+from flask.json import load
 from flask_restful import Resource
 from disasterpets import bcrypt, db, jwt
 from werkzeug.utils import secure_filename
@@ -28,7 +29,7 @@ from disasterpets.Pets.schema import (
     AlteredSchema,
     PetsIDSchema,
     UniqueFeatureSchema,
-    # UniqueFeaturesJoinSchema,
+    UniqueFeaturesJoinSchema,
     UniqueFeatureNameSchema,
     BodyPartSchema,
     PositionSchema,
@@ -58,61 +59,164 @@ from flask_jwt_extended import (
 # from disasterpets.Pets.models import Pets, PetsJoin
 
 
-class AddPetAPI(Resource):
+def editPet(requestedData):
+    oneEntry = AlteredStatus.query.filter(requestedData['id'] == AlteredStatus.id).first()
+    oneEntry.status = requestedData['status']
+    db.session.commit()
+
+
+
+def addPet(requestedData):
+    pet = Pets(
+        pet_name=requestedData.get("pet_name"),
+        animal_type=requestedData.get("animal_type"),
+        primary_breed=requestedData.get("primary_breed"),
+        secondary_breed=requestedData.get("secondary_breed"),
+        gender=requestedData.get("gender"),
+        altered_status=requestedData.get("altered_status"),
+        trapper_id=requestedData.get("trapper_id "),
+        pet_status=requestedData.get("pet_status"),
+        )
+    db.session.add(pet)
+    db.session.commit()
+    return pet
+
+
+
+def addLocation(requestedData):
+    location = Location(
+        street_name=requestedData.get("street_name"),
+        house_number=requestedData.get("house_number"),
+        city=requestedData.get("city"),
+        state=requestedData.get("state"),
+        zipcode=requestedData.get("zipcode"),
+        )
+    db.session.add(location)
+    db.session.commit()
+    return location
+
+
+def addImage(requestedData):
+    petimage = PetImage(
+        image_url=requestedData.get("image_url")
+        )
+    db.session.add(petimage)
+    db.session.commit()
+    return petimage
+
+
+def addPetJoin(current_user, pet):
+    petjoin = PetsJoin(user_id=current_user, pet_id=pet.id)
+    db.session.add(petjoin)
+    db.session.commit()
+    return petjoin
+
+def addLocationJoin(location, pet):
+    locationjoin = LocationJoin(petid=pet.id, locationid=location.id)
+    db.session.add(locationjoin)
+    db.session.commit()
+    return locationjoin
+
+
+
+def addPetImageJoin(pet,petimage):
+    petimagejoin = PetImageJoin(pet_id=pet.id, petimage_id=petimage.id)
+    db.session.add(petimagejoin)
+    db.session.commit()
+    return petimagejoin
+
+
+
+def collectAllPets():
+    pass
+
+
+
+def collectOnePet(requestedData):
+    oneAlturedStat = AlteredStatus.query.filter(requestedData['id'] == AlteredStatus.id)
+    alturedStatSchema = AlteredSchema(many = True)
+    Results = alturedStatSchema.dump(oneAlturedStat)
+    
+    return Results
+
+
+def collectAllStatus():
+    petstat_schema = PetStatusSchema(many=True)
+    allpetstat = PetStatus.query.all()
+    statusresults = petstat_schema.dump(allpetstat)
+    
+    return statusresults
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def addUniqueFeatureJoin(pet, new_pet):
+    for feature in new_pet['feature']:
+        feature = addUniqueFeature(feature).id
+        db.session.refresh(feature)
+        petFeature = UniqueFeaturesJoinSchema(petid=pet.id, featureid=feature.id)
+        db.session.add(petFeature)
+        db.session.commit()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class AddPetAPI(Resource): # TODO make so it takes more than one image
     def post(self): # adds location and pet and joins
         new_pet = request.get_json()
         current_user = get_jwt_identity()
         try:
-            pet = Pets(
-                pet_name=new_pet.get("pet_name"),
-                animal_type=new_pet.get("animal_type"),
-                primary_breed=new_pet.get("primary_breed"),
-                secondary_breed=new_pet.get("secondary_breed"),
-                gender=new_pet.get("gender"),
-                altered_status=new_pet.get("altered_status"),
-                trapper_id=new_pet.get("trapper_id "),
-                pet_status=new_pet.get("pet_status"),
-            )
-            db.session.add(pet)
-            db.session.commit()
-
-            location = Location(
-                street_name=new_pet.get("street_name"),
-                house_number=new_pet.get("house_number"),
-                city=new_pet.get("city"),
-                state=new_pet.get("state"),
-                zipcode=new_pet.get("zipcode"),
-            )
-            db.session.add(location)
-            db.session.commit()
-
-            petimage = PetImage(image_url=new_pet.get("image_url"))
-            db.session.add(petimage)
-            db.session.commit()
-
-
-
-
+            
+            pet = addPet(new_pet)
             db.session.refresh(pet)
-            petjoin = PetsJoin(user_id=current_user, pet_id=pet.id)
-            db.session.add(petjoin)
-            db.session.commit()
-
-            db.session.refresh(pet)
+            
+            location = addLocation(new_pet)
+            petimage = addImage(new_pet)
+            
+            addPetJoin(current_user, pet)
+            # db.session.refresh(pet)
             db.session.refresh(location)
-            locationjoin = LocationJoin(petid=pet.id, locationid=location.id)
-            db.session.add(locationjoin)
-            db.session.commit()
-
+            
+            addLocationJoin(pet, location)
             db.session.refresh(pet)
             db.session.refresh(petimage)
-            petimagejoin = PetImageJoin(pet_id=pet.id, petimage_id=petimage.id)
-            db.session.add(petimagejoin)
-            db.session.commit()
-
-
-
-
+            
+            addPetImageJoin(pet,petimage)
+            
+            addUniqueFeatureJoin(pet, new_pet)
+            
+            
             responseObject = {
                 "status": "success",
                 "message": "successfully added pet"
@@ -127,30 +231,15 @@ class AddPetAPI(Resource):
             return make_response(jsonify(responseObject)), 404
 
     def get(self): # gets everything a pet can have (general call is not tied to a pet)
-        breeds_schema = BreedSchema(many=True)
-        genders_schema = GenderSchema(many=True)
-        petstat_schema = PetStatusSchema(many=True)
-        animals_schena = AnimalSchema(many=True)
-        altered_schema = AlteredSchema(many=True)
         try:
-            allbreeds = Breeds.query.all()
-            breedresult = breeds_schema.dump(allbreeds)
-            allgenders = Gender.query.all()
-            genderesults = genders_schema.dump(allgenders)
-            allpetstat = PetStatus.query.all()
-            statusresults = petstat_schema.dump(allpetstat)
-            allanimals = Animals.query.all()
-            animalresults = animals_schena.dump(allanimals)
-            altered = AlteredStatus.query.all()
-            alteredresults = altered_schema.dump(altered)
             responseObject = {
                 "status": "success",
                 "message": "successfully Pulled!",
-                "breeds": breedresult,
-                "genders": genderesults,
-                "animal": animalresults,
-                "status": statusresults,
-                "altered": alteredresults,
+                "breeds": collectAllBreeds(),
+                "genders": collectAllGender(),
+                "animal": collectAllAnimalType(),
+                "status": collectAllStatus(),
+                "altered": collectAllAlturedStat(),
             }
             return make_response(jsonify(responseObject)), 201
 
@@ -166,12 +255,10 @@ class AddPetAPI(Resource):
 class PetDetailAPI(Resource):
     def post(self): # one pet
         this_pet = request.get_json()
-
         pet_schema = PetsSchema(many=True)
-
+        
         try:
             pet_info = (PetImageJoin.query.filter(this_pet["id"] == PetImageJoin.pet_id).with_entities(PetImageJoin.petimage_id).all()) # pet image join ID only
-
             images = []
             for x in pet_info:
                 pet_image = (PetImage.query.filter(PetImage.id == x[0]).with_entities(PetImage.image_url).all()) # pet image url only
@@ -179,7 +266,7 @@ class PetDetailAPI(Resource):
             
             pet_result = Pets.query.filter(this_pet["id"] == Pets.id).all()
             results = pet_schema.dump(pet_result)
-
+            
             if pet_info == None:
                 responseObject = {
                     "status": "error",
@@ -303,11 +390,10 @@ class ManagePetAPI(Resource):
                 "message": "something went wrong try again",
             }
             return make_response(jsonify(responseObject)), 404
-
-
-
-
-def editAlturedStat(requestedData):
+n(pet, new_pet):
+    petimagejoin = UniqueFeaturesJoinSchema(petid=pet.id, featureid=addUniqueFeature(new_pet).id)
+    db.session.add(petimagejoin)
+    db.session.commit()ef editAlturedStat(requestedData):
     oneEntry = AlteredStatus.query.filter(requestedData['id'] == AlteredStatus.id).first()
     oneEntry.status = requestedData['status']
     db.session.commit()
@@ -978,6 +1064,7 @@ def addUniqueFeature(requestedData):# TODO this needs to be fixed
         )
     db.session.add(newEntery)
     db.session.commit()
+    return newEntery
 
 
 
@@ -1480,3 +1567,29 @@ def collectAllBodyPart():# TODO this needs to be fixed
 # Patch: EDIT ROLE
 # POST: ONE ROLE, NEW
 # GET: ALL
+
+
+
+
+
+class UniqueFeaturesInfoAPI(Resource):
+    # @jwt_required
+    def get(self):
+        try:
+            responseObject = {
+                    'status': 'success',
+                    'animal':collectAllAnimalType(),
+                    'color': collectAllColor(),
+                    'feature':collectAllFeature(),
+                    'position':collectAllPosition(),
+                    'BodyPart': collectAllBodyPart(),
+                    'message': 'All BodyParts Have Been Returned'
+                }
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
