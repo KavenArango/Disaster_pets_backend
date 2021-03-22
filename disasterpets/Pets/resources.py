@@ -125,12 +125,25 @@ def addPetImageJoin(pet,petimage):
     db.session.commit()
     return petimagejoin
 
+def collectAllFeaturesForOnePet(requestedData):
+    data  = UniqueFeaturesJoin.query.filter(requestedData["id"] == UniqueFeaturesJoin.petid).with_entities(UniqueFeaturesJoin.featureid).all()
+    Schema = UniqueFeaturesJoinSchema(many = True)
+    Results = Schema.dump(data)
+    features = []
+    
+    for featureid in Results:
+        toBeFeature = UniqueFeature.query.filter(featureid['featureid'] == UniqueFeature.id).all()
+        FeatureNameShema = UniqueFeatureNameSchema(many = True)
+        newfeature = FeatureNameShema.dump(toBeFeature)
+        features.append(newfeature)
+    return features
+
+
+
 
 
 def collectAllPets():
     pass
-
-
 
 def collectOnePet(requestedData):
     oneAlturedStat = AlteredStatus.query.filter(requestedData['id'] == AlteredStatus.id)
@@ -139,28 +152,12 @@ def collectOnePet(requestedData):
     
     return Results
 
-
 def collectAllStatus():
     petstat_schema = PetStatusSchema(many=True)
     allpetstat = PetStatus.query.all()
     statusresults = petstat_schema.dump(allpetstat)
     
     return statusresults
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 def addUniqueFeatureJoin(pet, new_pet):
     for feature in new_pet['feature']:
@@ -169,28 +166,6 @@ def addUniqueFeatureJoin(pet, new_pet):
         petFeature = UniqueFeaturesJoinSchema(petid=pet.id, featureid=feature.id)
         db.session.add(petFeature)
         db.session.commit()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 class AddPetAPI(Resource): # TODO make so it takes more than one image
     def post(self): # adds location and pet and joins
@@ -278,6 +253,7 @@ class PetDetailAPI(Resource):
                     "status": "success",
                     "images": images,
                     "pets": results,
+                    "feature": collectAllFeaturesForOnePet(this_pet),
                     "message": "single pet has been returned",
                 }
                 return make_response(jsonify(responseObject)), 201
@@ -327,6 +303,9 @@ def editPet(requestedData):
     onePet.secondary_breed = requestedData["secondary_breed"]
     onePet.trapper_id = requestedData["trapper_id"]
 
+    # for feature in requestedData["features"]:
+    #     collectAllFeaturesForOnePet(feature)
+    
     db.session.commit()
 
 
@@ -342,7 +321,7 @@ def collectOnePet(requestedData):
 
 class ManagePetAPI(Resource):
     # @jwt_required
-    def patch(self):  # taking from client giving to db
+    def patch(self):
         try:
             requestedData = request.get_json()
             
@@ -390,13 +369,7 @@ class ManagePetAPI(Resource):
                 "message": "something went wrong try again",
             }
             return make_response(jsonify(responseObject)), 404
-n(pet, new_pet):
-    petimagejoin = UniqueFeaturesJoinSchema(petid=pet.id, featureid=addUniqueFeature(new_pet).id)
-    db.session.add(petimagejoin)
-    db.session.commit()ef editAlturedStat(requestedData):
-    oneEntry = AlteredStatus.query.filter(requestedData['id'] == AlteredStatus.id).first()
-    oneEntry.status = requestedData['status']
-    db.session.commit()
+
 
 
 
@@ -1079,7 +1052,6 @@ def collectOneUniqueFeature(requestedData):# TODO this needs to be fixed
 
 def collectAllUniqueFeature():# TODO this needs to be fixed
     Schema = UniqueFeatureNameSchema(many = True)
-    
     allFeature = UniqueFeature.query.all()
     Results = Schema.dump(allFeature)
     return Results
@@ -1170,7 +1142,6 @@ class ManageFeaturesAPI(Resource):
 
 
 def editFeature(requestedData):
-    pass
     oneEntry = Feature.query.filter(requestedData['id'] == Feature.id).first()
     oneEntry.feature = requestedData['feature']
     db.session.commit()

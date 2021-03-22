@@ -44,8 +44,6 @@ petbp.add_url_rule(
     methods=['GET']
 )
 
-
-
 petbp.add_url_rule(
     '/managefeatures',
     view_func= managefeatures_view,
