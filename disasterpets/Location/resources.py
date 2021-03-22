@@ -37,8 +37,8 @@ def removeCounty(requestedData):
     
 def addCounty(requestedData):
 	newcounty = CountyTable(
-		countyname = requestedData['countyname'],
-		state = requestedData['state']
+        countyname = requestedData['countyname'],
+        state = requestedData['state']
 	)
 	db.session.add(newcounty)
 	db.session.commit()
@@ -80,13 +80,20 @@ class CountyManagerAPI(Resource):
             if requestedData is None: 
                 responseObject = {
                     'status': 'error',
-                    'message': 'No data provided to add'
+                    'message': 'No data provided'
                     }
                 return make_response(jsonify(responseObject)), 404
+            else if 'countyname' in requestedData:
+                responseObject = {
+                            'status': 'sucess',
+                            'locations': addCounty(requestedData),
+                            'message': 'County has been added'
+                            }
+                return make_response(jsonify(responseObject)), 200
             else: 
                 responseObject = {
                         'status': 'sucess',
-                        'locations': addCounty(requestedData),
+                        'locations': collectOneCounty(requestedData),
                         'message': 'County has been added'
                         }
                 return make_response(jsonify(responseObject)), 200
@@ -112,3 +119,8 @@ class CountyManagerAPI(Resource):
                 'message': 'something went wrong try again'
             }
             return make_response(jsonify(responseObject)), 404
+
+
+
+
+       

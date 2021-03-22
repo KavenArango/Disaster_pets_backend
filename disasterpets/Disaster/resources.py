@@ -122,10 +122,17 @@ class ManageDisasterAPI(Resource):
                     'message': 'No data provided to add'
                     }
                 return make_response(jsonify(responseObject)), 404
+            else if 'disaster_name' in requestedData:
+                responseObject = {
+                            'status': 'sucess',
+                            'locations': addDisaster(requestedData),
+                            'message': 'County has been added'
+                        }
+                return make_response(jsonify(responseObject)), 200
             else: 
                 responseObject = {
                         'status': 'sucess',
-                        'locations': addDisaster(requestedData),
+                        'locations': collectOneDisaster(requestedData),
                         'message': 'Disaster has been added'
                         }
                 return make_response(jsonify(responseObject)), 200

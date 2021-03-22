@@ -366,7 +366,7 @@ class ManagePetAPI(Resource):
                 "message": "something went wrong try again",
             }
             return make_response(jsonify(responseObject)), 404
-    def post(sefl):
+    def post(self):
         try:
             requestedData = request.get_json()
             if bool(Pets.query.filter_by(id=requestedData['id']).first()):
