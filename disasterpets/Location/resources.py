@@ -23,8 +23,8 @@ def collectAllCounties():
 
 def editCounty(requestedData):
 	editcounty = CountyTable.query.filter(requestedData['id'] == CountyTable.id).first()
-	CountyTable.countyname = requestedData['countyname']
-	CountyTable.state = requestedData['state']
+	editcounty.countyname = requestedData['countyname']
+	editcounty.state = requestedData['state']
 	db.session.commit()
 
 
@@ -83,18 +83,18 @@ class CountyManagerAPI(Resource):
                     'message': 'No data provided'
                     }
                 return make_response(jsonify(responseObject)), 404
-            else if 'countyname' in requestedData:
+            elif 'countyname' in requestedData:
                 responseObject = {
                             'status': 'sucess',
                             'locations': addCounty(requestedData),
-                            'message': 'County has been added'
+                            'message': 'County has been added '
                             }
                 return make_response(jsonify(responseObject)), 200
             else: 
                 responseObject = {
                         'status': 'sucess',
                         'locations': collectOneCounty(requestedData),
-                        'message': 'County has been added'
+                        'message': 'Single County Have Been Returned'
                         }
                 return make_response(jsonify(responseObject)), 200
         except Exception as e:
@@ -109,7 +109,7 @@ class CountyManagerAPI(Resource):
             responseObject = {
                     'status': 'sucess',
                     'locations': collectAllCounties(),
-                    'message': 'all counties returned'
+                    'message': 'All Counties Have Been Returned'
             }
             return make_response(jsonify(responseObject)), 200
         except Exception as e:

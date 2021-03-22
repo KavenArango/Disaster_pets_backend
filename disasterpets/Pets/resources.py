@@ -59,10 +59,10 @@ from flask_jwt_extended import (
 # from disasterpets.Pets.models import Pets, PetsJoin
 
 
-def editPet(requestedData):
-    oneEntry = AlteredStatus.query.filter(requestedData['id'] == AlteredStatus.id).first()
-    oneEntry.status = requestedData['status']
-    db.session.commit()
+#def editPet(requestedData):
+    #oneEntry = AlteredStatus.query.filter(requestedData['id'] == AlteredStatus.id).first()
+    #oneEntry.status = requestedData['status']
+    #db.session.commit()
 
 
 
@@ -111,7 +111,7 @@ def addPetJoin(current_user, pet):
     db.session.commit()
     return petjoin
 
-def addLocationJoin(location, pet):
+def addLocationJoin(pet, location):
     locationjoin = LocationJoin(petid=pet.id, locationid=location.id)
     db.session.add(locationjoin)
     db.session.commit()
@@ -149,53 +149,22 @@ def collectAllStatus():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 def addUniqueFeatureJoin(pet, new_pet):
-    for feature in new_pet['feature']:
-        feature = addUniqueFeature(feature).id
+    for feature in new_pet['features']:
+        feature = addUniqueFeature(feature)
         db.session.refresh(feature)
-        petFeature = UniqueFeaturesJoinSchema(petid=pet.id, featureid=feature.id)
+        petFeature = UniqueFeaturesJoin(petid=pet.id, featureid=feature.id)
         db.session.add(petFeature)
         db.session.commit()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
 class AddPetAPI(Resource): # TODO make so it takes more than one image
     def post(self): # adds location and pet and joins
         new_pet = request.get_json()
-        current_user = get_jwt_identity()
+        print(new_pet)
+        current_user = new_pet['user_id']
+        print(current_user)
         try:
             
             pet = addPet(new_pet)
@@ -205,7 +174,7 @@ class AddPetAPI(Resource): # TODO make so it takes more than one image
             petimage = addImage(new_pet)
             
             addPetJoin(current_user, pet)
-            # db.session.refresh(pet)
+            db.session.refresh(pet)
             db.session.refresh(location)
             
             addLocationJoin(pet, location)
@@ -390,13 +359,6 @@ class ManagePetAPI(Resource):
                 "message": "something went wrong try again",
             }
             return make_response(jsonify(responseObject)), 404
-n(pet, new_pet):
-    petimagejoin = UniqueFeaturesJoinSchema(petid=pet.id, featureid=addUniqueFeature(new_pet).id)
-    db.session.add(petimagejoin)
-    db.session.commit()ef editAlturedStat(requestedData):
-    oneEntry = AlteredStatus.query.filter(requestedData['id'] == AlteredStatus.id).first()
-    oneEntry.status = requestedData['status']
-    db.session.commit()
 
 
 
@@ -1056,11 +1018,11 @@ def editUniqueFeature(requestedData):# TODO this needs to be fixed
 
 def addUniqueFeature(requestedData):# TODO this needs to be fixed
     newEntery = UniqueFeature(
-        animal = requestedData['animal'],
-        feature = requestedData['feature'],
-        bodyPart = requestedData['bodyPart'],
-        position = requestedData['position'],
-        color = requestedData['color']
+        animalid = requestedData['animal'],
+        featureid = requestedData['feature'],
+        bodyPartid = requestedData['bodyPart'],
+        positionid = requestedData['position'],
+        colorid = requestedData['color']
         )
     db.session.add(newEntery)
     db.session.commit()
