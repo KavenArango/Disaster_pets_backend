@@ -970,11 +970,11 @@ def editUniqueFeature(requestedData):# TODO this needs to be fixed
 
 def addUniqueFeature(requestedData):# TODO this needs to be fixed
     newEntery = UniqueFeature(
-        animalid = requestedData['animal'],
-        featureid = requestedData['feature'],
-        bodyPartid = requestedData['bodyPart'],
-        positionid = requestedData['position'],
-        colorid = requestedData['color']
+        animal = requestedData['animal'],
+        feature = requestedData['feature'],
+        bodyPart = requestedData['bodyPart'],
+        position = requestedData['position'],
+        color = requestedData['color']
         )
     db.session.add(newEntery)
     db.session.commit()

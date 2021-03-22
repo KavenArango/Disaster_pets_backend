@@ -37,7 +37,7 @@ def removeCounty(requestedData):
     
 def addCounty(requestedData):
 	newcounty = CountyTable(
-		countyname = requestedData['countyname']
+		countyname = requestedData['countyname'],
 		state = requestedData['state']
 	)
 	db.session.add(newcounty)
@@ -101,7 +101,7 @@ class CountyManagerAPI(Resource):
         try:
             responseObject = {
                     'status': 'sucess',
-                    'Disasters': collectAllCounties(),
+                    'locations': collectAllCounties(),
                     'message': 'all counties returned'
             }
             return make_response(jsonify(responseObject)), 200
