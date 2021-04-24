@@ -442,6 +442,11 @@ def addBreed(requestedData):
     db.session.commit()
 
 
+def editAlturedStat(requestedData):
+    oneEntry = AlteredStatus.query.filter(requestedData['id'] == AlteredStatus.id).first()
+    oneEntry.status = requestedData['status']
+    db.session.commit()
+
 
 def collectOneBreed(requestedData):
     oneBreed = Breeds.query.filter(requestedData['id'] == Breeds.id)
