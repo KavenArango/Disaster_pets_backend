@@ -8,9 +8,8 @@ APP_STATIC = os.path.join(APP_ROOT, 'static')
 
 @app.route('/<filename>',methods=['GET'])
 def index(filename):
-    imagePath = APP_STATIC + '/images/' + filename
+    imagePath = APP_STATIC + '\\images\\' + filename
     return send_file(imagePath, mimetype='image/jpg')
-
 
 
 if __name__ == "__main__":

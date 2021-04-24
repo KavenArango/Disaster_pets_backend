@@ -83,7 +83,9 @@ from flask_jwt_extended import (
 class AddPetAPI(Resource):
     def post(self): # adds location and pet and joins
         new_pet = request.get_json()
-        current_user = get_jwt_identity()
+        print(new_pet)
+        current_user = new_pet['user_id']
+        print(current_user)
         try:
             
             pet = addPet(new_pet)
@@ -93,7 +95,7 @@ class AddPetAPI(Resource):
             petimage = addImage(new_pet)
             
             addPetJoin(current_user, pet)
-            # db.session.refresh(pet)
+            db.session.refresh(pet)
             db.session.refresh(location)
             
             addLocationJoin(pet, location)
@@ -235,7 +237,7 @@ class ManagePetAPI(Resource): # TODO NEEDS TO BE REFACTORED
                 "message": "something went wrong try again",
             }
             return make_response(jsonify(responseObject)), 404
-    def post(sefl):
+    def post(self):
         try:
             requestedData = request.get_json()
             if bool(Pets.query.filter_by(id=requestedData['id']).first()):
