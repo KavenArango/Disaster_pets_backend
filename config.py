@@ -21,9 +21,7 @@ class Config:
 
     # Database
     SQLALCHEMY_DATABASE_URI = (
-        "mssql+pyodbc://pets_root:1234shan!@"
-        "petreunification.database.windows.net:1433/disasterpetsdb?"
-        "DRIVER={ODBC Driver 17 for SQL Server}"
+        "mysql+pymysql://root:root@127.0.0.1/petreunification"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
