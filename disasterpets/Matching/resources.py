@@ -8,6 +8,8 @@ from disasterpets.Pets.schema import PetsSchema, BreedSchema, GenderSchema, PetS
 from disasterpets.Pets.models import Pets, PetsJoin, Breeds, Gender, AlteredStatus, PetStatus, Animals
 from disasterpets.Pictures.models import PetImageJoin
 from disasterpets.Pictures.schema import PetsImageJoinSchema
+from disasterpets.Pets.resourceFunctions import collectAllUniqueFeature
+
 
 class PetMatchAPI(Resource):
     def get(self):
@@ -44,11 +46,11 @@ class PetMatchAPI(Resource):
                     'genders': genderesults,
                     'animal': animalresults,
                     'status': statusresults,
-                    'altered': alteredresults
+                    'altered': alteredresults,
+                    'UniqueFeatures': collectAllUniqueFeature()
                 }
                 return make_response(jsonify(responseObject)), 201
                 
-           
         except Exception as e:
             print(e)
             responseObject = {
@@ -56,5 +58,3 @@ class PetMatchAPI(Resource):
                 'message': 'something went wrong try again'
             }
             return make_response(jsonify(responseObject)), 404
-
-       
