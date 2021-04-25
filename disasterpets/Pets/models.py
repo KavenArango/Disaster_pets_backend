@@ -128,9 +128,6 @@ class UniqueFeaturesJoin(db.Model):
 
 
 
-
-
-
 class PetStatus(db.Model):
     __tablename__ = 'petstatus' 
 
