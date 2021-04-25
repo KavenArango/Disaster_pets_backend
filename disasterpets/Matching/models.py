@@ -8,21 +8,25 @@ class PotentialMatch(db.Model):
     id = db.Column(db.Integer, primary_key =True, autoincrement=True)
     petid = db.Column(db.Integer, db.ForeignKey('pets.id'))
     admincheck = db.Column(db.Boolean)
-
     def __init__(self, petid, admincheck):
         self.petid = petid
         self.admincheck = admincheck
+
+
+
 
 class PotentialMatchJoin(db.Model):
     __tablename__ = 'potentialjoin'
 
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     petid = db.Column(db.Integer, db.ForeignKey('pets.id'))
-    potentialid = db.Column(db.Integer, db.ForeignKey('potentialmatch.id'))
+    potentialid = db.Column(db.Integer, db.ForeignKey('pets.id'))
 
     def __init__(self, petid, potentialid):
         self.petid = petid
         self.potentialid = potentialid
+
+
 
 class RejectMatch(db.Model):
     __tablename__ = 'rejectmatch'
@@ -45,5 +49,3 @@ class RejectMatchJoin(db.Model):
     def __init__(self, petid, rejectid):
         self.petid = petid
         self.rejectid = rejectid
-
-       
