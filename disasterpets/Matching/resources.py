@@ -8,7 +8,7 @@ from disasterpets.Pets.schema import PetsSchema, BreedSchema, GenderSchema, PetS
 from disasterpets.Pets.models import Pets, PetsJoin, Breeds, Gender, AlteredStatus, PetStatus, Animals
 from disasterpets.Pictures.models import PetImageJoin
 from disasterpets.Pictures.schema import PetsImageJoinSchema
-from disasterpets.Pets.resourceFunctions import collectAllUniqueFeature
+from disasterpets.Pets.resourceFunctions import collectAllFeaturesForOnePet
 
 
 class PetMatchAPI(Resource):
@@ -36,8 +36,9 @@ class PetMatchAPI(Resource):
                 animalresults = animals_schema.dump(allanimals)
                 altered = AlteredStatus.query.all()
                 alteredresults = altered_schema.dump(altered)
-
-            
+                for pet in jresults:
+                    pet = collectAllFeaturesForOnePet(pet['id'])
+                
                 responseObject = {
                     'status' : 'success',
                     'message': 'successfully Pulled!',
@@ -47,7 +48,6 @@ class PetMatchAPI(Resource):
                     'animal': animalresults,
                     'status': statusresults,
                     'altered': alteredresults,
-                    'UniqueFeatures': collectAllUniqueFeature()
                 }
                 return make_response(jsonify(responseObject)), 201
                 
