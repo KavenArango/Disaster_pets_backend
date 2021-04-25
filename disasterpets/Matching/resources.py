@@ -57,7 +57,7 @@ class PetMatchAPI(Resource):
                 altered = AlteredStatus.query.all()
                 alteredresults = altered_schema.dump(altered)
                 for pet in jresults:
-                    pet = collectAllFeaturesForOnePetbecausetheotheronedontwork(pet)
+                    pet['features'] = collectAllFeaturesForOnePetbecausetheotheronedontwork(pet)
                 
                 responseObject = {
                     'status' : 'success',
