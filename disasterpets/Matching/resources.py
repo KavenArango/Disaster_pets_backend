@@ -4,11 +4,31 @@ from flask import Flask, Blueprint, jsonify, request, make_response, current_app
 from disasterpets.Pets.models import Pets, PetsJoin
 from disasterpets import bcrypt, db, jwt
 from flask_restful import Resource
-from disasterpets.Pets.schema import PetsSchema, BreedSchema, GenderSchema, PetStatusSchema, AnimalSchema, AlteredSchema
-from disasterpets.Pets.models import Pets, PetsJoin, Breeds, Gender, AlteredStatus, PetStatus, Animals
+
+from disasterpets.Pets.schema import (
+    PetsSchema,
+    BreedSchema,
+    GenderSchema,
+    PetStatusSchema,
+    AnimalSchema,
+    AlteredSchema,
+    UniqueFeaturesJoinSchema,
+    UniqueFeatureNameSchema,
+    )
+from disasterpets.Pets.models import (
+    Pets, 
+    PetsJoin,
+    Breeds,
+    Gender,
+    AlteredStatus,
+    PetStatus,
+    Animals,
+    UniqueFeaturesJoin,
+    UniqueFeature,
+    )
 from disasterpets.Pictures.models import PetImageJoin
 from disasterpets.Pictures.schema import PetsImageJoinSchema
-from disasterpets.Pets.resourceFunctions import collectAllFeaturesForOnePet
+
 
 
 class PetMatchAPI(Resource):
@@ -37,7 +57,7 @@ class PetMatchAPI(Resource):
                 altered = AlteredStatus.query.all()
                 alteredresults = altered_schema.dump(altered)
                 for pet in jresults:
-                    pet = collectAllFeaturesForOnePet(pet['id'])
+                    pet = collectAllFeaturesForOnePetbecausetheotheronedontwork(pet)
                 
                 responseObject = {
                     'status' : 'success',
@@ -58,3 +78,17 @@ class PetMatchAPI(Resource):
                 'message': 'something went wrong try again'
             }
             return make_response(jsonify(responseObject)), 404
+
+
+def collectAllFeaturesForOnePetbecausetheotheronedontwork(requestedData):
+    data  = UniqueFeaturesJoin.query.filter(requestedData["pet_id"] == UniqueFeaturesJoin.petid).with_entities(UniqueFeaturesJoin.featureid).all()
+    Schema = UniqueFeaturesJoinSchema(many = True)
+    Results = Schema.dump(data)
+    features = []
+    
+    for featureid in Results:
+        toBeFeature = UniqueFeature.query.filter(featureid['featureid'] == UniqueFeature.id).all()
+        FeatureNameShema = UniqueFeatureNameSchema(many = True)
+        newfeature = FeatureNameShema.dump(toBeFeature)
+        features.append(newfeature)
+    return features
