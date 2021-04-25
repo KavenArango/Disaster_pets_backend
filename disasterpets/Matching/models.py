@@ -21,10 +21,12 @@ class PotentialMatchJoin(db.Model):
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     petid = db.Column(db.Integer, db.ForeignKey('pets.id'))
     potentialid = db.Column(db.Integer, db.ForeignKey('pets.id'))
-
-    def __init__(self, petid, potentialid):
+    admincheck = db.Column(db.Boolean)
+    
+    def __init__(self, petid, potentialid, admincheck):
         self.petid = petid
         self.potentialid = potentialid
+        self.admincheck = admincheck
 
 
 
