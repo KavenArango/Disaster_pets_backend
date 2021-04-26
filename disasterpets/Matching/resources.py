@@ -224,39 +224,6 @@ class ManageMatchAPI(Resource):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def collectAllFeaturesForOnePetbecausetheotheronedontwork(requestedData):
     data  = UniqueFeaturesJoin.query.filter(requestedData["pet_id"] == UniqueFeaturesJoin.petid).with_entities(UniqueFeaturesJoin.featureid).all()
     Schema = UniqueFeaturesJoinSchema(many = True)
