@@ -63,9 +63,8 @@ def addMatch(requestedData):
     newEntery = PotentialMatchJoin(
         petid = requestedData['id'],
         potentialid = requestedData['potentialid'],
+        admincheck = requestedData['match']
     )
-    if (requestedData['match'] == 'False'):
-        newEntery['match'] = requestedData['match']
     db.session.add(newEntery)
     db.session.commit()
 
@@ -133,7 +132,7 @@ class ManageMatchAPI(Resource):
             
             if 'match' in requestedData: # adding role
                 
-                addMatch(requestedData, True)
+                addMatch(requestedData)
                 responseObject = {
                     'status': 'success',
                     'message': 'New Match Has been Added'
