@@ -8,7 +8,7 @@ from flask_restful import Resource
 from disasterpets.Matching.models import PotentialMatchJoin
 from disasterpets.Matching.schema import PotentialMatchJoinSchema
 
-from disasterpets.Pets.resourceFunctions import collectOnePet
+from disasterpets.Pets.resourceFunctions import collectAllPets
 
 from disasterpets.Pets.schema import (
     PetsSchema,
@@ -37,23 +37,7 @@ from disasterpets.Pictures.schema import PetsImageJoinSchema
 
 
 
-def collectAllMatchForOnePet(requestedData):
-    data  = PotentialMatchJoin.query.filter(requestedData["id"] == PotentialMatchJoin.petid).with_entities(PotentialMatchJoin.potentialid).all()
-    Schema = PotentialMatchJoinSchema(many = True)
-    Results = Schema.dump(data)
-    features = []
-    
-    for pripet in Results:
-        toBeFeature = PotentialMatchJoin.query.filter(pripet['id'] == PotentialMatchJoin.id).all()
-        FeatureNameShema = PotentialMatchJoinSchema(many = True)
-        newfeature = FeatureNameShema.dump(toBeFeature)
-        
-        toBeFeature = PotentialMatchJoin.query.filter(pripet['id'] == PotentialMatchJoin.id).all()
-        FeatureNameShema = PotentialMatchJoinSchema(many = True)
-        newfeature['potentialid'] = FeatureNameShema.dump(toBeFeature)
-        
-        features.append(newfeature)
-    return features
+
 
 
 
@@ -119,6 +103,28 @@ class PetMatchAPI(Resource):
 
 
 
+def collectAllMatchForOnePet(requestedData):
+    pet, images, features = collectAllPets(requestedData)
+    
+    requestedData.pop('id')
+    requestedData['id'] = requestedData['potentialid']
+    
+    pet1, images1, features1 = collectAllPets(requestedData)
+    
+    matchedpets = {
+        pet['id']:{
+            'pet': pet,
+            'images': images,
+            'feature': features
+        },
+        pet1['id']:{
+            'pet': pet1,
+            'images': images1,
+            'feature': features1
+        }
+    }
+    
+    return jsonify(matchedpets)
 
 
 
