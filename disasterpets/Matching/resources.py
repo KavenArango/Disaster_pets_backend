@@ -4,8 +4,10 @@ from flask import Flask, Blueprint, jsonify, request, make_response, current_app
 from disasterpets.Pets.models import Pets, PetsJoin
 from disasterpets import bcrypt, db, jwt
 from flask_restful import Resource
+
 from disasterpets.Matching.models import PotentialMatchJoin
 from disasterpets.Matching.schema import PotentialMatchJoinSchema
+
 from disasterpets.Pets.resourceFunctions import collectOnePet
 
 from disasterpets.Pets.schema import (
@@ -31,6 +33,28 @@ from disasterpets.Pets.models import (
     )
 from disasterpets.Pictures.models import PetImageJoin
 from disasterpets.Pictures.schema import PetsImageJoinSchema
+
+
+
+
+def collectAllMatchForOnePet(requestedData):
+    data  = PotentialMatchJoin.query.filter(requestedData["id"] == PotentialMatchJoin.petid).with_entities(PotentialMatchJoin.potentialid).all()
+    Schema = PotentialMatchJoinSchema(many = True)
+    Results = Schema.dump(data)
+    features = []
+    
+    for pripet in Results:
+        toBeFeature = PotentialMatchJoin.query.filter(pripet['id'] == PotentialMatchJoin.id).all()
+        FeatureNameShema = PotentialMatchJoinSchema(many = True)
+        newfeature = FeatureNameShema.dump(toBeFeature)
+        
+        toBeFeature = PotentialMatchJoin.query.filter(pripet['id'] == PotentialMatchJoin.id).all()
+        FeatureNameShema = PotentialMatchJoinSchema(many = True)
+        newfeature['potentialid'] = FeatureNameShema.dump(toBeFeature)
+        
+        features.append(newfeature)
+    return features
+
 
 
 
@@ -138,9 +162,6 @@ class ManageMatchAPI(Resource):
 
 
 
-def collectAllMatchForOnePet(requestedData):
-    pass
-
 
 
 
@@ -173,13 +194,13 @@ def collectAllMatchForOnePet(requestedData):
 
 
 def collectAllFeaturesForOnePetbecausetheotheronedontwork(requestedData):
-    data  = UniqueFeaturesJoin.query.filter(requestedData["pet_id"] == UniqueFeaturesJoin.petid).with_entities(UniqueFeaturesJoin.featureid).all()
+    data  = UniqueFeaturesJoin.query.filter(requestedData["pet_id"] == UniqueFeaturesJoin.petid).with_entities(UniqueFeaturesJoin.pripet).all()
     Schema = UniqueFeaturesJoinSchema(many = True)
     Results = Schema.dump(data)
     features = []
     
-    for featureid in Results:
-        toBeFeature = UniqueFeature.query.filter(featureid['featureid'] == UniqueFeature.id).all()
+    for pripet in Results:
+        toBeFeature = UniqueFeature.query.filter(pripet['pripet'] == UniqueFeature.id).all()
         FeatureNameShema = UniqueFeatureNameSchema(many = True)
         newfeature = FeatureNameShema.dump(toBeFeature)
         features.append(newfeature)
