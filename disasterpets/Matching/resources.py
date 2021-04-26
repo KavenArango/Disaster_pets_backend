@@ -105,6 +105,14 @@ class PetMatchAPI(Resource):
             return make_response(jsonify(responseObject)), 404
 
 
+def collectAllMatchedID():
+    petstat_schema = PotentialMatchJoinSchema(many=True)
+    allpetstat = PotentialMatchJoin.query.all()
+    statusresults = petstat_schema.dump(allpetstat)
+    
+    return statusresults
+
+
 
 def collectAllMatchForOnePet(requestedData):
     pet, images, features = collectAllPets(requestedData)
@@ -192,14 +200,15 @@ class ManageMatchAPI(Resource):
             return make_response(jsonify(responseObject)), 404
     def get(self):
         try:
+            MatchedPet = []
             
-            
-            
-            
+            allmatchedpets = collectAllMatchedID()
+            for pet in allmatchedpets:
+                MatchedPet.append(collectAllMatchForOnePet(pet)) 
             
             responseObject = {
                     'status': 'success',
-                    'Match': collectAllBreeds(),
+                    'Match': MatchedPet,
                     'message': 'All Breeds Have Been Returned'
                 }
             return make_response(jsonify(responseObject)), 200
