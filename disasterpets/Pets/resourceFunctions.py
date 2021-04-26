@@ -124,15 +124,15 @@ def collectAllFeaturesForOnePet(requestedData):
 
 def collectAllPets(requestedData):
     pet_schema = PetsSchema(many=True)
-    pet_info = (PetImageJoin.query.filter(this_pet["id"] == PetImageJoin.pet_id).with_entities(PetImageJoin.petimage_id).all()) # pet image join ID only
+    pet_info = (PetImageJoin.query.filter(requestedData["id"] == PetImageJoin.pet_id).with_entities(PetImageJoin.petimage_id).all()) # pet image join ID only
     images = []
     for x in pet_info:
             pet_image = (PetImage.query.filter(PetImage.id == x[0]).with_entities(PetImage.image_url).all()) # pet image url only
             images.append(pet_image) # appends the image url to images
         
-    pet_result = Pets.query.filter(this_pet["id"] == Pets.id).all()
+    pet_result = Pets.query.filter(requestedData["id"] == Pets.id).all()
     results = pet_schema.dump(pet_result)
-    return results, images, collectAllFeaturesForOnePet(this_pet)
+    return results, images, collectAllFeaturesForOnePet(requestedData)
 
 
 
