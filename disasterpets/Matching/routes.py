@@ -18,5 +18,5 @@ matchingbp.add_url_rule(
 matchingbp.add_url_rule(
     '/managepetmatch',
     view_func= managepetmatch_view,
-    methods=['post']
+    methods=['POST']
 )
