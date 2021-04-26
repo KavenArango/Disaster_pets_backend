@@ -249,13 +249,13 @@ class ManageMatchAPI(Resource):
 
 
 def collectAllFeaturesForOnePetbecausetheotheronedontwork(requestedData):
-    data  = UniqueFeaturesJoin.query.filter(requestedData["pet_id"] == UniqueFeaturesJoin.petid).with_entities(UniqueFeaturesJoin.potentialid).all()
+    data  = UniqueFeaturesJoin.query.filter(requestedData["pet_id"] == UniqueFeaturesJoin.petid).with_entities(UniqueFeaturesJoin.featureid).all()
     Schema = UniqueFeaturesJoinSchema(many = True)
     Results = Schema.dump(data)
     features = []
-    
-    for pripet in Results:
-        toBeFeature = UniqueFeature.query.filter(pripet['pripet'] == UniqueFeature.id).all()
+
+    for featureid in Results:
+        toBeFeature = UniqueFeature.query.filter(featureid['featureid'] == UniqueFeature.id).all()
         FeatureNameShema = UniqueFeatureNameSchema(many = True)
         newfeature = FeatureNameShema.dump(toBeFeature)
         features.append(newfeature)
