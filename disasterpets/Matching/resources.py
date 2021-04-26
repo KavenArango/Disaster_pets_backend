@@ -8,7 +8,7 @@ from flask_restful import Resource
 from disasterpets.Matching.models import PotentialMatchJoin
 from disasterpets.Matching.schema import PotentialMatchJoinSchema
 
-from disasterpets.Pets.resourceFunctions import collectAllPets
+from disasterpets.Pets.resourceFunctions import collectAllPets, collectAllFeaturesForOnePet
 
 from disasterpets.Pets.schema import (
     PetsSchema,
@@ -40,7 +40,10 @@ from disasterpets.Pictures.schema import PetsImageJoinSchema
 
 
 
-
+def editMatch(requestedData):
+    oneEntry = PotentialMatchJoin.query.filter(requestedData['id'] == PotentialMatchJoin.petid).first()
+    oneEntry.admincheck = requestedData['admincheck']
+    db.session.commit()
 
 
 def addMatch(requestedData):
@@ -131,6 +134,33 @@ def collectAllMatchForOnePet(requestedData):
 
 
 class ManageMatchAPI(Resource):
+    def patch(self):
+        try:
+            requestedData = request.get_json()
+            if bool(PotentialMatchJoin.query.filter_by(id=requestedData['id']).first()):
+                editMatch(requestedData)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Match Updated'
+                    }
+                return make_response(jsonify(responseObject)), 201
+            
+            else:
+                
+                responseObject = {
+                    'status': 'error',
+                    'message': 'No Match found'
+                    }
+                return make_response(jsonify(responseObject)), 500
+            
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+        
     def post(self):  # asking from db to client
         try:
             requestedData = request.get_json()
@@ -148,10 +178,30 @@ class ManageMatchAPI(Resource):
                 
                 responseObject = {
                     'status': 'success',
-                    'Breed': collectAllMatchForOnePet(requestedData),
+                    'Match': collectAllMatchForOnePet(requestedData),
                     'message': 'Breed Has Been Returned'
                 }
                 
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'failed',
+                'message': 'something went wrong try again'
+            }
+            return make_response(jsonify(responseObject)), 404
+    def get(self):
+        try:
+            
+            
+            
+            
+            
+            responseObject = {
+                    'status': 'success',
+                    'Match': collectAllBreeds(),
+                    'message': 'All Breeds Have Been Returned'
+                }
             return make_response(jsonify(responseObject)), 200
         except Exception as e:
             print(e)
@@ -199,7 +249,7 @@ class ManageMatchAPI(Resource):
 
 
 def collectAllFeaturesForOnePetbecausetheotheronedontwork(requestedData):
-    data  = UniqueFeaturesJoin.query.filter(requestedData["pet_id"] == UniqueFeaturesJoin.petid).with_entities(UniqueFeaturesJoin.pripet).all()
+    data  = UniqueFeaturesJoin.query.filter(requestedData["pet_id"] == UniqueFeaturesJoin.petid).with_entities(UniqueFeaturesJoin.potentialid).all()
     Schema = UniqueFeaturesJoinSchema(many = True)
     Results = Schema.dump(data)
     features = []
