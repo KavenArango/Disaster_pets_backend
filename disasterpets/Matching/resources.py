@@ -117,6 +117,7 @@ def collectAllMatchedID():
 
 
 def collectAllMatchForOnePet(requestedData):
+    requestedData['mid'] = requestedData['id']
     requestedData['id'] = requestedData['petid']
     pet, images, features = collectAllPets(requestedData)
     
@@ -126,6 +127,9 @@ def collectAllMatchForOnePet(requestedData):
     pet1, images1, features1 = collectAllPets(requestedData)
 
     matchedpets = [
+        {
+            'id': request['mid']
+        },
         {
             'pet': pet,
             'images': images,
@@ -157,7 +161,6 @@ class ManageMatchAPI(Resource):
                 return make_response(jsonify(responseObject)), 201
             
             else:
-                
                 responseObject = {
                     'status': 'error',
                     'message': 'No Match found'
