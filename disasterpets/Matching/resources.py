@@ -83,6 +83,7 @@ class PetMatchAPI(Resource):
                 alteredresults = altered_schema.dump(altered)
                 for pet in jresults:
                     pet['features'] = collectAllFeaturesForOnePetbecausetheotheronedontwork(pet)
+                    pet['featureID'] = unuiqeFeatureID(pet)
                 
                 responseObject = {
                     'status' : 'success',
@@ -221,7 +222,18 @@ class ManageMatchAPI(Resource):
             return make_response(jsonify(responseObject)), 404
 
 
-
+def unuiqeFeatureID(requestedData):
+    data  = UniqueFeaturesJoin.query.filter(requestedData["pet_id"] == UniqueFeaturesJoin.petid).with_entities(UniqueFeaturesJoin.featureid).all()
+    Schema = UniqueFeaturesJoinSchema(many = True)
+    Results = Schema.dump(data)
+    features = []
+    
+    for featureid in Results:
+        toBeFeature = UniqueFeature.query.filter(featureid['featureid'] == UniqueFeature.id).all()
+        FeatureNameShema = UniqueFeatureSchema(many = True)
+        newfeature = FeatureNameShema.dump(toBeFeature)
+        features.append(newfeature)
+    return features
 
 
 def collectAllFeaturesForOnePetbecausetheotheronedontwork(requestedData):
