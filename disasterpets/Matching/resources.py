@@ -117,6 +117,7 @@ def collectAllMatchedID():
 
 
 def collectAllMatchForOnePet(requestedData):
+    requestedData['id'] = requestedData['petid']
     pet, images, features = collectAllPets(requestedData)
     
     requestedData.pop('id')
