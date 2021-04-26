@@ -83,9 +83,7 @@ from flask_jwt_extended import (
 class AddPetAPI(Resource):
     def post(self): # adds location and pet and joins
         new_pet = request.get_json()
-        print(new_pet)
         current_user = new_pet['user_id']
-        print(current_user)
         try:
             
             pet = addPet(new_pet)
@@ -101,11 +99,8 @@ class AddPetAPI(Resource):
             addLocationJoin(pet, location)
             db.session.refresh(pet)
             db.session.refresh(petimage)
-            
             addPetImageJoin(pet,petimage)
-            
             addUniqueFeatureJoin(pet, new_pet)
-            
             
             responseObject = {
                 "status": "success",

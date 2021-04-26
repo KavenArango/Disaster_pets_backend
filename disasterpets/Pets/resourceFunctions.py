@@ -157,8 +157,7 @@ def collectAllStatus():
 def addUniqueFeatureJoin(pet, new_pet):
     for feature in new_pet['feature']:
         feature = addUniqueFeature(feature).id
-        db.session.refresh(feature)
-        petFeature = UniqueFeaturesJoinSchema(petid=pet.id, featureid=feature.id)
+        petFeature = UniqueFeaturesJoin(petid=pet.id, featureid=feature)
         db.session.add(petFeature)
         db.session.commit()
 
@@ -174,6 +173,7 @@ def addUniqueFeature(requestedData):# TODO this needs to be fixed
         )
     db.session.add(newEntery)
     db.session.commit()
+    db.session.refresh(newEntery)
     return newEntery
 
 
