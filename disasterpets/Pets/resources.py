@@ -78,8 +78,39 @@ from flask_jwt_extended import (
     get_raw_jwt,
 )
 
-
-
+from disasterpets.Pets.schema import (
+    PetsSchema,
+    BreedSchema,
+    GenderSchema,
+    PetStatusSchema,
+    AnimalSchema,
+    AlteredSchema,
+    PetsIDSchema,
+    UniqueFeatureSchema,
+    UniqueFeaturesJoinSchema,
+    UniqueFeatureNameSchema,
+    BodyPartSchema,
+    PositionSchema,
+    ColorSchema,
+    FeatureSchema,
+)
+from disasterpets.Pets.models import (
+    Pets,
+    PetsJoin,
+    Breeds,
+    Gender,
+    AlteredStatus,
+    PetStatus,
+    Animals,
+    UniqueFeature,
+    BodyParts,
+    Positions,
+    Colors,
+    UniqueFeaturesJoin,
+    Feature,
+    PetImageJoin,
+    PetImage
+)
 class AddPetAPI(Resource):
     def post(self): # adds location and pet and joins
         new_pet = request.get_json()
