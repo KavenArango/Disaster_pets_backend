@@ -124,21 +124,21 @@ def collectAllMatchForOnePet(requestedData):
     requestedData['id'] = requestedData['potentialid']
     
     pet1, images1, features1 = collectAllPets(requestedData)
-    
-    matchedpets = {
-        pet['id']:{
+
+    matchedpets = [
+        {
             'pet': pet,
             'images': images,
             'feature': features
         },
-        pet1['id']:{
+        {
             'pet': pet1,
             'images': images1,
             'feature': features1
         }
-    }
-    
-    return jsonify(matchedpets)
+	]
+
+    return matchedpets
 
 
 
@@ -212,9 +212,9 @@ class ManageMatchAPI(Resource):
             responseObject = {
                     'status': 'success',
                     'Match': MatchedPet,
-                    'message': 'All Breeds Have Been Returned'
+                    'message': 'All Matches Have Been Returned'
                 }
-            return make_response(jsonify(responseObject)), 200
+            return make_response(jsonify(MatchedPet)), 200
         except Exception as e:
             print(e)
             responseObject = {

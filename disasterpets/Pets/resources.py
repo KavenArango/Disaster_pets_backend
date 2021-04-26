@@ -108,6 +108,8 @@ from disasterpets.Pets.models import (
     Colors,
     UniqueFeaturesJoin,
     Feature,
+)
+from disasterpets.Pictures.models import (
     PetImageJoin,
     PetImage
 )
