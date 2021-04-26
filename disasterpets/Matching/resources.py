@@ -19,6 +19,7 @@ from disasterpets.Pets.schema import (
     AlteredSchema,
     UniqueFeaturesJoinSchema,
     UniqueFeatureNameSchema,
+    UniqueFeatureSchema
     )
 from disasterpets.Pets.models import (
     Pets, 
