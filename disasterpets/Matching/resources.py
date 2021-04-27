@@ -109,7 +109,7 @@ class PetMatchAPI(Resource):
 
 def collectAllMatchedID():
     petstat_schema = PotentialMatchJoinSchema(many=True)
-    allpetstat = PotentialMatchJoin.query.with_entities(PotentialMatchJoin.id).all()
+    allpetstat = PotentialMatchJoin.query.all()
     statusresults = petstat_schema.dump(allpetstat)
     
     return statusresults

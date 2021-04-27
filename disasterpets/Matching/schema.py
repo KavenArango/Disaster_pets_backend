@@ -17,4 +17,4 @@ class PotentialMatchSchema(ma.Schema):
 class PotentialMatchJoinSchema(ma.Schema):
     class Meta:
         model = PotentialMatchJoin
-        fields = ('petid', 'potentialid', 'admincheck')
+        fields = ('id', 'petid', 'potentialid', 'admincheck')
