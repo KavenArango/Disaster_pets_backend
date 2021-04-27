@@ -42,7 +42,7 @@ from disasterpets.Pictures.schema import PetsImageJoinSchema
 
 
 def editMatch(requestedData):
-    oneEntry = PotentialMatchJoin.query.filter(requestedData['id'] == PotentialMatchJoin.petid).first()
+    oneEntry = PotentialMatchJoin.query.filter(requestedData['id'] == PotentialMatchJoin.id).first()
     oneEntry.admincheck = requestedData['admincheck']
     db.session.commit()
 
@@ -125,11 +125,9 @@ def collectAllMatchForOnePet(requestedData):
     requestedData['id'] = requestedData['potentialid']
     
     pet1, images1, features1 = collectAllPets(requestedData)
-
+    if requestedData['admincheck'] is None: 
+        requestedData['admincheck'] = 'null'
     matchedpets = [
-        {
-            'id': request['mid']
-        },
         {
             'pet': pet,
             'images': images,
@@ -139,7 +137,11 @@ def collectAllMatchForOnePet(requestedData):
             'pet': pet1,
             'images': images1,
             'feature': features1
-        }
+        },
+		{
+            'id': requestedData['mid'],
+			'admincheck': requestedData['admincheck']
+        },
 	]
 
     return matchedpets
@@ -153,6 +155,7 @@ class ManageMatchAPI(Resource):
         try:
             requestedData = request.get_json()
             if bool(PotentialMatchJoin.query.filter_by(id=requestedData['id']).first()):
+                print(requestedData)
                 editMatch(requestedData)
                 responseObject = {
                     'status': 'success',
